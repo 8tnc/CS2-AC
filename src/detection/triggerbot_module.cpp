@@ -20,7 +20,7 @@ CConVar<bool> cs2ac_triggerbot_debug("cs2ac_triggerbot_debug", FCVAR_NONE, "Show
 namespace
 {
 	constexpr float playerHalfWidth = 16.0f;
-	constexpr float maximumReactionMilliseconds = 90.0f;
+	constexpr float maximumReactionMilliseconds = 60.0f;
 	constexpr float maximumHeldAimDrift = 0.5f;
 	constexpr int detectionThreshold = 5;
 	constexpr int historyTicks = 16;
@@ -29,8 +29,8 @@ namespace
 	constexpr auto evidenceWindow = std::chrono::minutes(5);
 	constexpr float bodyHeights[] = {8.0f, 46.0f, 64.0f};
 
-	static_assert(ENGINE_FIXED_TICK_INTERVAL * 5.0f * 1000.0f < maximumReactionMilliseconds);
-	static_assert(ENGINE_FIXED_TICK_INTERVAL * 6.0f * 1000.0f >= maximumReactionMilliseconds);
+	static_assert(ENGINE_FIXED_TICK_INTERVAL * 3.0f * 1000.0f < maximumReactionMilliseconds);
+	static_assert(ENGINE_FIXED_TICK_INTERVAL * 4.0f * 1000.0f >= maximumReactionMilliseconds);
 	static_assert(historyTicks == sizeof(std::uint16_t) * 8);
 
 	struct ConeMatch
