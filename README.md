@@ -6,7 +6,7 @@
 
 [![Build](https://img.shields.io/github/actions/workflow/status/karola3vax/CS2AC/build.yml?branch=main&style=for-the-badge&label=build)](https://github.com/karola3vax/CS2AC/actions/workflows/build.yml) [![Version](https://img.shields.io/badge/version-1.0.0-blue?style=for-the-badge)](https://github.com/karola3vax/CS2AC) [![Detectors](https://img.shields.io/badge/detectors-17-red?style=for-the-badge)](#what-it-detects) [![License](https://img.shields.io/badge/license-AGPL--3.0-green?style=for-the-badge)](LICENSE)
 
-<img src="docs/cs2ac.png" width="800" alt="CS2AC">
+<img src="docs/cs2ac-logo.png" width="800" alt="CS2AC">
 
 <!-- Add docs/detection.gif here when the original CS2AC chat and center-screen demonstration is ready.
 <img src="docs/detection.gif" width="800" alt="CS2AC announcing a confirmed detection in chat and at the center of the screen">
