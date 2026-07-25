@@ -59,6 +59,7 @@ namespace utils
 	void CPrintChatAll(const char *format, ...);
 	void AnnounceDetection(const char *detection, const char *playerName, DetectionOutcome outcome);
 	void AnnounceTest();
+	void AnnounceWatermark();
 	void ResetDetectionAnnouncement();
 } // namespace utils
 

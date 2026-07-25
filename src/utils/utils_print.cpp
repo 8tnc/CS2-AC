@@ -234,6 +234,8 @@ static std::string EscapeHtml(const char *text)
 static std::string detectionHtml;
 static std::chrono::steady_clock::time_point detectionHtmlExpires;
 static bool detectionHtmlTimerRunning;
+static bool detectionHtmlIsDetection;
+static bool detectionHtmlAlwaysVisible;
 static int detectionHtmlBroadcasts;
 static constexpr int maximumDetectionHtmlBroadcasts = 51;
 
@@ -269,10 +271,12 @@ static void SendDetectionHtml(const char *message, int duration)
 static f64 ResendDetectionHtml()
 {
 	const auto now = std::chrono::steady_clock::now();
-	if (!settings::ShowCenterAnnouncements())
+	if (!detectionHtmlAlwaysVisible && !settings::ShowCenterAnnouncements())
 	{
 		detectionHtml.clear();
 		detectionHtmlTimerRunning = false;
+		detectionHtmlIsDetection = false;
+		detectionHtmlAlwaysVisible = false;
 		SendDetectionHtml("<font></font>", 1);
 		return 0.0;
 	}
@@ -285,6 +289,8 @@ static f64 ResendDetectionHtml()
 	{
 		detectionHtml.clear();
 		detectionHtmlTimerRunning = false;
+		detectionHtmlIsDetection = false;
+		detectionHtmlAlwaysVisible = false;
 		SendDetectionHtml("<font></font>", 1);
 		return 0.0;
 	}
@@ -296,11 +302,17 @@ static f64 ResendDetectionHtml()
 	return 0.1;
 }
 
-static void ShowCenterMessage(std::string message)
+static void ShowCenterMessage(std::string message, bool isDetection = false, bool alwaysVisible = false)
 {
-	detectionHtml = std::move(message);
 	const auto now = std::chrono::steady_clock::now();
+	if (!isDetection && detectionHtmlIsDetection && now < detectionHtmlExpires)
+	{
+		return;
+	}
+	detectionHtml = std::move(message);
 	detectionHtmlExpires = now + std::chrono::seconds(5);
+	detectionHtmlIsDetection = isDetection;
+	detectionHtmlAlwaysVisible = alwaysVisible;
 	SendDetectionHtml(detectionHtml.c_str(), 5);
 	detectionHtmlBroadcasts = 1;
 	if (!detectionHtmlTimerRunning)
@@ -371,7 +383,7 @@ void utils::AnnounceDetection(const char *detection, const char *playerName, Det
 			 "<span color='#FFFFFF'>%s</span></span>",
 			 safeDetection.c_str(), safePlayerName.c_str(), outcomeText);
 
-	ShowCenterMessage(message);
+	ShowCenterMessage(message, true);
 }
 
 void utils::AnnounceTest()
@@ -403,6 +415,22 @@ void utils::AnnounceTest()
 	Msg("[CS2AC] Test announcement finished: %s\n", text);
 }
 
+void utils::AnnounceWatermark()
+{
+	char coloredChat[256];
+	if (CFormat(coloredChat, sizeof(coloredChat),
+				"{red}[CS2AC]{default} This server is protected by {grey}karola3vax{default}'s anti-cheat."))
+	{
+		CBroadcastRecipientFilter filter;
+		ClientPrintFilter(&filter, HUD_PRINTTALK, coloredChat, "", "", "", "");
+	}
+
+	ShowCenterMessage("<span class='fontSize-l'><span color='#FF0000'>[CS2AC]</span> "
+					  "<span color='#FFFFFF'>This server is protected by </span><span color='#B0B0B0'>karola3vax</span>"
+					  "<span color='#FFFFFF'>&#39;s anti-cheat.</span></span>",
+					  false, true);
+}
+
 void utils::ResetDetectionAnnouncement()
 {
 	if (!detectionHtml.empty())
@@ -412,5 +440,7 @@ void utils::ResetDetectionAnnouncement()
 	detectionHtml.clear();
 	detectionHtmlExpires = {};
 	detectionHtmlTimerRunning = false;
+	detectionHtmlIsDetection = false;
+	detectionHtmlAlwaysVisible = false;
 	detectionHtmlBroadcasts = 0;
 }

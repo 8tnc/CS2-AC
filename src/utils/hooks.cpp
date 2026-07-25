@@ -6,6 +6,7 @@
 #include "utils/ctimer.h"
 #include "utils/gameconfig.h"
 #include "utils/interfaces.h"
+#include "utils/utils.h"
 
 #include "igameevents.h"
 #include "iserver.h"
@@ -32,6 +33,8 @@ namespace
 	};
 
 	std::vector<PendingGameEvent> pendingGameEvents;
+	constexpr unsigned watermarkRoundInterval = 6;
+	unsigned completedRounds {};
 	bool AddTeleportHook(MovementPlayer *player);
 
 	bool IsConsumedEvent(IGameEvent *event)
@@ -42,7 +45,7 @@ namespace
 		}
 		const char *name = event->GetName();
 		return CS2AC_STREQ(name, "weapon_fire") || CS2AC_STREQ(name, "bullet_impact") || CS2AC_STREQ(name, "player_hurt")
-			   || CS2AC_STREQ(name, "player_death") || CS2AC_STREQ(name, "player_spawn");
+			   || CS2AC_STREQ(name, "player_death") || CS2AC_STREQ(name, "player_spawn") || CS2AC_STREQ(name, "round_end");
 	}
 
 	MovementPlayer *ResolveEventPlayer(IGameEvent *event)
@@ -88,6 +91,10 @@ namespace
 		}
 		if (pending.event)
 		{
+			if (CS2AC_STREQ(pending.event->GetName(), "round_end") && ++completedRounds % watermarkRoundInterval == 0)
+			{
+				utils::AnnounceWatermark();
+			}
 			g_CS2AC.OnGameEvent(pending.event, pending.player);
 			if (CS2AC_STREQ(pending.event->GetName(), "player_spawn") && pending.player)
 			{
@@ -245,6 +252,7 @@ void hooks::HookActivePlayers()
 
 void hooks::ResetMap()
 {
+	completedRounds = 0;
 	for (i32 slot = 0; slot < MAXPLAYERS; ++slot)
 	{
 		RemoveTeleportHook(CPlayerSlot(slot));

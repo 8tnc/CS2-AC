@@ -21,6 +21,7 @@ CS2AC catches common CS2 cheats and exploits from the server side. It watches ai
 - **Works with your admin plugin:** CS2AC sends the ban or kick command you choose.
 - **Easy to follow:** detections appear in chat, on screen, in the server console, and optionally in Discord.
 - **Safe whitelist:** whitelisted players can still be detected, but they are never punished.
+- **Visible credit:** every six completed rounds, CS2AC reminds players who made the anti-cheat protecting the server.
 
 ## What it detects
 
