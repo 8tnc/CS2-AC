@@ -9,8 +9,8 @@ namespace
 {
 	constexpr auto scanInterval = std::chrono::seconds(10);
 
-	// This conservative list excludes client_disconnect and local_player_team because normal clients use them.
-	constexpr std::array<const char *, 136> blacklistedEvents = {
+	// Keep normal client and game-instructor subscriptions out of this list.
+	constexpr std::array<const char *, 118> blacklistedEvents = {
 		"gameui_hidden",
 		"player_chat",
 		"player_score",
@@ -25,9 +25,6 @@ namespace
 		"ugc_file_download_start",
 		"dm_bonus_weapon_start",
 		"survival_announce_phase",
-		"entity_visible",
-		"instructor_server_hint_create",
-		"instructor_server_hint_stop",
 		"reset_game_titledata",
 		"vote_ended",
 		"vote_started",
@@ -41,29 +38,18 @@ namespace
 		"door_closed",
 		"door_break",
 		"bullet_damage",
-		"bomb_abortplant",
-		"hostage_stops_following",
 		"hostage_call_for_help",
 		"vip_escaped",
 		"vip_killed",
 		"silencer_detach",
 		"inspect_weapon",
-		"weapon_zoom_rifle",
 		"player_spawned",
 		"item_pickup_slerp",
 		"item_pickup_failed",
-		"item_equip",
-		"enter_buyzone",
-		"exit_buyzone",
-		"buytime_ended",
-		"enter_bombzone",
-		"exit_bombzone",
 		"enter_rescue_zone",
 		"exit_rescue_zone",
 		"silencer_off",
 		"silencer_on",
-		"buymenu_open",
-		"buymenu_close",
 		"round_poststart",
 		"tagrenade_detonate",
 		"inferno_extinguish",
@@ -116,7 +102,6 @@ namespace
 		"hltv_rank_entity",
 		"demo_stop",
 		"map_shutdown",
-		"map_transition",
 		"hostname_changed",
 		"game_message",
 		"round_start_pre_entity",
@@ -131,8 +116,6 @@ namespace
 		"achievement_event",
 		"achievement_write_failed",
 		"bonus_updated",
-		"gameinstructor_draw",
-		"gameinstructor_nodraw",
 		"flare_ignite_npc",
 		"helicopter_grenade_punt_miss",
 		"physgun_pickup",
@@ -144,12 +127,11 @@ namespace
 		"gc_connected",
 		"instructor_start_lesson",
 		"instructor_close_lesson",
-		"set_instructor_group_enabled",
 		"clientside_lesson_closed",
 		"dynamic_shadow_light_changed",
 	};
 
-	static_assert(blacklistedEvents.size() == 136, "The DLL Injection event list must contain 136 entries.");
+	static_assert(blacklistedEvents.size() == 118, "The DLL Injection event list must contain 118 entries.");
 } // namespace
 
 namespace detection
