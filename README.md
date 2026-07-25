@@ -2,7 +2,7 @@
 
 # CS2AC
 
-### Server-side anti-cheat for Counter-Strike 2 community servers
+### A server-side anti-cheat for Counter-Strike 2
 
 [![Build](https://img.shields.io/github/actions/workflow/status/karola3vax/CS2AC/build.yml?branch=main&style=for-the-badge&label=build)](https://github.com/karola3vax/CS2AC/actions/workflows/build.yml) [![Version](https://img.shields.io/badge/version-1.0.0-blue?style=for-the-badge)](https://github.com/karola3vax/CS2AC) [![Detectors](https://img.shields.io/badge/detectors-17-red?style=for-the-badge)](#what-it-detects) [![License](https://img.shields.io/badge/license-AGPL--3.0-green?style=for-the-badge)](LICENSE)
 
@@ -12,27 +12,28 @@
 
 </div>
 
-CS2AC watches the commands and gameplay that reach your Counter-Strike 2 server for behavior a normal client should not produce. When it confirms a detection, it can warn everyone in chat and at the center of the screen, send a detailed Discord report, and pass the punishment to your existing administrator plugin.
+CS2AC catches common CS2 cheats and exploits from the server side. It watches aim, movement, shots, player settings, and inputs, then announces confirmed detections in chat and on screen. It can also send a Discord report and run your own ban or kick command.
 
-- **Everything runs on your server:** players install nothing.
-- **Every detector is optional:** the included configuration keeps control in the server owner's hands.
-- **Punishments are yours:** CS2AC runs the command you configure instead of tying you to one admin system.
-- **Whitelisted players stay visible:** their detections are still announced and reported, but no punishment command is sent.
+- **No client download:** everything runs on the game server.
+- **Ready out of the box:** all detectors are enabled by default.
+- **Works with your admin plugin:** CS2AC sends the ban or kick command you choose.
+- **Easy to follow:** detections appear in chat, on screen, in the server console, and optionally in Discord.
+- **Safe whitelist:** whitelisted players can still be detected, but they are never punished.
 
 ## What it detects
 
 All 17 detectors are enabled by default.
 
-| Aim and combat | Movement | Client and input |
+| Aim cheats | Movement cheats | Exploits and other cheats |
 | --- | --- | --- |
-| **Aimbot** — damaging visible aim snaps | **Autostrafe** — automated air strafing | **DLL Injection** — suspicious client event subscriptions |
-| **Aimlock** — unnaturally precise target tracking | **Bhop** — automated bunny hopping | **Desubticking** — commands with normal subtick timing removed |
-| **Silentaim** — bullets that disagree with visible aim | **Hyperscroll** — automated jump-input frequency | **Doubletap** — impossible rapid fire |
-| **Inhuman Accuracy** — sustained near-perfect results | **Nulls** — automated opposite-direction input timing | **Invalid CVar** — unsafe or manipulated client settings |
-| **Irregular Behavior** — repeated difficult airborne or unscoped results |  | **Invalid Input** — malformed player commands |
-|  |  | **Antiaim** — impossible or manipulated view angles |
-|  |  | **Namechanger** — repeated rapid name changes |
-|  |  | **Subtick Spam** — an impossible number of subtick inputs |
+| **Aimbot** - blatant snap-to-target shots | **Autostrafe** - scripted air strafing | **DLL Injection** - unusual game-event listeners used by injected cheats |
+| **Aimlock** - tracking an enemy too perfectly for too long | **Bhop** - repeated frame-perfect bunny hops | **Desubticking** - removing the normal timing from subtick inputs |
+| **Silentaim** - shots landing far away from the player's visible aim | **Hyperscroll** - jump inputs faster than normal scrolling | **Doubletap** - firing twice faster than the weapon allows |
+| **Inhuman Accuracy** - keeping unrealistically high accuracy over many shots | **Nulls** - perfectly timed left/right movement normally produced by scripts | **Invalid CVar** - forbidden or impossible client settings |
+| **Irregular Behavior** - too many unlikely airborne or no-scope results |  | **Invalid Input** - broken or impossible player commands |
+|  |  | **Antiaim** - impossible pitch, roll, spinning, or jittering view angles |
+|  |  | **Namechanger** - rapidly spamming name changes |
+|  |  | **Subtick Spam** - packing too many inputs into one command |
 
 ## What a detection looks like
 
@@ -40,13 +41,13 @@ All 17 detectors are enabled by default.
 [CS2AC] detected AIMBOT on Player and punished.
 ```
 
-The public announcement uses a red CS2AC prefix, a lime detection name, a grey player name, and white sentence text. The center alert repeats briefly so it cannot disappear between client UI updates.
+Everyone sees the detection in chat and through a five-second center-screen alert. The same result is written to the server console, so the server owner is never left guessing what happened.
 
 <!-- Add docs/announcements.gif here when the original CS2AC announcement demonstration is ready.
 <img src="docs/announcements.gif" width="800" alt="CS2AC showing the same detection in chat and through its center-screen alert">
 -->
 
-Discord reports include the player, SteamID64, detection, collected evidence, punishment result, server, map, address, and Steam avatar when one is available.
+Discord reports show who was detected, what CS2AC found, what punishment was sent, and where it happened. They also include the player's SteamID64 and Steam avatar when available.
 
 <!-- Add docs/webhook.gif here when the original CS2AC Discord report demonstration is ready.
 <img src="docs/webhook.gif" width="800" alt="CS2AC sending a detailed detection report to Discord">
@@ -55,9 +56,9 @@ Discord reports include the player, SteamID64, detection, collected evidence, pu
 ## FAQ
 
 <details>
-<summary><strong>Does anything run on the player's computer?</strong></summary>
+<summary><strong>Do players need to install anything?</strong></summary>
 
-No. CS2AC is a Metamod:Source plugin that runs inside the dedicated server. Players join normally and download no anti-cheat client.
+No. Players join like normal. CS2AC runs only on your dedicated server.
 
 </details>
 
@@ -69,34 +70,34 @@ No. You need control of a community or dedicated server running Metamod:Source.
 </details>
 
 <details>
-<summary><strong>Does CS2AC ban players by itself?</strong></summary>
+<summary><strong>Does it work with CS2-SimpleAdmin or another admin plugin?</strong></summary>
 
-CS2AC decides when to act, then sends the console command configured by the server owner. The defaults use CS2-SimpleAdmin, but any administrator plugin with a suitable command can be used.
+Yes. The default commands are made for CS2-SimpleAdmin. If you use something else, replace them with that plugin's ban and kick commands in `cs2ac.cfg`.
 
 </details>
 
 <details>
 <summary><strong>Which detections ban and which only kick?</strong></summary>
 
-Desubticking, Nulls, and Subtick Spam use the configured kick command. The other detections use the configured permanent-ban command. Emptying either command disables that punishment type without hiding the detection.
+Desubticking, Nulls, and Subtick Spam kick by default. The other detections permanently ban by default. You can change or disable either command without turning off detection messages.
 
 </details>
 
 <details>
 <summary><strong>What happens to whitelisted players?</strong></summary>
 
-Their detections still appear in chat, on screen, and in Discord. CS2AC clearly says that the player is whitelisted and does not send a punishment command.
+They are still detected and shown in chat, on screen, and in Discord, but CS2AC does not send a ban or kick command.
 
 </details>
 
 <details>
 <summary><strong>Can CS2AC catch every cheat?</strong></summary>
 
-No server-side anti-cheat can see everything happening inside a player's computer. CS2AC judges the commands, settings, event subscriptions, shots, and movement visible to the server. It deliberately waits for detector-specific evidence instead of treating every unusual play as cheating.
+No. A server-side plugin cannot see everything running on a player's PC. CS2AC catches the cheating behavior that reaches the server and waits for enough evidence before acting.
 
 </details>
 
-## Quickstart
+## Installation
 
 1. Install [Metamod:Source](https://www.sourcemm.net/) 2.x on a Windows x64 or Linux x64 CS2 dedicated server.
 2. Download the matching CS2AC package from [GitHub Releases](https://github.com/karola3vax/CS2AC/releases).
@@ -104,26 +105,26 @@ No server-side anti-cheat can see everything happening inside a player's compute
 4. Edit `game/csgo/cfg/cs2ac.cfg`.
 5. Start the server and run `meta list`, then `cs2ac_status`.
 
-CS2AC loads its configuration automatically when the plugin starts and whenever a map begins.
+CS2AC loads `cs2ac.cfg` when the plugin starts and again on every map change.
 
 ## Configuration
 
-The included [`cs2ac.cfg`](cfg/cs2ac.cfg) explains every setting in plain language. These are the settings most server owners will use:
+The included [`cs2ac.cfg`](cfg/cs2ac.cfg) explains every option. These are the main ones:
 
 | Setting | Default | Meaning |
 | --- | --- | --- |
-| `cs2ac_enabled` | `1` | Turn all detection on or off. |
-| `cs2ac_whitelist` | empty | Comma-separated SteamID64s that may be detected but never punished. |
-| `cs2ac_*_enabled` | `1` | Turn one detector on or off. |
-| `cs2ac_chat_announcements` | `1` | Show public detection messages in chat. |
-| `cs2ac_center_announcements` | `1` | Show the center-screen detection alert. |
-| `cs2ac_punishment_command` | `css_addban ...` | Run this command for permanent-ban detections. |
-| `cs2ac_kick_command` | `css_kick ...` | Run this command for kick-only detections. |
-| `cs2ac_webhook_url` | empty | Send detection reports to this Discord webhook. |
-| `cs2ac_webhook_role_id` | empty | Mention this Discord role in every report. |
-| `cs2ac_webhook_server_address` | automatic | Override the public server address shown in reports. |
-| `cs2ac_webhook_logo_url` | empty | Set the Discord branding and fallback avatar. |
-| `cs2ac_allow_sv_cheats_testing` | `0` | Keep detectors active during deliberate local testing with `sv_cheats 1`. |
+| `cs2ac_enabled` | `1` | Turn CS2AC on or off. |
+| `cs2ac_whitelist` | empty | SteamID64s that CS2AC must never punish. |
+| `cs2ac_*_enabled` | `1` | Turn a specific detector on or off. |
+| `cs2ac_chat_announcements` | `1` | Announce detections in public chat. |
+| `cs2ac_center_announcements` | `1` | Show detections at the center of the screen. |
+| `cs2ac_punishment_command` | `css_addban ...` | Command used for permanent bans. |
+| `cs2ac_kick_command` | `css_kick ...` | Command used for kicks. |
+| `cs2ac_webhook_url` | empty | Discord webhook that receives detection reports. |
+| `cs2ac_webhook_role_id` | empty | Discord role to mention when someone is detected. |
+| `cs2ac_webhook_server_address` | automatic | Server address shown in Discord reports. |
+| `cs2ac_webhook_logo_url` | empty | Logo and fallback player image used in Discord. |
+| `cs2ac_allow_sv_cheats_testing` | `0` | Let you test detectors locally with `sv_cheats 1`. Keep this off on a public server. |
 
 Punishment commands support `{steamid64}`, `{userid}`, and `{detection}`:
 
@@ -145,26 +146,26 @@ cs2ac_whitelist "76561198000000001,76561198000000002"
 3. Run `cs2ac_reload`.
 4. Run `cs2ac_webhook_test`.
 
-Keep the webhook URL private. If Discord returns an error, CS2AC disables further webhook attempts until the configuration is reloaded so a broken endpoint cannot keep delaying the server.
+Keep the webhook URL private. If Discord returns an error, CS2AC pauses webhook reports until you fix the setting and run `cs2ac_reload`.
 
 ## Administrator commands
 
 | Command | What it does |
 | --- | --- |
-| `cs2ac_status` | Show plugin, player, detector, announcement, punishment, and webhook status. |
-| `cs2ac_help` | List the administrator commands. |
-| `cs2ac_reload` | Reload and validate `cs2ac.cfg`. |
-| `cs2ac_check_config` | Check the current settings without changing them. |
-| `cs2ac_test_announcement` | Show a harmless chat and center-screen test. |
-| `cs2ac_webhook_test` | Send a harmless Discord test report. |
+| `cs2ac_status` | Show whether CS2AC and its main features are working. |
+| `cs2ac_help` | List these commands in the server console. |
+| `cs2ac_reload` | Reload `cs2ac.cfg`. |
+| `cs2ac_check_config` | Check the config for mistakes. |
+| `cs2ac_test_announcement` | Test the chat and center-screen message without detecting anyone. |
+| `cs2ac_webhook_test` | Send a test report to Discord. |
 
-## Honest limits
+## Good to know
 
-- CS2AC does not inspect client memory or files. The DLL Injection detector infers suspicious event subscriptions visible to the server.
-- An administrator plugin is required if you want the configured kick and ban commands to do anything.
-- Uncertain or incomplete evidence is rejected, which is safer but can allow some cheating to pass without a detection.
-- Valve updates can change private engine details. Install a current build and check `cs2ac_status` after server updates.
-- Debug settings are intended for short troubleshooting sessions and remain off by default.
+- CS2AC cannot scan a player's PC, memory, or files. DLL Injection looks for suspicious game-event listeners exposed to the server.
+- You need an admin plugin such as CS2-SimpleAdmin for the default ban and kick commands to work.
+- CS2AC ignores incomplete evidence instead of guessing. That lowers false bans, but it also means no anti-cheat can promise to catch everyone.
+- Valve updates can break server plugins. Keep CS2AC and Metamod:Source updated, then run `cs2ac_status` after a game update.
+- Debug messages are off by default and should only be enabled while troubleshooting.
 
 ## Building
 
