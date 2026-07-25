@@ -475,7 +475,7 @@ namespace detection
 	struct TriggerbotSample
 	{
 		int serverTick {-1};
-		int enterTick {-1};
+		int contactTick {-1};
 		float distance {};
 		float aimDot {-1.0f};
 		bool valid {};
@@ -488,6 +488,7 @@ namespace detection
 	{
 		std::array<TriggerbotSample, 3> samples;
 		std::uint16_t spottedHistory {};
+		int spottedSamples {};
 		int lastServerTick {-1};
 	};
 
@@ -497,6 +498,11 @@ namespace detection
 		int serverTick {-1};
 		QAngle visibleAngles;
 		Vector eyePosition;
+		int targetIndex {-1};
+		float reactionMilliseconds {};
+		float aimError {};
+		bool evaluated {};
+		bool eligible {};
 	};
 
 	struct TriggerbotPlayerData
@@ -504,11 +510,14 @@ namespace detection
 		std::array<TriggerbotTargetData, MAXPLAYERS + 1> targets;
 		std::deque<TriggerbotPendingShot> pending;
 		std::deque<Clock::time_point> evidence;
+		QAngle heldAim;
+		int heldSinceTick {-1};
 		int lastServerTick {-1};
 		int team {};
+		bool hasHeldAim {};
 	};
 
-	// Detects repeated shots fired almost immediately after a visible target enters the crosshair.
+	// Detects repeated damaging shots fired immediately as a previously unseen target crosses a held angle.
 	class TriggerbotModule
 	{
 	public:
@@ -517,10 +526,11 @@ namespace detection
 		void Reset();
 		void OnGameFrame(int currentTick);
 		void OnWeaponFire(MovementPlayer *player, ShotRecord &shot);
+		void OnPlayerHurt(MovementPlayer *attacker, MovementPlayer *victim, ShotRecord &shot);
 		void OnClientDisconnect(MovementPlayer *player);
 
 	private:
-		bool EvaluateShot(MovementPlayer *player, TriggerbotPlayerData &data, const TriggerbotPendingShot &shot);
+		bool EvaluateShot(MovementPlayer *player, TriggerbotPlayerData &data, TriggerbotPendingShot &shot);
 
 		AnnounceCallback announce {};
 		ShotCorrelator *shots {};

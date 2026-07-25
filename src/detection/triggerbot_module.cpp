@@ -21,7 +21,9 @@ namespace
 {
 	constexpr float playerHalfWidth = 16.0f;
 	constexpr float maximumReactionMilliseconds = 90.0f;
+	constexpr float maximumHeldAimDrift = 0.5f;
 	constexpr int detectionThreshold = 5;
+	constexpr int historyTicks = 16;
 	constexpr int pendingLifetimeTicks = 2;
 	constexpr size_t pendingLimit = 8;
 	constexpr auto evidenceWindow = std::chrono::minutes(5);
@@ -29,6 +31,7 @@ namespace
 
 	static_assert(ENGINE_FIXED_TICK_INTERVAL * 5.0f * 1000.0f < maximumReactionMilliseconds);
 	static_assert(ENGINE_FIXED_TICK_INTERVAL * 6.0f * 1000.0f >= maximumReactionMilliseconds);
+	static_assert(historyTicks == sizeof(std::uint16_t) * 8);
 
 	struct ConeMatch
 	{
@@ -46,8 +49,11 @@ namespace
 	{
 		data.targets = {};
 		data.pending.clear();
+		data.heldAim = {};
+		data.heldSinceTick = -1;
 		data.lastServerTick = -1;
 		data.team = CS_TEAM_NONE;
+		data.hasHeldAim = false;
 	}
 
 	const detection::TriggerbotSample *FindSample(const detection::TriggerbotTargetData &target, int serverTick)
@@ -162,6 +168,13 @@ namespace detection
 				continue;
 			}
 			const Vector forward = AimForward(view);
+			if (!data.hasHeldAim || AngularDistance(data.heldAim, view) > maximumHeldAimDrift)
+			{
+				data.heldAim = view;
+				data.heldSinceTick = currentTick;
+				data.hasHeldAim = true;
+			}
+			const bool heldAngle = static_cast<std::int64_t>(currentTick) - data.heldSinceTick >= historyTicks;
 
 			// The direct player-pair scan is bounded by the server's 64-player limit.
 			for (int targetIndex = 1; targetIndex <= MAXPLAYERS; ++targetIndex)
@@ -185,30 +198,37 @@ namespace detection
 				}
 
 				const bool spotted = targetPawn->m_entitySpottedState().m_bSpottedByMask().IsBitSet(observerSlot);
+				const bool newlyVisible = targetData.spottedSamples >= historyTicks && targetData.spottedHistory == 0 && spotted;
 				targetData.spottedHistory = static_cast<std::uint16_t>((targetData.spottedHistory << 1) | static_cast<std::uint16_t>(spotted));
+				targetData.spottedSamples = (std::min)(targetData.spottedSamples + 1, historyTicks);
 				targetData.lastServerTick = currentTick;
 				const bool visible = targetData.spottedHistory != 0;
 				const ConeMatch cone = MatchCone(observer.eyePosition, forward, target.origin);
 				const bool inside = target.alive && visible && cone.inside;
-				int enterTick = -1;
-				if (inside && previous)
+				int contactTick = -1;
+				if (newlyVisible && inside && heldAngle)
 				{
-					enterTick = previous->inside ? previous->enterTick : currentTick;
+					contactTick = currentTick;
+				}
+				else if (inside && previous && previous->contactTick >= 0
+						 && static_cast<std::int64_t>(currentTick) - previous->contactTick <= 5)
+				{
+					contactTick = previous->contactTick;
 				}
 
 				auto &sample = targetData.samples[static_cast<unsigned int>(currentTick) % targetData.samples.size()];
-				sample = {currentTick, enterTick, cone.distance, cone.dot, true, target.alive, visible, inside};
-				if (inside && (!previous || !previous->inside))
+				sample = {currentTick, contactTick, cone.distance, cone.dot, true, target.alive, visible, inside};
+				if (contactTick == currentTick)
 				{
-					TRIGGERBOT_DEBUG("%s entered target %d at tick %d: distance %.1f, error %.3f, cone %.3f, visible history 0x%04x.\n",
-									 observerPlayer->GetName(), targetIndex, currentTick, cone.distance, ToDegrees(cone.dot),
-									 ConeDegrees(cone.distance), targetData.spottedHistory);
+					TRIGGERBOT_DEBUG("%s held a %.3f degree angle as target %d became visible at tick %d: distance %.1f, error %.3f, cone %.3f.\n",
+									 observerPlayer->GetName(), maximumHeldAimDrift, targetIndex, currentTick, cone.distance,
+									 ToDegrees(cone.dot), ConeDegrees(cone.distance));
 				}
 			}
 
 			for (auto pending = data.pending.begin(); pending != data.pending.end();)
 			{
-				if (EvaluateShot(observerPlayer, data, *pending)
+				if ((!pending->evaluated && EvaluateShot(observerPlayer, data, *pending) && !pending->eligible)
 					|| static_cast<std::int64_t>(currentTick) - pending->serverTick > pendingLifetimeTicks)
 				{
 					pending = data.pending.erase(pending);
@@ -228,24 +248,25 @@ namespace detection
 		{
 			return;
 		}
-		shot.triggerbotConsumed = true;
 		TriggerbotPendingShot pending {shot.id, shot.serverTick, shot.visibleAngles, shot.eyePosition};
 		auto &data = playerData[player->index];
-		if (EvaluateShot(player, data, pending))
+		if (EvaluateShot(player, data, pending) && !pending.eligible)
 		{
+			shot.triggerbotConsumed = true;
 			return;
 		}
-		data.pending.push_back(pending);
+		data.pending.push_back(std::move(pending));
 		while (data.pending.size() > pendingLimit)
 		{
 			data.pending.pop_front();
 		}
 	}
 
-	bool TriggerbotModule::EvaluateShot(MovementPlayer *player, TriggerbotPlayerData &data, const TriggerbotPendingShot &shot)
+	bool TriggerbotModule::EvaluateShot(MovementPlayer *player, TriggerbotPlayerData &data, TriggerbotPendingShot &shot)
 	{
 		if (!shots)
 		{
+			shot.evaluated = true;
 			return true;
 		}
 		const PositionFrame *frame = shots->FindFrame(shot.serverTick);
@@ -253,6 +274,7 @@ namespace detection
 		{
 			return false;
 		}
+		shot.evaluated = true;
 		const auto &observer = frame->players[player->index];
 		if (!observer.valid || !observer.alive || observer.teleported || !IsPlayingTeam(observer.team))
 		{
@@ -261,7 +283,7 @@ namespace detection
 
 		const Vector forward = AimForward(shot.visibleAngles);
 		int matchedTarget = -1;
-		int enterTick = -1;
+		int contactTick = -1;
 		ConeMatch matchedCone;
 		for (int targetIndex = 1; targetIndex <= MAXPLAYERS; ++targetIndex)
 		{
@@ -269,7 +291,8 @@ namespace detection
 			const auto &targetData = data.targets[targetIndex];
 			const TriggerbotSample *current = FindSample(targetData, shot.serverTick);
 			const TriggerbotSample *previous = FindSample(targetData, shot.serverTick - 1);
-			if (targetIndex == player->index || !current || !current->valid || !current->visible || !previous || !previous->valid || !previous->alive
+			if (targetIndex == player->index || !current || !current->valid || !current->inside || current->contactTick < 0 || !previous
+				|| !previous->valid || !previous->alive
 				|| !target.valid || target.teleported || !IsPlayingTeam(target.team) || target.team == observer.team || !IsFinite(target.origin))
 			{
 				continue;
@@ -288,18 +311,16 @@ namespace detection
 			}
 			matchedTarget = targetIndex;
 			matchedCone = cone;
-			enterTick = current->inside && current->enterTick >= 0
-							? current->enterTick
-							: (previous->inside && previous->enterTick >= 0 ? previous->enterTick : shot.serverTick);
+			contactTick = current->contactTick;
 		}
 
 		if (matchedTarget == -1)
 		{
-			TRIGGERBOT_DEBUG("%s shot %llu rejected because no uniquely visible target was inside the dynamic cone.\n", player->GetName(),
+			TRIGGERBOT_DEBUG("%s shot %llu rejected because it did not follow a fresh target appearance on a held angle.\n", player->GetName(),
 							 static_cast<unsigned long long>(shot.shotId));
 			return true;
 		}
-		const std::int64_t reactionTicks = static_cast<std::int64_t>(shot.serverTick) - enterTick;
+		const std::int64_t reactionTicks = static_cast<std::int64_t>(shot.serverTick) - contactTick;
 		const float reactionMilliseconds = static_cast<float>(reactionTicks) * ENGINE_FIXED_TICK_INTERVAL * 1000.0f;
 		if (reactionTicks < 0 || reactionMilliseconds >= maximumReactionMilliseconds)
 		{
@@ -309,6 +330,51 @@ namespace detection
 			return true;
 		}
 
+		shot.targetIndex = matchedTarget;
+		shot.reactionMilliseconds = reactionMilliseconds;
+		shot.aimError = ToDegrees(matchedCone.dot);
+		shot.eligible = true;
+		TRIGGERBOT_DEBUG("%s shot %llu is waiting for damage on target %d: %.3f degree error, %.3f degree cone, %.3f ms.\n",
+						 player->GetName(), static_cast<unsigned long long>(shot.shotId), matchedTarget, shot.aimError,
+						 ConeDegrees(matchedCone.distance), reactionMilliseconds);
+		return true;
+	}
+
+	void TriggerbotModule::OnPlayerHurt(MovementPlayer *attacker, MovementPlayer *victim, ShotRecord &shot)
+	{
+		if (!IsEligibleHuman(attacker) || !victim || attacker == victim || shot.playerIndex != attacker->index || shot.triggerbotConsumed)
+		{
+			return;
+		}
+		shot.triggerbotConsumed = true;
+		auto &data = playerData[attacker->index];
+		auto pending = std::find_if(data.pending.begin(), data.pending.end(),
+									[&](const TriggerbotPendingShot &candidate)
+									{
+										return candidate.shotId == shot.id;
+									});
+		if (pending == data.pending.end())
+		{
+			TRIGGERBOT_DEBUG("%s damaging shot %llu rejected because it had no held-angle candidate.\n", attacker->GetName(),
+							 static_cast<unsigned long long>(shot.id));
+			return;
+		}
+		if (!pending->evaluated && !EvaluateShot(attacker, data, *pending))
+		{
+			TRIGGERBOT_DEBUG("%s damaging shot %llu rejected because its historical frame was unavailable.\n", attacker->GetName(),
+							 static_cast<unsigned long long>(shot.id));
+			data.pending.erase(pending);
+			return;
+		}
+		const TriggerbotPendingShot candidate = *pending;
+		data.pending.erase(pending);
+		if (!candidate.eligible || candidate.targetIndex != victim->index)
+		{
+			TRIGGERBOT_DEBUG("%s damaging shot %llu rejected because target %d did not match hurt victim %d.\n", attacker->GetName(),
+							 static_cast<unsigned long long>(shot.id), candidate.targetIndex, victim->index);
+			return;
+		}
+
 		auto &evidence = data.evidence;
 		const auto now = Clock::now();
 		while (!evidence.empty() && now - evidence.front() >= evidenceWindow)
@@ -316,20 +382,19 @@ namespace detection
 			evidence.pop_front();
 		}
 		evidence.push_back(now);
-		TRIGGERBOT_DEBUG("%s shot %llu added evidence %d/%d on target %d: %.3f degree error, %.3f degree cone, %.3f ms.\n", player->GetName(),
-						 static_cast<unsigned long long>(shot.shotId), static_cast<int>(evidence.size()), detectionThreshold, matchedTarget,
-						 ToDegrees(matchedCone.dot), ConeDegrees(matchedCone.distance), reactionMilliseconds);
+		TRIGGERBOT_DEBUG("%s damaging shot %llu added evidence %d/%d on target %d: %.3f degree error, %.3f ms.\n", attacker->GetName(),
+						 static_cast<unsigned long long>(shot.id), static_cast<int>(evidence.size()), detectionThreshold,
+						 candidate.targetIndex, candidate.aimError, candidate.reactionMilliseconds);
 		if (evidence.size() >= detectionThreshold)
 		{
 			if (announce)
 			{
-				announce("TRIGGERBOT", player,
-						 tfm::format("%zu fast target-contact shots reached the threshold; latest reaction %.3f ms with %.3f degree aim error.",
-									 evidence.size(), reactionMilliseconds, ToDegrees(matchedCone.dot)));
+				announce("TRIGGERBOT", attacker,
+						 tfm::format("%zu damaging held-angle shots followed fresh target appearances; latest response %.3f ms with %.3f degree aim error.",
+									 evidence.size(), candidate.reactionMilliseconds, candidate.aimError));
 			}
 			evidence.clear();
 		}
-		return true;
 	}
 
 	void TriggerbotModule::OnClientDisconnect(MovementPlayer *player)

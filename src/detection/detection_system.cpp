@@ -684,6 +684,10 @@ namespace detection
 				{
 					aimbot.OnPlayerHurt(attacker, victim, *shot);
 				}
+				if (settings::IsDetectionEnabled(DetectionType::Triggerbot))
+				{
+					triggerbot.OnPlayerHurt(attacker, victim, *shot);
+				}
 			}
 		}
 		else if (CS2AC_STREQ(event->GetName(), "player_death"))
