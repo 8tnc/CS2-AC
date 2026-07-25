@@ -20,17 +20,18 @@ namespace
 {
 	constexpr int evidenceWindowSeconds = 10 * 60;
 	constexpr int minimumAttempts = 24;
-	constexpr int requiredHitsPerTwenty = 17;
+	constexpr int requiredHitsPerTwentyFour = 20;
 	constexpr float minimumDistance = 100.0f;
 	constexpr float maximumAimError = 0.5f;
-	static_assert(requiredHitsPerTwenty <= 20);
+	static_assert(requiredHitsPerTwentyFour <= 24);
 
 	bool IsAccuracyWeapon(std::string_view weapon)
 	{
 		weapon = detection::NormalizeWeapon(weapon);
 		static constexpr std::string_view weapons[] = {
-			"ak47",          "aug",   "bizon", "cz75a", "deagle", "elite", "famas", "fiveseven", "galilar", "glock", "hkp2000", "m4a1",
-			"m4a1_silencer", "mac10", "mp5sd", "mp7",   "mp9",    "p250",  "p90",   "revolver",  "sg556",   "tec9",  "ump45",   "usp_silencer",
+			"ak47", "aug", "awp", "bizon", "cz75a", "deagle", "elite", "famas", "fiveseven", "g3sg1", "galilar", "glock", "hkp2000", "m4a1",
+			"m4a1_silencer", "mac10", "mp5sd", "mp7", "mp9", "p250", "p90", "revolver", "scar20", "sg556", "ssg08", "tec9", "ump45",
+			"usp_silencer",
 		};
 		return std::find(std::begin(weapons), std::end(weapons), weapon) != std::end(weapons);
 	}
@@ -180,7 +181,7 @@ namespace detection
 		}
 		ACCURACY_DEBUG("%s shot %llu counted at %.3f degrees: %d/%d hits.\n", player->GetName(), static_cast<unsigned long long>(shot.id),
 					   matchedError, hits, attempts);
-		if (attempts < minimumAttempts || hits * 20 < attempts * requiredHitsPerTwenty)
+		if (attempts < minimumAttempts || hits * 24 < attempts * requiredHitsPerTwentyFour)
 		{
 			return;
 		}
