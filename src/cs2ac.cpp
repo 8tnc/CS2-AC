@@ -30,7 +30,7 @@ namespace
 		"AIMBOT",          "AIMLOCK",       "ANTIAIM",        "AUTOSTRAFE", "BHOP",         "DLL INJECTION",
 		"DESUBTICKING",    "DOUBLETAP",     "HYPERSCROLL",    "INHUMAN ACCURACY",          "INVALID CVAR",
 		"INVALID INPUT",   "IRREGULAR BEHAVIOR",              "NAMECHANGER", "NULLS",       "SILENTAIM",
-		"SUBTICK SPAM",    "TRIGGERBOT",
+		"SUBTICK SPAM",
 	};
 	static_assert(CS2AC_ARRAYSIZE(detectionNames) == static_cast<size_t>(DetectionType::Count));
 

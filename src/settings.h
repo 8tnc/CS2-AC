@@ -22,7 +22,6 @@ enum class DetectionType : std::uint8_t
 	Nulls,
 	SilentAim,
 	SubtickSpam,
-	Triggerbot,
 	Count,
 };
 

@@ -86,7 +86,6 @@ namespace detection
 		bool silentConsumed {};
 		bool irregularConsumed {};
 		bool accuracyConsumed {};
-		bool triggerbotConsumed {};
 	};
 
 	struct ShotPlayerData
@@ -472,71 +471,6 @@ namespace detection
 		std::array<NameChangerPlayerData, MAXPLAYERS + 1> playerData;
 	};
 
-	struct TriggerbotSample
-	{
-		int serverTick {-1};
-		int contactTick {-1};
-		float distance {};
-		float aimDot {-1.0f};
-		bool valid {};
-		bool alive {};
-		bool visible {};
-		bool inside {};
-	};
-
-	struct TriggerbotTargetData
-	{
-		std::array<TriggerbotSample, 3> samples;
-		std::uint16_t spottedHistory {};
-		int spottedSamples {};
-		int lastServerTick {-1};
-	};
-
-	struct TriggerbotPendingShot
-	{
-		std::uint64_t shotId {};
-		int serverTick {-1};
-		QAngle visibleAngles;
-		Vector eyePosition;
-		int targetIndex {-1};
-		float reactionMilliseconds {};
-		float aimError {};
-		bool evaluated {};
-		bool eligible {};
-	};
-
-	struct TriggerbotPlayerData
-	{
-		std::array<TriggerbotTargetData, MAXPLAYERS + 1> targets;
-		std::deque<TriggerbotPendingShot> pending;
-		std::deque<Clock::time_point> evidence;
-		QAngle heldAim;
-		int heldSinceTick {-1};
-		int lastServerTick {-1};
-		int team {};
-		bool hasHeldAim {};
-	};
-
-	// Detects repeated damaging shots fired immediately as a previously unseen target crosses a held angle.
-	class TriggerbotModule
-	{
-	public:
-		void Load(AnnounceCallback announce, ShotCorrelator *shotCorrelator);
-		void Unload();
-		void Reset();
-		void OnGameFrame(int currentTick);
-		void OnWeaponFire(MovementPlayer *player, ShotRecord &shot);
-		void OnPlayerHurt(MovementPlayer *attacker, MovementPlayer *victim, ShotRecord &shot);
-		void OnClientDisconnect(MovementPlayer *player);
-
-	private:
-		bool EvaluateShot(MovementPlayer *player, TriggerbotPlayerData &data, TriggerbotPendingShot &shot);
-
-		AnnounceCallback announce {};
-		ShotCorrelator *shots {};
-		std::array<TriggerbotPlayerData, MAXPLAYERS + 1> playerData;
-	};
-
 	class DetectionSystem
 	{
 	public:
@@ -565,7 +499,6 @@ namespace detection
 		IrregularBehaviorModule irregularBehavior;
 		InhumanAccuracyModule inhumanAccuracy;
 		NameChangerModule nameChanger;
-		TriggerbotModule triggerbot;
 		std::uint64_t settingsMask {};
 		std::uint64_t settingsRevision {};
 	};

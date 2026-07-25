@@ -490,7 +490,6 @@ namespace detection
 		irregularBehavior.Load(announce);
 		inhumanAccuracy.Load(announce, &shots);
 		nameChanger.Load(announce);
-		triggerbot.Load(announce, &shots);
 		settingsMask = settings::GetDetectionMask();
 		settingsRevision = settings::GetRevision();
 	}
@@ -506,7 +505,6 @@ namespace detection
 		irregularBehavior.Unload();
 		inhumanAccuracy.Unload();
 		nameChanger.Unload();
-		triggerbot.Unload();
 		shots.Reset();
 		settingsMask = 0;
 		settingsRevision = 0;
@@ -523,7 +521,6 @@ namespace detection
 		irregularBehavior.Reset();
 		inhumanAccuracy.Reset();
 		nameChanger.Reset();
-		triggerbot.Reset();
 		shots.Reset();
 	}
 
@@ -615,10 +612,6 @@ namespace detection
 		{
 			inhumanAccuracy.OnGameFrame(currentTick);
 		}
-		if (settings::IsDetectionEnabled(DetectionType::Triggerbot))
-		{
-			triggerbot.OnGameFrame(currentTick);
-		}
 		if (settings::IsDetectionEnabled(DetectionType::DllInjection))
 		{
 			dllInjection.OnGameFrame();
@@ -654,10 +647,6 @@ namespace detection
 				{
 					irregularBehavior.OnWeaponFire(player, *shot);
 				}
-				if (settings::IsDetectionEnabled(DetectionType::Triggerbot))
-				{
-					triggerbot.OnWeaponFire(player, *shot);
-				}
 			}
 		}
 		else if (CS2AC_STREQ(event->GetName(), "bullet_impact"))
@@ -683,10 +672,6 @@ namespace detection
 				if (settings::IsDetectionEnabled(DetectionType::Aimbot))
 				{
 					aimbot.OnPlayerHurt(attacker, victim, *shot);
-				}
-				if (settings::IsDetectionEnabled(DetectionType::Triggerbot))
-				{
-					triggerbot.OnPlayerHurt(attacker, victim, *shot);
 				}
 			}
 		}
@@ -733,7 +718,6 @@ namespace detection
 		irregularBehavior.OnClientDisconnect(player);
 		inhumanAccuracy.OnClientDisconnect(player);
 		nameChanger.OnClientDisconnect(player);
-		triggerbot.OnClientDisconnect(player);
 		shots.OnClientDisconnect(player);
 	}
 

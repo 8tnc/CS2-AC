@@ -2,7 +2,7 @@
 
 CS2AC is a server-side anti-cheat plugin for Counter-Strike 2 and Metamod:Source. It watches player input and gameplay for clearly suspicious behavior, announces detections in chat and on screen, and can run administrator-defined punishment commands.
 
-The plugin includes 18 detectors: Aimbot, Aimlock, Antiaim, Autostrafe, Bhop, DLL Injection, Desubticking, Doubletap, Hyperscroll, Inhuman Accuracy, Invalid CVar, Invalid Input, Irregular Behavior, Namechanger, Nulls, Silentaim, Subtick Spam, and Triggerbot.
+The plugin includes 17 detectors: Aimbot, Aimlock, Antiaim, Autostrafe, Bhop, DLL Injection, Desubticking, Doubletap, Hyperscroll, Inhuman Accuracy, Invalid CVar, Invalid Input, Irregular Behavior, Namechanger, Nulls, Silentaim, and Subtick Spam.
 
 ## Requirements
 
