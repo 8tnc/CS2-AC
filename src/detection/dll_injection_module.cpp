@@ -9,8 +9,8 @@ namespace
 {
 	constexpr auto scanInterval = std::chrono::seconds(10);
 
-	// This conservative list excludes client_disconnect because normal clients use it.
-	constexpr std::array<const char *, 137> blacklistedEvents = {
+	// This conservative list excludes client_disconnect and local_player_team because normal clients use them.
+	constexpr std::array<const char *, 136> blacklistedEvents = {
 		"gameui_hidden",
 		"player_chat",
 		"player_score",
@@ -107,7 +107,6 @@ namespace
 		"bullet_flight_resolution",
 		"server_message",
 		"player_full_update",
-		"local_player_team",
 		"local_player_controller_team",
 		"local_player_pawn_changed",
 		"ragdoll_dissolved",
@@ -150,7 +149,7 @@ namespace
 		"dynamic_shadow_light_changed",
 	};
 
-	static_assert(blacklistedEvents.size() == 137, "The DLL Injection event list must contain 137 entries.");
+	static_assert(blacklistedEvents.size() == 136, "The DLL Injection event list must contain 136 entries.");
 } // namespace
 
 namespace detection
@@ -207,7 +206,7 @@ namespace detection
 				continue;
 			}
 
-			std::bitset<137> current;
+			std::bitset<136> current;
 			for (size_t eventIndex = 0; eventIndex < blacklistedEvents.size(); ++eventIndex)
 			{
 				if (!interfaces::pGameEventManager->FindListener(listener, blacklistedEvents[eventIndex]))

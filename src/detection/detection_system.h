@@ -303,7 +303,7 @@ namespace detection
 
 	private:
 		AnnounceCallback announce {};
-		std::array<std::bitset<137>, MAXPLAYERS> activeEvents;
+		std::array<std::bitset<136>, MAXPLAYERS> activeEvents;
 		Clock::time_point nextScan;
 	};
 
