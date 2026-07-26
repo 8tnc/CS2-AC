@@ -11,6 +11,7 @@ class CS2ACPlugin final : public ISmmPlugin, public IMetamodListener
 {
 public:
 	bool Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen, bool late) override;
+	void AllPluginsLoaded() override;
 	bool QueryRunning(char *error, size_t maxlen) override;
 	bool Unload(char *error, size_t maxlen) override;
 	bool Pause(char *error, size_t maxlen) override;
@@ -93,7 +94,7 @@ private:
 	void ResetRuntime();
 	void CleanupRuntime();
 	bool loaded {};
-	bool activateOnLevelInit {};
+	bool activationPending {};
 	bool convarsRegistered {};
 	bool svCheatsWatcherInstalled {};
 	bool configLoaded {};

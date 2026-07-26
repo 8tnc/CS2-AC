@@ -28,7 +28,8 @@ void MovementDetectionService::CreateInputEvents(PlayerCommand *cmd)
 	{
 		this->recentForwardBackwardEvents.clear();
 		this->recentLeftRightEvents.clear();
-		this->nullsDirty = false;
+		this->forwardBackwardNullsDirty = false;
+		this->leftRightNullsDirty = false;
 	};
 	// Ignore bots.
 	if (!cmd || !cmd->has_base() || this->player->IsFakeClient() || this->player->IsCSTV() || !this->player->IsAlive())
@@ -89,6 +90,7 @@ void MovementDetectionService::CreateInputEvents(PlayerCommand *cmd)
 			}
 		}
 		auto &events = button == IN_FORWARD || button == IN_BACK ? this->recentForwardBackwardEvents : this->recentLeftRightEvents;
+		auto &dirty = button == IN_FORWARD || button == IN_BACK ? this->forwardBackwardNullsDirty : this->leftRightNullsDirty;
 		for (auto existing = events.rbegin(); existing != events.rend(); ++existing)
 		{
 			if (existing->cmdNum != event.cmdNum || existing->fraction != event.fraction)
@@ -100,18 +102,18 @@ void MovementDetectionService::CreateInputEvents(PlayerCommand *cmd)
 				if (existing->pressed != event.pressed)
 				{
 					events.erase(std::next(existing).base());
-					this->nullsDirty = true;
+					dirty = true;
 				}
 				else
 				{
-					this->nullsDirty = this->nullsDirty || (!existing->analog && event.analog);
+					dirty = dirty || (!existing->analog && event.analog);
 					existing->analog |= event.analog;
 				}
 				return;
 			}
 		}
 		events.push_back(event);
-		this->nullsDirty = true;
+		dirty = true;
 		if (events.size() > MAX_INPUT_EVENTS)
 		{
 			events.pop_front();
@@ -305,9 +307,9 @@ void MovementDetectionService::AnalyzeNullsForAxis(const std::deque<InputEvent> 
 	{
 		return;
 	}
-	std::sort(framerates.begin(), framerates.end());
-
-	f32 medianFramerate = framerates[framerates.size() / 2];
+	auto medianFrameratePosition = framerates.begin() + framerates.size() / 2;
+	std::nth_element(framerates.begin(), medianFrameratePosition, framerates.end());
+	f32 medianFramerate = *medianFrameratePosition;
 	// The median FPS should not exceed fps_max set by players.
 	if (this->currentMaxFps != 0)
 	{
@@ -511,8 +513,9 @@ void MovementDetectionService::AnalyzeNullsForAxis(const std::deque<InputEvent> 
 	f32 underlapMedian = 0.0f;
 	if (!underlapDurations.empty())
 	{
-		std::sort(underlapDurations.begin(), underlapDurations.end());
-		underlapMedian = underlapDurations[underlapDurations.size() / 2];
+		auto underlapMedianPosition = underlapDurations.begin() + underlapDurations.size() / 2;
+		std::nth_element(underlapDurations.begin(), underlapMedianPosition, underlapDurations.end());
+		underlapMedian = *underlapMedianPosition;
 	}
 
 	u32 total = numOverlaps + numPerfect + underlapDurations.size();
@@ -568,27 +571,18 @@ void MovementDetectionService::CheckNulls()
 		this->recentForwardBackwardEvents.clear();
 		this->recentLeftRightEvents.clear();
 		this->lastNullsCmdNum = -1;
-		this->nullsDirty = false;
+		this->forwardBackwardNullsDirty = false;
+		this->leftRightNullsDirty = false;
 		return;
 	}
-	if (!this->nullsDirty)
+	if (this->forwardBackwardNullsDirty)
 	{
-		return;
+		this->forwardBackwardNullsDirty = false;
+		this->AnalyzeNullsForAxis(this->recentForwardBackwardEvents, IN_FORWARD, IN_BACK);
 	}
-	this->nullsDirty = false;
-	this->AnalyzeNullsForAxis(this->recentForwardBackwardEvents, IN_FORWARD, IN_BACK);
-	this->AnalyzeNullsForAxis(this->recentLeftRightEvents, IN_MOVELEFT, IN_MOVERIGHT);
-}
-
-void MovementDetectionService::CleanupOldInputEvents()
-{
-	// MAX_INPUT_EVENTS should be more than enough to cover recent history.
-	while (this->recentForwardBackwardEvents.size() > MAX_INPUT_EVENTS)
+	if (this->leftRightNullsDirty)
 	{
-		this->recentForwardBackwardEvents.pop_front();
-	}
-	while (this->recentLeftRightEvents.size() > MAX_INPUT_EVENTS)
-	{
-		this->recentLeftRightEvents.pop_front();
+		this->leftRightNullsDirty = false;
+		this->AnalyzeNullsForAxis(this->recentLeftRightEvents, IN_MOVELEFT, IN_MOVERIGHT);
 	}
 }

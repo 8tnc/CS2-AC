@@ -310,25 +310,44 @@ bool CS2ACPlugin::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen, b
 		{
 			return false;
 		}
+		ismm->AddListener(this, this);
 	}
 	else
 	{
-		// Network messages and game events are registered after Metamod's early Load callback.
-		activateOnLevelInit = true;
+		// The game DLL finishes registering its messages and events after this early callback.
+		activationPending = true;
 	}
-	ismm->AddListener(this, this);
 	return true;
+}
+
+void CS2ACPlugin::AllPluginsLoaded()
+{
+	if (!activationPending)
+	{
+		return;
+	}
+
+	activationPending = false;
+	char error[1024] {};
+	if (!Activate(error, sizeof(error), false))
+	{
+		activationError = error[0] ? error : "CS2AC could not finish loading after the game became ready.";
+		Msg("[CS2AC] CS2AC is not running. %s\n", activationError.c_str());
+		return;
+	}
+	g_SMAPI->AddListener(this, this);
 }
 
 bool CS2ACPlugin::QueryRunning(char *error, size_t maxlen)
 {
-	if (activationError.empty())
+	if (loaded)
 	{
 		return true;
 	}
+	const char *reason = activationError.empty() ? "CS2AC is waiting for the game to finish starting." : activationError.c_str();
 	if (error && maxlen)
 	{
-		snprintf(error, maxlen, "%s", activationError.c_str());
+		snprintf(error, maxlen, "%s", reason);
 	}
 	return false;
 }
@@ -530,16 +549,6 @@ bool CS2ACPlugin::Unpause(char *error, size_t maxlen)
 
 void CS2ACPlugin::OnLevelInit(char const *, char const *, char const *, char const *, bool, bool)
 {
-	if (activateOnLevelInit)
-	{
-		char error[1024] {};
-		activateOnLevelInit = false;
-		if (!Activate(error, sizeof(error), false))
-		{
-			activationError = error[0] ? error : "CS2AC could not finish loading when the map became ready.";
-		}
-		return;
-	}
 	if (loaded)
 	{
 		ResetRuntime();
@@ -946,18 +955,25 @@ void CS2ACPlugin::ResetRuntime()
 
 void CS2ACPlugin::CleanupRuntime()
 {
+	// Any exceptional SourceHook that survives manual cleanup must remain inert
+	// until Metamod removes all hooks owned by this plugin.
+	loaded = false;
 	if (webhook)
 	{
 		webhook->Unload();
 		delete webhook;
 		webhook = nullptr;
 	}
-	hooks::Cleanup();
+	bool sourceHooksRemoved = hooks::Cleanup();
 	utils::ResetDetectionAnnouncement();
 	RemoveAllTimers();
 	detectionSystem.Unload();
 	g_pClientCvarValue = nullptr;
-	g_ClientCvarValue.Unload();
+	sourceHooksRemoved = g_ClientCvarValue.Unload() && sourceHooksRemoved;
+	if (!sourceHooksRemoved)
+	{
+		Warning("[CS2AC] Some Metamod hooks are still attached but inert. Metamod will remove them before closing CS2AC.\n");
+	}
 	if (svCheatsWatcherInstalled)
 	{
 		MovementDetectionService::CleanupSvCheatsWatcher();
@@ -978,8 +994,7 @@ void CS2ACPlugin::CleanupRuntime()
 	punishmentLevels.fill(PunishmentLevel::None);
 	utils::Cleanup();
 	modules::Cleanup();
-	loaded = false;
-	activateOnLevelInit = false;
+	activationPending = false;
 	configLoaded = false;
 	configReloadPending = false;
 	configLoadFailed = false;

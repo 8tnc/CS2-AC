@@ -52,7 +52,8 @@ void MovementDetectionService::ResetTransientDetectionState()
 	currentMaxFps = 0.0f;
 	currentCmdNum = 0;
 	lastNullsCmdNum = -1;
-	nullsDirty = false;
+	forwardBackwardNullsDirty = false;
+	leftRightNullsDirty = false;
 	nullsFramerateBuffer.clear();
 	nullsUnderlapBuffer.clear();
 	invalidCvarLatches.clear();
@@ -90,7 +91,8 @@ void MovementDetectionService::OnSetupMove(PlayerCommand *command)
 		{
 			ClearDetectionBuffers();
 			lastNullsCmdNum = -1;
-			nullsDirty = false;
+			forwardBackwardNullsDirty = false;
+			leftRightNullsDirty = false;
 		}
 		return;
 	}
@@ -118,7 +120,6 @@ void MovementDetectionService::OnPhysicsSimulatePost()
 	if (settings::IsDetectionEnabled(DetectionType::Nulls))
 	{
 		CheckNulls();
-		CleanupOldInputEvents();
 	}
 	CheckSuspiciousSubtickCommands();
 	CheckLandingEvents();

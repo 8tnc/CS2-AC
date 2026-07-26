@@ -63,13 +63,13 @@ public:
 	std::deque<InputEvent> recentForwardBackwardEvents;
 	std::deque<InputEvent> recentLeftRightEvents;
 	i32 lastNullsCmdNum {-1};
-	bool nullsDirty {};
+	bool forwardBackwardNullsDirty {};
+	bool leftRightNullsDirty {};
 	std::vector<f32> nullsFramerateBuffer;
 	std::vector<f32> nullsUnderlapBuffer;
 	void CreateInputEvents(PlayerCommand *command);
 	void CheckNulls();
 	void AnalyzeNullsForAxis(const std::deque<InputEvent> &events, u64 button1, u64 button2);
-	void CleanupOldInputEvents();
 
 	std::deque<f32> recentJumps;
 

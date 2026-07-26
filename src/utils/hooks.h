@@ -5,7 +5,7 @@
 namespace hooks
 {
 	bool Initialize(std::vector<std::string> &missing);
-	void Cleanup();
+	bool Cleanup();
 	void HookActivePlayers();
-	void ResetMap();
+	bool ResetMap();
 } // namespace hooks

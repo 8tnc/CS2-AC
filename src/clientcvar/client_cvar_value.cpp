@@ -173,10 +173,18 @@ bool ClientCvarValue::Load(IVEngineServer2 *pEngineServer, INetworkMessages *pNe
 
 bool ClientCvarValue::Unload()
 {
+	bool removed = true;
 	if (m_iProcessRespondCvarValueID)
 	{
-		SH_REMOVE_HOOK_ID(m_iProcessRespondCvarValueID);
-		m_iProcessRespondCvarValueID = 0;
+		if (SH_REMOVE_HOOK_ID(m_iProcessRespondCvarValueID))
+		{
+			m_iProcessRespondCvarValueID = 0;
+		}
+		else
+		{
+			Warning("[CS2AC] The player-setting response hook could not be removed yet. Metamod will try again during unload.\n");
+			removed = false;
+		}
 	}
 
 	OnMapReset();
@@ -185,7 +193,7 @@ bool ClientCvarValue::Unload()
 	m_pEngineServer = nullptr;
 	m_iClientSlotOffset = -1;
 	m_iQueryCvarCookieCounter = 0;
-	return true;
+	return removed;
 }
 
 bool ClientCvarValue::OnProcessRespondCvarValue(const CNetMessagePB<CCLCMsg_RespondCvarValue> &msg)

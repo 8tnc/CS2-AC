@@ -22,7 +22,13 @@ SH_DECL_HOOK2(IGameEventManager2, FireEvent, SH_NOATTRIB, false, bool, IGameEven
 
 namespace
 {
-	CUtlVector<i32> hookIds;
+	struct HookEntry
+	{
+		i32 id;
+		const char *name;
+	};
+
+	CUtlVector<HookEntry> hookIds;
 	i32 gameFrameHookId {};
 	i32 teleportHooks[MAXPLAYERS] {};
 
@@ -72,6 +78,10 @@ namespace
 
 	bool HookFireEventBefore(IGameEvent *event, bool)
 	{
+		if (!g_CS2AC.IsLoaded())
+		{
+			RETURN_META_VALUE(MRES_IGNORED, true);
+		}
 		PendingGameEvent pending {};
 		if (IsConsumedEvent(event))
 		{
@@ -83,6 +93,10 @@ namespace
 
 	bool HookFireEventAfter(IGameEvent *, bool)
 	{
+		if (!g_CS2AC.IsLoaded())
+		{
+			RETURN_META_VALUE(MRES_IGNORED, true);
+		}
 		PendingGameEvent pending {};
 		if (!pendingGameEvents.empty())
 		{
@@ -109,6 +123,10 @@ namespace
 
 	void HookTeleport(const Vector *origin, const QAngle *angles, const Vector *velocity)
 	{
+		if (!g_CS2AC.IsLoaded())
+		{
+			RETURN_META(MRES_IGNORED);
+		}
 		auto *pawn = META_IFACEPTR(CCSPlayerPawn);
 		auto *current = g_pCS2ACPlayerManager->ToPlayer(static_cast<CBasePlayerPawn *>(pawn));
 		if (current)
@@ -118,13 +136,20 @@ namespace
 		RETURN_META(MRES_IGNORED);
 	}
 
-	void RemoveTeleportHook(CPlayerSlot slot)
+	bool RemoveTeleportHook(CPlayerSlot slot)
 	{
-		if (slot.Get() >= 0 && slot.Get() < MAXPLAYERS && teleportHooks[slot.Get()])
+		if (slot.Get() < 0 || slot.Get() >= MAXPLAYERS || !teleportHooks[slot.Get()])
 		{
-			SH_REMOVE_HOOK_ID(teleportHooks[slot.Get()]);
-			teleportHooks[slot.Get()] = 0;
+			return true;
 		}
+		if (!SH_REMOVE_HOOK_ID(teleportHooks[slot.Get()]))
+		{
+			Warning("[CS2AC] The player teleport hook for slot %d could not be removed yet. Metamod will try again during unload.\n",
+					slot.Get());
+			return false;
+		}
+		teleportHooks[slot.Get()] = 0;
+		return true;
 	}
 
 	bool AddTeleportHook(MovementPlayer *player)
@@ -133,7 +158,10 @@ namespace
 		{
 			return false;
 		}
-		RemoveTeleportHook(player->GetPlayerSlot());
+		if (!RemoveTeleportHook(player->GetPlayerSlot()))
+		{
+			return false;
+		}
 		teleportHooks[player->GetPlayerSlot().Get()] = SH_ADD_MANUALHOOK(Teleport, player->GetPlayerPawn(), SH_STATIC(HookTeleport), false);
 		if (!teleportHooks[player->GetPlayerSlot().Get()])
 		{
@@ -145,6 +173,10 @@ namespace
 
 	void HookGameFrameBefore(bool, bool, bool)
 	{
+		if (!g_CS2AC.IsLoaded())
+		{
+			RETURN_META(MRES_IGNORED);
+		}
 		if (auto *globals = g_pCS2ACUtils->GetGlobals())
 		{
 			g_CS2AC.serverGlobals = *globals;
@@ -154,6 +186,10 @@ namespace
 
 	void HookGameFrameAfter(bool simulating, bool, bool)
 	{
+		if (!g_CS2AC.IsLoaded())
+		{
+			RETURN_META(MRES_IGNORED);
+		}
 		if (auto *globals = g_pCS2ACUtils->GetGlobals())
 		{
 			g_CS2AC.serverGlobals = *globals;
@@ -166,6 +202,10 @@ namespace
 
 	void HookClientFullyConnect(CPlayerSlot slot)
 	{
+		if (!g_CS2AC.IsLoaded())
+		{
+			RETURN_META(MRES_IGNORED);
+		}
 		g_pCS2ACPlayerManager->OnClientFullyConnect(slot);
 		g_ClientCvarValue.OnClientFullyConnected(slot, g_pCS2ACPlayerManager->ToPlayer(slot)->IsFakeClient());
 		g_CS2AC.OnClientFullyConnect(slot);
@@ -174,12 +214,20 @@ namespace
 
 	void HookClientSettingsChanged(CPlayerSlot slot)
 	{
+		if (!g_CS2AC.IsLoaded())
+		{
+			RETURN_META(MRES_IGNORED);
+		}
 		g_CS2AC.OnClientSettingsChanged(slot);
 		RETURN_META(MRES_IGNORED);
 	}
 
 	void HookClientActive(CPlayerSlot slot, bool, const char *, uint64 xuid)
 	{
+		if (!g_CS2AC.IsLoaded())
+		{
+			RETURN_META(MRES_IGNORED);
+		}
 		g_pCS2ACPlayerManager->OnClientActive(slot, xuid);
 		auto *player = g_pCS2ACPlayerManager->ToPlayer(slot);
 		if (player && player->GetPlayerPawn())
@@ -191,6 +239,10 @@ namespace
 
 	void HookClientDisconnect(CPlayerSlot slot, ENetworkDisconnectionReason, const char *, uint64, const char *)
 	{
+		if (!g_CS2AC.IsLoaded())
+		{
+			RETURN_META(MRES_IGNORED);
+		}
 		RemoveTeleportHook(slot);
 		g_ClientCvarValue.OnClientDisconnect(slot);
 		g_CS2AC.OnClientDisconnect(slot);
@@ -208,7 +260,7 @@ bool hooks::Initialize(std::vector<std::string> &missing)
 	{
 		if (id)
 		{
-			hookIds.AddToTail(id);
+			hookIds.AddToTail({id, name});
 		}
 		else
 		{
@@ -250,25 +302,44 @@ void hooks::HookActivePlayers()
 	}
 }
 
-void hooks::ResetMap()
+bool hooks::ResetMap()
 {
 	completedRounds = 0;
+	bool removed = true;
 	for (i32 slot = 0; slot < MAXPLAYERS; ++slot)
 	{
-		RemoveTeleportHook(CPlayerSlot(slot));
+		removed = RemoveTeleportHook(CPlayerSlot(slot)) && removed;
 	}
+	return removed;
 }
 
-void hooks::Cleanup()
+bool hooks::Cleanup()
 {
-	ResetMap();
+	bool removed = ResetMap();
 	if (gameFrameHookId)
 	{
-		SH_REMOVE_HOOK_ID(gameFrameHookId);
-		gameFrameHookId = 0;
+		if (SH_REMOVE_HOOK_ID(gameFrameHookId))
+		{
+			gameFrameHookId = 0;
+		}
+		else
+		{
+			Warning("[CS2AC] The completed game frame hook could not be removed yet. Metamod will try again during unload.\n");
+			removed = false;
+		}
 	}
-	FOR_EACH_VEC(hookIds, i) SH_REMOVE_HOOK_ID(hookIds[i]);
-	hookIds.RemoveAll();
+	for (i32 i = hookIds.Count() - 1; i >= 0; --i)
+	{
+		if (SH_REMOVE_HOOK_ID(hookIds[i].id))
+		{
+			hookIds.Remove(i);
+		}
+		else
+		{
+			Warning("[CS2AC] The %s hook could not be removed yet. Metamod will try again during unload.\n", hookIds[i].name);
+			removed = false;
+		}
+	}
 	if (interfaces::pGameEventManager)
 	{
 		for (const auto &pending : pendingGameEvents)
@@ -280,4 +351,5 @@ void hooks::Cleanup()
 		}
 	}
 	pendingGameEvents.clear();
+	return removed;
 }

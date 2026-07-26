@@ -318,9 +318,17 @@ void MovementPlayer::RegisterLanding(const Vector &landingVelocity, bool distbug
 			if (mv->m_TouchList[i].trace.m_vHitNormal.z > normal)
 			{
 				this->landingOriginActual = mv->m_TouchList[i].trace.m_vEndPos;
-				this->landingTimeActual =
-					this->landingTime
-					- (1 - mv->m_TouchList[i].trace.m_flFraction) * g_pCS2ACUtils->GetGlobals()->frametime; // TODO: make sure this is right
+				const f32 fraction = mv->m_TouchList[i].trace.m_flFraction;
+				const f32 frameTime = g_pCS2ACUtils->GetGlobals()->frametime;
+				if (std::isfinite(fraction) && fraction >= 0.0f && fraction <= 1.0f && std::isfinite(frameTime) && frameTime >= 0.0f)
+				{
+					// landingTime is the end of this movement interval. Subtract its unused fraction to recover the collision time.
+					this->landingTimeActual = this->landingTime - (1.0f - fraction) * frameTime;
+				}
+				else
+				{
+					this->landingTimeActual = this->landingTime;
+				}
 				return;
 			}
 		}

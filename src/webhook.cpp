@@ -619,7 +619,7 @@ std::string WebhookService::BuildPayload(const ReportData &report)
 		"{\"name\":\"Punishment\",\"value\":\"%s\"},"
 		"{\"name\":\"Map\",\"value\":\"`%s`\",\"inline\":true}%s],"
 		"\"timestamp\":\"%s\",\"footer\":{\"text\":\"CS2AC 1.0.0 \\u2022 Detection report\"%s},"
-		"\"image\":{\"url\":\"https://raw.githubusercontent.com/karola3vax/CS2FOW/main/docs/cs2ac-logo.png\"}}]}",
+		"\"image\":{\"url\":\"https://raw.githubusercontent.com/karola3vax/CS2AC/main/docs/cs2ac-logo.png\"}}]}",
 		JsonEscape(content), allowed, JsonEscape(serverName), authorIcon, thumbnail, JsonEscape(playerValue),
 		JsonEscape(steamIdValue), JsonEscape(Limit(report.detection.empty() ? "UNKNOWN" : report.detection, 256)),
 		JsonEscape(evidenceText), JsonEscape(OutcomeText(report.outcome)), JsonEscape(Limit(map, 256)), addressField, UtcTimestamp(),
