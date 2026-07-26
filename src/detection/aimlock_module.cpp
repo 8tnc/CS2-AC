@@ -27,7 +27,7 @@ namespace
 	constexpr int lagSearchRadius = 2;
 	constexpr float maximumError = 1.0f;
 	constexpr float minimumDistance = 200.0f;
-	constexpr float minimumTargetDisplacement = 10.0f;
+	constexpr float minimumTargetDisplacement = 5.0f;
 	constexpr float maximumInterpolationTicks = 19.0f;
 	constexpr int detectionThreshold = 3;
 	constexpr auto evidenceWindow = std::chrono::minutes(10);
@@ -35,11 +35,11 @@ namespace
 
 	constexpr bool MeetsCoverage(int onTarget, int samples)
 	{
-		return samples > 0 && onTarget * 10 >= samples * 9;
+		return samples > 0 && onTarget * 20 >= samples * 19;
 	}
 
-	static_assert(MeetsCoverage(9, 10));
-	static_assert(!MeetsCoverage(8, 10));
+	static_assert(MeetsCoverage(123, 129));
+	static_assert(!MeetsCoverage(122, 129));
 	static_assert(std::tuple_size<decltype(detection::AimlockTrack::hypotheses)>::value == lagSearchRadius * 2 + 1);
 
 	struct Candidate
