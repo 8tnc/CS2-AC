@@ -586,7 +586,7 @@ void CS2ACPlugin::OnGameEvent(IGameEvent *event, MovementPlayer *player)
 	detectionSystem.OnGameEvent(event, player, globals ? globals->tickcount : 0);
 }
 
-void CS2ACPlugin::HandleDetection(const char *detection, MovementPlayer *player, std::string_view evidence)
+void CS2ACPlugin::HandleDetection(const char *detection, MovementPlayer *player, std::string_view evidence, bool kickOnly)
 {
 	if (!detection || !*detection || !player || player->index < 1 || player->index > MAXPLAYERS)
 	{
@@ -625,7 +625,7 @@ void CS2ACPlugin::HandleDetection(const char *detection, MovementPlayer *player,
 		return;
 	}
 
-	const PunishmentLevel requested = IsKickOnlyDetection(detection) ? PunishmentLevel::Kick : PunishmentLevel::Ban;
+	const PunishmentLevel requested = kickOnly || IsKickOnlyDetection(detection) ? PunishmentLevel::Kick : PunishmentLevel::Ban;
 	auto &issued = punishmentLevels[player->index];
 	if (issued >= requested)
 	{

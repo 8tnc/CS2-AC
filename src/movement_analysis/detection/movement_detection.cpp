@@ -139,12 +139,12 @@ void MovementDetectionService::ClearDetectionBuffers()
 	yawAccelPercent = 0.0f;
 }
 
-void MovementDetectionService::MarkInvalidCvar(const char *cvarName, const std::string &reason)
+void MovementDetectionService::MarkInvalidCvar(const char *cvarName, const std::string &reason, bool kickOnly)
 {
 	RefreshSettings();
 	if (cvarName && invalidCvarLatches.emplace(cvarName).second)
 	{
-		MarkInfraction(Infraction::Type::InvalidCvar, reason);
+		MarkInfraction(Infraction::Type::InvalidCvar, reason, kickOnly);
 	}
 }
 
@@ -156,13 +156,13 @@ void MovementDetectionService::MarkValidCvar(const char *cvarName)
 	}
 }
 
-void MovementDetectionService::MarkCvarSource(const char *cvarName, const std::string &reason, bool invalid, bool userInfo)
+void MovementDetectionService::MarkCvarSource(const char *cvarName, const std::string &reason, bool invalid, bool userInfo, bool kickOnly)
 {
 	auto &source = userInfo ? invalidUserInfoCvars : invalidQueriedCvars;
 	if (invalid)
 	{
 		source.emplace(cvarName);
-		MarkInvalidCvar(cvarName, reason);
+		MarkInvalidCvar(cvarName, reason, kickOnly);
 		return;
 	}
 	source.erase(cvarName);
@@ -173,7 +173,7 @@ void MovementDetectionService::MarkCvarSource(const char *cvarName, const std::s
 	}
 }
 
-void MovementDetectionService::MarkInfraction(Infraction::Type type, const std::string &reason)
+void MovementDetectionService::MarkInfraction(Infraction::Type type, const std::string &reason, bool kickOnly)
 {
 	RefreshSettings();
 	const auto index = static_cast<u8>(type);
@@ -186,5 +186,5 @@ void MovementDetectionService::MarkInfraction(Infraction::Type type, const std::
 	{
 		return;
 	}
-	g_CS2AC.HandleDetection(Infraction::displayNames[index], player, reason);
+	g_CS2AC.HandleDetection(Infraction::displayNames[index], player, reason, kickOnly);
 }

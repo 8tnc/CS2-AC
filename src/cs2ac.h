@@ -62,7 +62,7 @@ public:
 	void OnSetupMove(MovementPlayer *player, PlayerCommand *command);
 	void OnGameFrame(bool simulating);
 	void OnGameEvent(IGameEvent *event, MovementPlayer *player);
-	void HandleDetection(const char *detection, MovementPlayer *player, std::string_view evidence = {});
+	void HandleDetection(const char *detection, MovementPlayer *player, std::string_view evidence = {}, bool kickOnly = false);
 	void OnClientFullyConnect(CPlayerSlot slot);
 	void OnClientSettingsChanged(CPlayerSlot slot);
 	void OnClientDisconnect(CPlayerSlot slot);

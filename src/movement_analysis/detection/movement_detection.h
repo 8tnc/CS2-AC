@@ -137,10 +137,10 @@ public:
 	std::set<std::string> invalidCvarLatches;
 	std::set<std::string> invalidQueriedCvars;
 	std::set<std::string> invalidUserInfoCvars;
-	void MarkInvalidCvar(const char *cvarName, const std::string &reason);
+	void MarkInvalidCvar(const char *cvarName, const std::string &reason, bool kickOnly = false);
 	void MarkValidCvar(const char *cvarName);
-	void MarkCvarSource(const char *cvarName, const std::string &reason, bool invalid, bool userInfo);
-	void MarkInfraction(Infraction::Type type, const std::string &reason);
+	void MarkCvarSource(const char *cvarName, const std::string &reason, bool invalid, bool userInfo, bool kickOnly = false);
+	void MarkInfraction(Infraction::Type type, const std::string &reason, bool kickOnly = false);
 
 private:
 	void RefreshSettings();
