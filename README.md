@@ -269,64 +269,64 @@ Keep the webhook URL private. CS2AC never prints it back to the console.
 
 </details>
 
-## Straight answers
+## FAQ
 
 <details>
 <summary><strong>Do players install anything?</strong></summary>
 
-No. CS2AC runs inside the dedicated server. Players connect and play normally.
+Nope. CS2AC lives entirely on the dedicated server, so players just connect and play as usual.
 
 </details>
 
 <details>
 <summary><strong>Does it work in Premier or Valve matchmaking?</strong></summary>
 
-No. You need control of a community or dedicated server running Metamod:Source.
+No. CS2AC is made for community and dedicated servers you control. It cannot be added to Premier or Valve matchmaking.
 
 </details>
 
 <details>
 <summary><strong>Can it catch every cheat?</strong></summary>
 
-No anti-cheat can promise that. CS2AC sees the cheating behavior that reaches the server; it cannot inspect a player's files, memory, or desktop.
+No. No anti-cheat catches everything. CS2AC can only judge the behavior that reaches the server; it does not read a player's files, memory, or desktop.
 
-That also means **DLL Injection does not scan anyone's PC**. It looks for suspicious game-event subscriptions that the client exposes to the server.
+Despite the name, **DLL Injection does not scan anyone's PC**. It only checks suspicious game-event subscriptions that the client shares with the server.
 
 </details>
 
 <details>
 <summary><strong>Which detections ban and which only kick?</strong></summary>
 
-Desubticking, Nulls, and Subtick Spam use the kick command by default. Every other detection uses the permanent-ban command by default.
+By default, Desubticking, Nulls, and Subtick Spam only kick. Every other detection uses the permanent-ban command.
 
-You can replace or empty either command without disabling detection announcements.
+Want different punishments? Change or empty either command. The detection announcements will keep working.
 
 </details>
 
 <details>
 <summary><strong>What happens to whitelisted players?</strong></summary>
 
-They are still detected and shown everywhere, but CS2AC never sends a punishment command for them.
+They can still trigger a detection, and everyone can still see it, but CS2AC stops before sending any punishment command.
 
 </details>
 
 <details>
 <summary><strong>Does it support FFA?</strong></summary>
 
-Yes. CS2AC follows `mp_teammates_are_enemies`, so other players are treated as enemies when FFA is enabled.
+Yes. When `mp_teammates_are_enemies` is enabled, CS2AC treats other players as enemies just like the game does.
 
 </details>
 
 <details>
 <summary><strong>Does CS2AC advertise itself?</strong></summary>
 
-Every six completed rounds, CS2AC shows one chat and center-screen credit:
+Yes, but it does not spam. Every six completed rounds, CS2AC shows this message once in chat and at the center of the screen:
 
 ```text
 [CS2AC] This server is protected by karola3vax's anti-cheat.
 ```
 
-This project credit is built in and has no disable option.
+This small project credit is built in and cannot be turned off.
 
 </details>
 
