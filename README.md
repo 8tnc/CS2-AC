@@ -18,10 +18,6 @@ CS2AC helps community servers keep it that way.
 
 </div>
 
-> ### No guesses. No K/D bans.
->
-> CS2AC waits for a cheating pattern it knows how to prove. When it acts, it says so.
-
 ## See it catch
 
 Real in-game clips. No mockups.
