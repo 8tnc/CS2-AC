@@ -35,9 +35,10 @@ namespace
 	constexpr float jitterTolerance = 0.25f;
 	constexpr float minimumJitterSpan = 10.0f;
 	constexpr float commandMismatchAngle = 90.0f;
+	constexpr float minimumAttackReturnAngle = 30.0f;
 	constexpr int commandMismatchSpacing = 4;
-	constexpr float detectionThreshold = 10.0f;
-	constexpr float scoreDecayPerSecond = 0.5f;
+	constexpr float detectionThreshold = 20.0f;
+	constexpr float scoreDecayPerSecond = 1.0f;
 
 	enum CommandProblem : std::uint32_t
 	{
@@ -446,7 +447,8 @@ namespace detection
 		ANTIAIM_DEBUG("%s shot command %d: base/shot-history %.2f, surrounding %.2f, snap %.2f, mouse %d/%d, subtick %.2f/%.2f.\n", player->GetName(),
 					  shot->commandNumber, shot->historyDifference, surrounding, snap, shot->mouseX, shot->mouseY, shot->subtickPitch,
 					  shot->subtickYaw);
-		if (std::isfinite(surrounding) && std::isfinite(snap) && surrounding < 10.0f && snap > 0.5f && snap > surrounding * 5.0f)
+		if (std::isfinite(surrounding) && std::isfinite(snap) && surrounding < 10.0f && snap > minimumAttackReturnAngle
+			&& snap > surrounding * 5.0f)
 		{
 			AddEvidence(player, data, 2.0f, "one-command attack return", false);
 		}
@@ -512,7 +514,7 @@ namespace detection
 		if (found->problems != 0 && !data.suppressContinuous)
 		{
 			ANTIAIM_DEBUG("%s command %d is inconsistent: %s.\n", player->GetName(), found->commandNumber, ProblemName(found->problems));
-			AddEvidence(player, data, 3.0f, "an inconsistent angle command", true);
+			AddEvidence(player, data, 2.0f, "an inconsistent angle command", true);
 		}
 		else if (historyMismatch && !data.suppressContinuous
 				 && (data.lastMismatchEvidenceCommand < 0
