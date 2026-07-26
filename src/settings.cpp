@@ -82,7 +82,8 @@ namespace
 		CConVar<bool> nullsEnabled {"cs2ac_nulls_enabled", FCVAR_NONE, "Detect automated opposite-direction input timing", true};
 		CConVar<bool> silentaimEnabled {"cs2ac_silentaim_enabled", FCVAR_NONE,
 									  "Detect damaging shots that disagree with the visible aim", true};
-		CConVar<bool> subtickSpamEnabled {"cs2ac_subtick_spam_enabled", FCVAR_NONE, "Detect an impossible number of subtick inputs", true};
+		CConVar<bool> subtickSpamEnabled {"cs2ac_subtick_spam_enabled", FCVAR_NONE,
+										 "Detect repeated same-time button aliases carrying pitch or yaw changes", true};
 		CConVar<bool> chatAnnouncements {"cs2ac_chat_announcements", FCVAR_NONE, "Show CS2AC detections in public chat", true};
 		CConVar<bool> centerAnnouncements {"cs2ac_center_announcements", FCVAR_NONE,
 										 "Show CS2AC detections in the center of the screen", true};

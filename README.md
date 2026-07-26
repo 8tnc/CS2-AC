@@ -36,7 +36,7 @@ All 17 detectors are enabled by default.
 | **Irregular Behavior** - too many unlikely airborne or no-scope results |  | **Invalid Input** - broken or impossible player commands |
 |  |  | **Antiaim** - impossible pitch, roll, spinning, or jittering view angles |
 |  |  | **Namechanger** - rapidly spamming name changes |
-|  |  | **Subtick Spam** - packing too many inputs into one command |
+|  |  | **Subtick Spam** - repeating same-time button aliases with angle changes |
 
 ## What a detection looks like
 

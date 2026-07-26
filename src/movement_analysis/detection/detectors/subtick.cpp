@@ -2,6 +2,7 @@
 #include "movement_analysis/detection/movement_detection.h"
 #include "sdk/usercmd.h"
 #include "movement_analysis/events/movement_events.h"
+#include "settings.h"
 
 // Fixed thresholds for subtick command checks.
 #define SUBTICK_INITIAL_IGNORE_TIME        10.0f
@@ -13,7 +14,8 @@
 #define SUBTICK_SUBTICK_INPUTS_THRESHOLD   30
 #define SUBTICK_ZERO_WHEN_RATIO_THRESHOLD  0.9f
 
-CConVar<bool> cs2ac_subtick_debug("cs2ac_subtick_debug", FCVAR_NONE, "Show Desubticking evidence when it reaches the threshold", false);
+CConVar<bool> cs2ac_subtick_debug("cs2ac_subtick_debug", FCVAR_NONE, "Show Subtick Spam command matches and Desubticking evidence",
+								  false);
 
 // Every command should have all button presses/releases accounted for in subtick moves.
 // Only cheats that modify buttons without updating subtick moves would fail this.
@@ -87,6 +89,10 @@ static_global bool HasExcessiveSubtickMovesWithAngles(const PlayerCommand &cmd)
 			numSuspicious++;
 			if (numSuspicious >= 2)
 			{
+				if (cs2ac_subtick_debug.GetBool())
+				{
+					Msg("[CS2AC Subtick Spam] Suspicious command %d: %s\n", cmd.cmdNum, cmd.DebugString().c_str());
+				}
 				return true;
 			}
 		}
@@ -131,7 +137,7 @@ void MovementDetectionService::CheckSubtickAbuse(PlayerCommand *cmd)
 		this->invalidCommandTimes.push_back(g_pCS2ACUtils->GetServerGlobals()->curtime);
 	}
 	// Check for excessive subtick moves with angles
-	if (HasExcessiveSubtickMovesWithAngles(*cmd))
+	if (settings::IsDetectionEnabled(DetectionType::SubtickSpam) && HasExcessiveSubtickMovesWithAngles(*cmd))
 	{
 		this->suspiciousSubtickMoveTimes.push_back(g_pCS2ACUtils->GetServerGlobals()->curtime);
 	}
@@ -179,10 +185,12 @@ void MovementDetectionService::CheckSuspiciousSubtickCommands()
 	{
 		this->suspiciousSubtickMoveTimes.pop_front();
 	}
-	// Repeated malformed commands become Invalid Input evidence.
+	// Repeated same-time button aliases with angle changes become Subtick Spam evidence.
 	if (this->suspiciousSubtickMoveTimes.size() >= SUBTICK_SUSPICIOUS_MOVES_THRESHOLD)
 	{
-		this->MarkInfraction(Infraction::Type::SubtickSpam, "Excessive subtick moves detected");
+		this->MarkInfraction(Infraction::Type::SubtickSpam,
+							 tfm::format("%zu commands contained repeated same-time button aliases with angle changes within %.1f seconds.",
+										 this->suspiciousSubtickMoveTimes.size(), SUBTICK_SUSPICIOUS_MOVES_WINDOW));
 		this->suspiciousSubtickMoveTimes.clear();
 	}
 

@@ -27,7 +27,7 @@ public:
 			InvalidInput,
 			// Detects automated opposite-direction input release timing.
 			Nulls,
-			// Detects an impossible number of subtick input changes.
+			// Detects repeated same-time button aliases carrying pitch or yaw changes.
 			SubtickSpam,
 			// Detects commands engineered to remove normal subtick timing.
 			Desubtick,
