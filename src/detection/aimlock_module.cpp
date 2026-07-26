@@ -33,14 +33,15 @@ namespace
 
 	constexpr bool IsContinuousSequence(std::int64_t commandDelta, std::int64_t clientTickDelta, std::int64_t serverTickDelta)
 	{
-		return commandDelta >= 0 && clientTickDelta >= 0 && serverTickDelta == 1;
+		return commandDelta >= 0 && clientTickDelta >= 0 && serverTickDelta >= 1 && serverTickDelta <= 2;
 	}
 
 	static_assert(IsContinuousSequence(0, 0, 1));
 	static_assert(IsContinuousSequence(2, 2, 1));
+	static_assert(IsContinuousSequence(2, 2, 2));
 	static_assert(!IsContinuousSequence(-1, 1, 1));
 	static_assert(!IsContinuousSequence(1, -1, 1));
-	static_assert(!IsContinuousSequence(1, 1, 2));
+	static_assert(!IsContinuousSequence(1, 1, 3));
 
 	struct Candidate
 	{
@@ -319,6 +320,11 @@ namespace detection
 		const std::int64_t serverTickDelta = static_cast<std::int64_t>(sample.serverTick) - data.track.lastServerTick;
 		if (serverTickDelta == 0 && commandDelta >= 0 && clientTickDelta >= 0)
 		{
+			return;
+		}
+		if (!candidate.valid && serverTickDelta == 1 && commandDelta >= 0 && clientTickDelta >= 0)
+		{
+			AIMLOCK_DEBUG("%s kept target %d through one missing target sample.\n", player->GetName(), data.track.targetIndex);
 			return;
 		}
 		if (!candidate.valid || candidate.targetIndex != data.track.targetIndex
