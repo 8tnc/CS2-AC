@@ -33,7 +33,7 @@ All 17 detectors are enabled by default.
 | **Aimlock** - tracking an enemy too perfectly for too long | **Bhop** - repeated frame-perfect bunny hops | **Desubticking** - removing the normal timing from subtick inputs |
 | **Silentaim** - shots landing far away from the player's visible aim | **Hyperscroll** - jump inputs faster than normal scrolling | **Doubletap** - firing twice faster than the weapon allows |
 | **Inhuman Accuracy** - keeping unrealistically high accuracy over many shots | **Nulls** - perfectly timed left/right movement normally produced by scripts | **Invalid CVar** - forbidden or impossible client settings |
-| **Irregular Behavior** - too many unlikely airborne or no-scope results |  | **Invalid Input** - broken or impossible player commands |
+| **Irregular Behavior** - too many unlikely airborne or no-scope results |  | **Invalid Input** - movement button changes missing their subtick records |
 |  |  | **Antiaim** - impossible pitch, roll, spinning, or jittering view angles |
 |  |  | **Namechanger** - rapidly spamming name changes |
 |  |  | **Subtick Spam** - repeating same-time button aliases with angle changes |

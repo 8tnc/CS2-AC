@@ -75,7 +75,8 @@ namespace
 		CConVar<bool> hyperscrollEnabled {"cs2ac_hyperscroll_enabled", FCVAR_NONE, "Detect automated jump-input frequency", true};
 		CConVar<bool> inhumanAccuracyEnabled {"cs2ac_inhuman_accuracy_enabled", FCVAR_NONE, "Detect sustained near-perfect accuracy", true};
 		CConVar<bool> invalidCvarEnabled {"cs2ac_invalid_cvar_enabled", FCVAR_NONE, "Detect unsafe client settings", true};
-		CConVar<bool> invalidInputEnabled {"cs2ac_invalid_input_enabled", FCVAR_NONE, "Detect malformed player commands", true};
+		CConVar<bool> invalidInputEnabled {"cs2ac_invalid_input_enabled", FCVAR_NONE,
+										 "Detect movement button changes without matching subtick records", true};
 		CConVar<bool> irregularBehaviorEnabled {"cs2ac_irregular_behavior_enabled", FCVAR_NONE,
 											   "Detect repeated success with unusually difficult shots", true};
 		CConVar<bool> namechangerEnabled {"cs2ac_namechanger_enabled", FCVAR_NONE, "Detect repeated player name changes", true};

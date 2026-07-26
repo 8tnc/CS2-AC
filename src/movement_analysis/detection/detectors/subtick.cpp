@@ -14,7 +14,7 @@
 #define SUBTICK_SUBTICK_INPUTS_THRESHOLD   30
 #define SUBTICK_ZERO_WHEN_RATIO_THRESHOLD  0.9f
 
-CConVar<bool> cs2ac_subtick_debug("cs2ac_subtick_debug", FCVAR_NONE, "Show Subtick Spam command matches and Desubticking evidence",
+CConVar<bool> cs2ac_subtick_debug("cs2ac_subtick_debug", FCVAR_NONE, "Show Invalid Input, Subtick Spam, and Desubticking evidence",
 								  false);
 
 // Every command should have all button presses/releases accounted for in subtick moves.
@@ -132,9 +132,13 @@ void MovementDetectionService::CheckSubtickAbuse(PlayerCommand *cmd)
 		return;
 	}
 	// Verify all button presses/releases are accounted for in subtick moves
-	if (!VerifyCommand(*cmd))
+	if (settings::IsDetectionEnabled(DetectionType::InvalidInput) && !VerifyCommand(*cmd))
 	{
 		this->invalidCommandTimes.push_back(g_pCS2ACUtils->GetServerGlobals()->curtime);
+		if (cs2ac_subtick_debug.GetBool())
+		{
+			Msg("[CS2AC Invalid Input] Suspicious command %d: %s\n", cmd->cmdNum, cmd->DebugString().c_str());
+		}
 	}
 	// Check for excessive subtick moves with angles
 	if (settings::IsDetectionEnabled(DetectionType::SubtickSpam) && HasExcessiveSubtickMovesWithAngles(*cmd))
@@ -176,7 +180,9 @@ void MovementDetectionService::CheckSuspiciousSubtickCommands()
 	}
 	if (this->invalidCommandTimes.size() >= SUBTICK_INVALID_COMMAND_THRESHOLD)
 	{
-		this->MarkInfraction(Infraction::Type::InvalidInput, "Excessive invalid commands detected");
+		this->MarkInfraction(Infraction::Type::InvalidInput,
+							 tfm::format("%zu commands had movement button changes without matching subtick records within %.1f seconds.",
+										 this->invalidCommandTimes.size(), SUBTICK_INVALID_COMMAND_WINDOW));
 		this->invalidCommandTimes.clear();
 	}
 

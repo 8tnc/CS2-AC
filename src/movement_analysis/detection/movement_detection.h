@@ -23,7 +23,7 @@ public:
 			Hyperscroll,
 			// Detects client settings outside the values accepted by CS2AC.
 			InvalidCvar,
-			// Detects malformed or contradictory player commands.
+			// Detects movement button changes without matching subtick records.
 			InvalidInput,
 			// Detects automated opposite-direction input release timing.
 			Nulls,
