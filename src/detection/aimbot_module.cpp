@@ -231,9 +231,7 @@ namespace detection
 			clearPending();
 			return true;
 		}
-		const bool attackerHasPlayingTeam = shotAttacker->team == CS_TEAM_T || shotAttacker->team == CS_TEAM_CT;
-		const bool targetHasPlayingTeam = shotTarget->team == CS_TEAM_T || shotTarget->team == CS_TEAM_CT;
-		if (!attackerHasPlayingTeam || !targetHasPlayingTeam || shotTarget->team == shotAttacker->team)
+		if (!AreOpponents(shotAttacker->team, shotTarget->team))
 		{
 			AIMBOT_DEBUG("%s rejected because the damaging shot was not against an enemy.\n", attacker->GetName());
 			clearPending();

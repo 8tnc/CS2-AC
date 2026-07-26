@@ -150,13 +150,13 @@ namespace
 		const auto &currentTarget = currentFrame.players[targetIndex];
 		const detection::PositionFrame *historicalFrame = shots->FindFrame(sample.serverTick - lagTicks);
 		if (!observer.valid || !observer.alive || observer.teleported || !currentTarget.valid || !currentTarget.alive || currentTarget.teleported
-			|| currentTarget.team == observer.team || !historicalFrame)
+			|| !detection::AreOpponents(observer.team, currentTarget.team) || !historicalFrame)
 		{
 			return false;
 		}
 
 		const auto &target = historicalFrame->players[targetIndex];
-		if (!target.valid || !target.alive || target.teleported || target.team == observer.team
+		if (!target.valid || !target.alive || target.teleported || !detection::AreOpponents(observer.team, target.team)
 			|| (target.origin - sample.eyePosition).Length() < minimumDistance)
 		{
 			return false;

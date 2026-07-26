@@ -127,7 +127,7 @@ namespace detection
 			return;
 		}
 		const auto &attacker = frame->players[player->index];
-		if (!attacker.valid || attacker.teleported || attacker.team == 0)
+		if (!attacker.valid || attacker.teleported)
 		{
 			return;
 		}
@@ -137,7 +137,7 @@ namespace detection
 		for (int targetIndex = 1; targetIndex <= MAXPLAYERS; ++targetIndex)
 		{
 			const auto &target = frame->players[targetIndex];
-			if (targetIndex == player->index || !target.valid || target.teleported || target.team == 0 || target.team == attacker.team
+			if (targetIndex == player->index || !target.valid || target.teleported || !AreOpponents(attacker.team, target.team)
 				|| (!shot.hurtSeen && !target.alive))
 			{
 				continue;

@@ -12,6 +12,8 @@
 #include <cmath>
 #include <limits>
 
+CConVarRef<bool> mp_teammates_are_enemies("mp_teammates_are_enemies");
+
 namespace
 {
 	constexpr size_t shotCommandLimit = 32;
@@ -20,6 +22,11 @@ namespace
 	constexpr int shotMatchTicks = 1;
 	constexpr int shotLifetimeTicks = 2;
 	static_assert(shotLifetimeTicks > shotMatchTicks, "Shots must survive long enough for every accepted event.");
+
+	bool TeammatesAreEnemies()
+	{
+		return mp_teammates_are_enemies.IsValidRef() && mp_teammates_are_enemies.IsConVarDataAvailable() && mp_teammates_are_enemies.Get();
+	}
 } // namespace
 
 namespace detection
@@ -47,6 +54,13 @@ namespace detection
 	bool IsEligibleHuman(MovementPlayer *player)
 	{
 		return player && player->index >= 1 && player->index <= MAXPLAYERS && player->GetController() && !player->IsFakeClient() && !player->IsCSTV();
+	}
+
+	bool AreOpponents(int firstTeam, int secondTeam)
+	{
+		const bool firstIsPlaying = firstTeam == CS_TEAM_T || firstTeam == CS_TEAM_CT;
+		const bool secondIsPlaying = secondTeam == CS_TEAM_T || secondTeam == CS_TEAM_CT;
+		return firstIsPlaying && secondIsPlaying && (firstTeam != secondTeam || TeammatesAreEnemies());
 	}
 
 	bool IsFinite(const QAngle &angles)
@@ -492,6 +506,7 @@ namespace detection
 		nameChanger.Load(announce);
 		settingsMask = settings::GetDetectionMask();
 		settingsRevision = settings::GetRevision();
+		teammatesAreEnemies = TeammatesAreEnemies();
 	}
 
 	void DetectionSystem::Unload()
@@ -508,6 +523,7 @@ namespace detection
 		shots.Reset();
 		settingsMask = 0;
 		settingsRevision = 0;
+		teammatesAreEnemies = false;
 	}
 
 	void DetectionSystem::Reset()
@@ -528,11 +544,13 @@ namespace detection
 	{
 		const std::uint64_t currentMask = settings::GetDetectionMask();
 		const std::uint64_t currentRevision = settings::GetRevision();
-		if (currentMask != settingsMask || currentRevision != settingsRevision)
+		const bool currentTeammatesAreEnemies = TeammatesAreEnemies();
+		if (currentMask != settingsMask || currentRevision != settingsRevision || currentTeammatesAreEnemies != teammatesAreEnemies)
 		{
 			Reset();
 			settingsMask = currentMask;
 			settingsRevision = currentRevision;
+			teammatesAreEnemies = currentTeammatesAreEnemies;
 		}
 	}
 

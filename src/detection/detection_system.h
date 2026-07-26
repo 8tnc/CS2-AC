@@ -22,6 +22,7 @@ namespace detection
 
 	bool IsBallisticWeapon(std::string_view weapon);
 	bool IsEligibleHuman(MovementPlayer *player);
+	bool AreOpponents(int firstTeam, int secondTeam);
 	bool IsFinite(const QAngle &angles);
 	bool IsFinite(const Vector &vector);
 	Vector AimForward(const QAngle &angles);
@@ -487,5 +488,6 @@ namespace detection
 		NameChangerModule nameChanger;
 		std::uint64_t settingsMask {};
 		std::uint64_t settingsRevision {};
+		bool teammatesAreEnemies {};
 	};
 } // namespace detection
