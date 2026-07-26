@@ -86,6 +86,7 @@ public:
 
 	f32 lastValidMoveTypeTime = -1.0f;
 	std::deque<LandingEvent> recentLandingEvents;
+	bool bhopDirty {};
 	void ParseCommandForJump(PlayerCommand *command);
 	void CreateLandEvent();
 	void CheckLandingEvents();

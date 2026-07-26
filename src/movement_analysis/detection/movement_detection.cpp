@@ -135,6 +135,7 @@ void MovementDetectionService::ClearDetectionBuffers()
 	recentJumpStatuses.clear();
 	recentJumps.clear();
 	recentLandingEvents.clear();
+	bhopDirty = false;
 	currentAirTime = 0.0f;
 	airMovedThisFrame = false;
 	lastValidMoveTypeTime = -1.0f;
