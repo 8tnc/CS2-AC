@@ -128,20 +128,18 @@ namespace detection
 
 	struct DoubletapState
 	{
-		std::uint64_t shotId {};
 		int serverTick {-1};
 		std::string weapon;
-		int incidents {};
 	};
 
-	// Detects repeated pairs of ballistic shots from the same weapon in the same or next server tick.
+	// Detects a weapon firing twice sooner than its live cycle time permits.
 	class DoubletapModule
 	{
 	public:
 		void Load(AnnounceCallback announce);
 		void Unload();
 		void Reset();
-		void OnWeaponFire(MovementPlayer *player, const ShotRecord &shot);
+		void OnWeaponFire(IGameEvent *event, MovementPlayer *player, int currentTick);
 		void OnClientDisconnect(MovementPlayer *player);
 
 	private:

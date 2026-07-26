@@ -1,11 +1,7 @@
 #include "detection/detection_system.h"
 
+#include "igameevents.h"
 #include "movement/movement.h"
-
-namespace
-{
-	constexpr int detectionThreshold = 2;
-}
 
 namespace detection
 {
@@ -25,40 +21,60 @@ namespace detection
 		playerData = {};
 	}
 
-	void DoubletapModule::OnWeaponFire(MovementPlayer *player, const ShotRecord &shot)
+	void DoubletapModule::OnWeaponFire(IGameEvent *event, MovementPlayer *player, int currentTick)
 	{
-		if (!IsEligibleHuman(player) || shot.playerIndex != player->index || !IsBallisticWeapon(shot.weapon))
+		if (!event || !IsEligibleHuman(player))
+		{
+			return;
+		}
+
+		const std::string_view weaponName = NormalizeWeapon(event->GetString("weapon", ""));
+		if (!IsBallisticWeapon(weaponName) || weaponName == "revolver")
 		{
 			return;
 		}
 
 		auto &previous = playerData[player->index];
-		const std::int64_t delta = static_cast<std::int64_t>(shot.serverTick) - previous.serverTick;
-		const bool detected = previous.shotId && previous.shotId != shot.id && NormalizeWeapon(previous.weapon) == NormalizeWeapon(shot.weapon)
-							  && delta >= 0 && delta <= 1;
-		if (detected)
+		auto *pawn = player->GetPlayerPawn();
+		auto *weaponServices = pawn ? pawn->m_pWeaponServices() : nullptr;
+		auto *activeWeapon = weaponServices ? weaponServices->m_hActiveWeapon().Get() : nullptr;
+		const char *activeWeaponName = activeWeapon ? activeWeapon->GetClassname() : nullptr;
+		if (!activeWeaponName || NormalizeWeapon(activeWeaponName) != weaponName)
 		{
-			const int incidents = previous.incidents + 1;
 			previous = {};
-			if (incidents >= detectionThreshold)
-			{
-				if (announce)
-				{
-					announce("DOUBLETAP", player,
-							 tfm::format("%d rapid-fire pairs from %s reached the threshold; the latest pair was %d server tick%s apart.",
-										 incidents, shot.weapon, delta, delta == 1 ? "" : "s"));
-				}
-			}
-			else
-			{
-				previous.incidents = incidents;
-			}
+			return;
+		}
+		auto *weaponData = activeWeapon ? activeWeapon->GetWeaponVData() : nullptr;
+		if (!weaponData)
+		{
+			previous = {};
 			return;
 		}
 
-		previous.shotId = shot.id;
-		previous.serverTick = shot.serverTick;
-		previous.weapon = shot.weapon;
+		const float cycleTime = weaponData->m_flCycleTime().m_flValues[0];
+		if (!std::isfinite(cycleTime) || cycleTime <= 0.0f)
+		{
+			previous = {};
+			return;
+		}
+
+		const std::int64_t delta = static_cast<std::int64_t>(currentTick) - previous.serverTick;
+		const bool detected = previous.serverTick >= 0 && delta >= 0
+							  && NormalizeWeapon(previous.weapon) == weaponName
+							  && static_cast<float>(delta) <= cycleTime * ENGINE_FIXED_TICK_RATE - 1.0f;
+		previous.serverTick = currentTick;
+		previous.weapon.assign(weaponName);
+
+		if (detected)
+		{
+			previous = {};
+			if (announce)
+			{
+				announce("DOUBLETAP", player,
+						 tfm::format("%s fired twice only %d server tick%s apart, sooner than its %.3f-second cycle allows.",
+									 weaponName, delta, delta == 1 ? "" : "s", cycleTime));
+			}
+		}
 	}
 
 	void DoubletapModule::OnClientDisconnect(MovementPlayer *player)

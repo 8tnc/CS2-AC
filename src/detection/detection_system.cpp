@@ -647,12 +647,12 @@ namespace detection
 		}
 		if (CS2AC_STREQ(event->GetName(), "weapon_fire"))
 		{
+			if (settings::IsDetectionEnabled(DetectionType::Doubletap))
+			{
+				doubletap.OnWeaponFire(event, player, currentTick);
+			}
 			if (ShotRecord *shot = shots.OnWeaponFire(event, player, currentTick))
 			{
-				if (settings::IsDetectionEnabled(DetectionType::Doubletap))
-				{
-					doubletap.OnWeaponFire(player, *shot);
-				}
 				if (settings::IsDetectionEnabled(DetectionType::AntiAim))
 				{
 					antiAim.OnWeaponFire(player, *shot);

@@ -95,6 +95,7 @@ public:
 	SCHEMA_FIELD(CCollisionProperty *, m_pCollision)
 	SCHEMA_FIELD(CHandle<CBaseEntity>, m_hGroundEntity)
 	SCHEMA_FIELD(CHandle<CBaseEntity>, m_hOwnerEntity)
+	SCHEMA_FIELD_POINTER(CUtlStringToken, m_nSubclassID)
 	SCHEMA_FIELD(uint32_t, m_fFlags)
 	SCHEMA_FIELD(float, m_flGravityScale)
 	SCHEMA_FIELD(float, m_flActualGravityScale)
@@ -104,6 +105,11 @@ public:
 	int entindex()
 	{
 		return m_pEntity->m_EHandle.GetEntryIndex();
+	}
+
+	void *GetVData()
+	{
+		return *reinterpret_cast<void **>(reinterpret_cast<uint8 *>(m_nSubclassID()) + sizeof(CUtlStringToken));
 	}
 
 	bool IsPawn()
