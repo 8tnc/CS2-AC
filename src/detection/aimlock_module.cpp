@@ -27,7 +27,7 @@ namespace
 	constexpr int lagSearchRadius = 2;
 	constexpr float maximumError = 0.5f;
 	constexpr float minimumDistance = 300.0f;
-	constexpr float minimumTargetDisplacement = 20.0f;
+	constexpr float minimumTargetDisplacement = 10.0f;
 	constexpr float maximumInterpolationTicks = 19.0f;
 	constexpr int detectionThreshold = 2;
 	constexpr auto evidenceWindow = std::chrono::minutes(10);
