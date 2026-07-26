@@ -22,7 +22,7 @@ namespace
 	constexpr size_t commandHistorySize = 128;
 	constexpr int snapWindowTicks = static_cast<int>(ENGINE_FIXED_TICK_RATE * 0.5f);
 	constexpr float minimumDistance = 100.0f;
-	constexpr int detectionThreshold = 5;
+	constexpr int detectionThreshold = 4;
 	constexpr auto evidenceWindow = std::chrono::minutes(10);
 
 	enum class AimbotRule
