@@ -78,29 +78,29 @@ Real in-game clips. No mockups.
 
 ### Aim and accuracy
 
-- **Aimbot** — Blatant snap-to-target hits.
-- **Aimlock** — Inhumanly precise tracking of a moving enemy.
-- **Silentaim** — Bullet impacts that disagree with the player's visible aim.
-- **Inhuman Accuracy** — Rage-level accuracy across a full shot sample.
-- **Irregular Behavior** — Repeated improbable airborne or no-scope attempts.
+- **Aimbot** — The aim snaps onto an enemy just before a damaging shot.
+- **Aimlock** — The aim follows a moving enemy with machine-like precision for too long, even through walls.
+- **Silentaim** — A damaging bullet lands far away from where the player's aim was pointing.
+- **Inhuman Accuracy** — A long run of shots lands with accuracy that normal play cannot sustain.
+- **Irregular Behavior** — The player repeatedly lands highly unlikely shots while airborne or without scoping.
 
 ### Movement
 
-- **Autostrafe** — Scripted or mathematically optimized air strafing.
-- **Bhop** — Repeated frame-perfect bunny hops and mechanical jump patterns.
-- **Hyperscroll** — Jump input patterns beyond normal scrolling.
-- **Nulls** — Mechanically perfect airborne direction switches.
+- **Autostrafe** — Air strafes repeat faster and more efficiently than a player can perform by hand.
+- **Bhop** — Too many jumps land and take off again with frame-perfect timing.
+- **Hyperscroll** — Jump inputs repeat too quickly and consistently for normal mouse-wheel scrolling.
+- **Nulls** — Opposite movement keys switch with perfectly automated timing while airborne.
 
 ### Exploits and client behavior
 
-- **Antiaim** — Impossible pitch, roll, jitter, attack-return, or spin patterns.
-- **DLL Injection** — Suspicious game-event listeners exposed by injected cheats.
-- **Desubticking** — Inputs stripped of their normal subtick timing.
-- **Doubletap** — Two shots fired faster than the weapon normally allows.
-- **Invalid CVar** — Unsafe, impossible, or tampered client settings.
-- **Invalid Input** — Button changes that do not match their subtick records.
-- **Namechanger** — Rapid name-change spam.
-- **Subtick Spam** — Repeated same-time input aliases carrying angle changes.
+- **Antiaim** — View angles spin, snap back after shots, or reach positions a normal client cannot produce.
+- **DLL Injection** — The player's game listens to hidden events commonly used by injected cheat DLLs.
+- **Desubticking** — Movement inputs repeatedly arrive without their normal between-tick timing.
+- **Doubletap** — The same weapon fires twice sooner than the game normally allows.
+- **Invalid CVar** — Protected or safety-critical settings use values a normal client should never have.
+- **Invalid Input** — Pressed and released buttons disagree with the input history sent by the client.
+- **Namechanger** — The player changes their visible name five times within one minute.
+- **Subtick Spam** — One game tick is flooded with repeated movement and angle changes.
 
 ## One detection. Everywhere.
 
