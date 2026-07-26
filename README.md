@@ -80,29 +80,29 @@ Real in-game clips. No mockups.
 
 ### Aim and accuracy
 
-- **Aimbot** — Detects blatant snap-to-target aim. The cheat makes a sudden correction just before firing.<br>**What CS2AC sees:** the exact aim command behind a damaging shot moved sharply onto the victim, with the same behavior repeated across several hits.
-- **Aimlock** — Detects smooth tracking that is too clean to be human. The cheat keeps the crosshair glued to a moving enemy without needing to snap or shoot.<br>**What CS2AC sees:** two seconds of near-perfect following while the target is moving, even through walls, repeated across separate tracking episodes.
-- **Silentaim** — Detects bullets that do not agree with the player's visible aim. The cheat sends the shot in another direction while making the crosshair look normal.<br>**What CS2AC sees:** one confirmed weapon fire, bullet impact, and damaging hit whose direction is far away from the exact firing angle.
-- **Inhuman Accuracy** — Detects rage-level accuracy from strong aim assistance or no-spread. The cheat removes the misses that even great players still make.<br>**What CS2AC sees:** at least 20 hits from 24 qualifying shots aimed at one clear enemy from 100 units or farther.
-- **Irregular Behavior** — Detects repeated airborne and no-scope results associated with rage cheating and no-spread.<br>**What CS2AC sees:** every difficult attempt, hit or miss, along with distance and headshots; one lucky kill is never enough.
+- **Aimbot** — The cheat snaps the crosshair onto an enemy just before shooting.<br>**How CS2AC catches it:** it looks for the same sharp snap leading straight to damaging hits again and again.
+- **Aimlock** — The cheat smoothly follows a moving enemy with almost no shake or error.<br>**How CS2AC catches it:** it watches for aim that stays unnaturally glued to a target for too long, even through walls.
+- **Silentaim** — The cheat lands a shot somewhere the player's crosshair never appeared to point.<br>**How CS2AC catches it:** it compares where the player aimed, where the bullet landed, and whether that bullet dealt damage.
+- **Inhuman Accuracy** — Strong aim assistance or no-spread removes the misses that even great players still make.<br>**How CS2AC catches it:** it watches a longer run of aimed shots and catches accuracy that normal play cannot keep up.
+- **Irregular Behavior** — Rage cheats make airborne and no-scope kills far more reliable than they should be.<br>**How CS2AC catches it:** it counts both the attempts and the results, so one lucky shot means nothing.
 
 ### Movement
 
-- **Autostrafe** — Detects cheats that steer through the air automatically to preserve or gain speed.<br>**What CS2AC sees:** recent jumps repeatedly contain impossible strafe speed, efficiency, or perfectly optimized direction changes.
-- **Bhop** — Detects scripts that press jump at the exact moment the player touches the ground.<br>**What CS2AC sees:** a long chain of frame-perfect hops or the same tiny landing pattern repeated again and again, with teleports, noclip, and bad collisions ignored.
-- **Hyperscroll** — Detects cheats that flood the game with far more jump inputs than normal mouse-wheel scrolling.<br>**What CS2AC sees:** a high number of jump presses around each landing combined with an unusually high rate of frame-perfect hops across a full sample.
-- **Nulls** — Detects movement binds that switch opposite keys with automated precision while airborne.<br>**What CS2AC sees:** the exact press-and-release timing, air speed, and player frame rate form a long chain of perfect direction switches.
+- **Autostrafe** — The cheat steers through the air automatically to keep speed and make every strafe count.<br>**How CS2AC catches it:** it looks for jump after jump with movement that is too fast, efficient, and perfectly timed.
+- **Bhop** — The script jumps at the exact moment the player touches the ground.<br>**How CS2AC catches it:** it waits for a long chain of frame-perfect hops or the same landing pattern repeating over and over.
+- **Hyperscroll** — The cheat floods the game with far more jump presses than normal mouse-wheel scrolling.<br>**How CS2AC catches it:** it looks for excessive scrolling that also keeps producing frame-perfect hops.
+- **Nulls** — The cheat switches opposite movement keys at the perfect moment while the player is airborne.<br>**How CS2AC catches it:** it waits for a long chain of direction changes with timing that is simply too perfect.
 
 ### Exploits and client behavior
 
-- **Antiaim** — Detects cheats that send fake or impossible view angles to confuse other players and systems.<br>**What CS2AC sees:** invalid pitch or roll, sustained spinning, repeated jitter, conflicting aim records, or an angle that snaps away for a shot and immediately returns.
-- **DLL Injection** — Detects injected cheats that listen to hidden game events to run their features.<br>**What CS2AC sees:** the player's client subscribes to a blacklisted event that normal play does not need; it is checked after joining and again during the match.
-- **Desubticking** — Detects cheats that strip normal between-tick timing from movement inputs.<br>**What CS2AC sees:** almost every timed input arrives at the same zero point across a sustained sample, rather than one unusual command.
-- **Doubletap** — Detects the tick-shifting exploit that makes one weapon fire twice before it is ready.<br>**What CS2AC sees:** two ballistic shots from the same active weapon arrive closer together than that weapon's real firing cycle allows.
-- **Invalid CVar** — Detects protected or safety-critical client settings changed to values normal play should never use.<br>**What CS2AC sees:** live checks of settings such as `m_yaw`, `fps_max`, sensitivity, view limits, and cheat-protected options return an invalid value.
-- **Invalid Input** — Detects cheats that change movement buttons without sending the input history CS2 normally creates.<br>**What CS2AC sees:** repeated commands say a button changed, but their own press-and-release records do not contain that change.
-- **Namechanger** — Detects rapid name spam used to distract players or show off a cheat feature.<br>**What CS2AC sees:** the same player changes their visible name five times within one rolling minute.
-- **Subtick Spam** — Detects aliases that pack repeated movement and angle changes into the same moment.<br>**What CS2AC sees:** many commands contain matching same-time presses and releases carrying aim changes within a very short window.
+- **Antiaim** — The cheat sends fake angles, making the player spin, jitter, or look in impossible directions.<br>**How CS2AC catches it:** it watches for impossible views and aim that jumps away for a shot before snapping straight back.
+- **DLL Injection** — An injected cheat listens to hidden game events to power some of its features.<br>**How CS2AC catches it:** it checks what events the player's game is listening to and finds ones linked to injected cheats.
+- **Desubticking** — The cheat removes the normal timing from movement to make automated inputs behave differently.<br>**How CS2AC catches it:** it looks for movement that keeps arriving at the exact same instant instead of naturally between ticks.
+- **Doubletap** — The exploit makes the same weapon fire twice before it should be ready.<br>**How CS2AC catches it:** it compares the two shots with that weapon's real firing speed.
+- **Invalid CVar** — A cheat or unsafe setup changes protected game settings to values normal players should never have.<br>**How CS2AC catches it:** it checks those settings directly and notices when the player's game reports an impossible value.
+- **Invalid Input** — The cheat changes movement buttons without leaving the normal record of those presses.<br>**How CS2AC catches it:** it checks whether the player's button presses tell the same story as their movement.
+- **Namechanger** — The cheat rapidly changes the player's name to distract people or show off.<br>**How CS2AC catches it:** it notices when the same player changes name five times within one minute.
+- **Subtick Spam** — The cheat packs too many movement and aim changes into the same instant.<br>**How CS2AC catches it:** it waits for those unnatural bursts to repeat within a very short time.
 
 ## One detection. Everywhere.
 
