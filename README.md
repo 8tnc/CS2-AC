@@ -80,23 +80,23 @@ CS2AC helps community servers keep it that way.
 <table>
 <tr>
 <td width="22%"><strong>Aimbot</strong></td>
-<td><strong>Cheat:</strong> Snaps the crosshair onto an enemy just before shooting.<br><strong>CS2AC:</strong> Looks for the same sharp snap leading straight to damaging hits again and again.</td>
+<td><strong>What it catches:</strong> The crosshair suddenly snapping onto an enemy before a shot.<br><strong>How it knows:</strong> The same sharp snap keeps ending in real damage.</td>
 </tr>
 <tr>
 <td><strong>Aimlock</strong></td>
-<td><strong>Cheat:</strong> Smoothly follows a moving enemy with almost no shake or error.<br><strong>CS2AC:</strong> Watches for aim that stays unnaturally glued to a target for too long, even through walls.</td>
+<td><strong>What it catches:</strong> Aim that follows a moving enemy with almost no shake or error.<br><strong>How it knows:</strong> The crosshair stays glued to the target for far too long, even through walls.</td>
 </tr>
 <tr>
 <td><strong>Silentaim</strong></td>
-<td><strong>Cheat:</strong> Lands a shot somewhere the player's crosshair never appeared to point.<br><strong>CS2AC:</strong> Compares where the player aimed, where the bullet landed, and whether that bullet dealt damage.</td>
+<td><strong>What it catches:</strong> Bullets landing somewhere the crosshair never appeared to point.<br><strong>How it knows:</strong> The player's aim, the bullet impact, and the damage do not line up.</td>
 </tr>
 <tr>
 <td><strong>Inhuman Accuracy</strong></td>
-<td><strong>Cheat:</strong> Removes the misses that even great players still make.<br><strong>CS2AC:</strong> Watches a longer run of aimed shots and catches accuracy that normal play cannot keep up.</td>
+<td><strong>What it catches:</strong> Long streaks of accuracy with almost none of the misses real players make.<br><strong>How it knows:</strong> The impossible hit rate continues across a full set of aimed shots.</td>
 </tr>
 <tr>
 <td><strong>Irregular Behavior</strong></td>
-<td><strong>Cheat:</strong> Makes airborne and no-scope kills far more reliable than they should be.<br><strong>CS2AC:</strong> Counts both the attempts and the results, so one lucky shot means nothing.</td>
+<td><strong>What it catches:</strong> Airborne and no-scope kills happening far too reliably.<br><strong>How it knows:</strong> It counts the misses too, so one lucky shot means nothing.</td>
 </tr>
 </table>
 
@@ -105,19 +105,19 @@ CS2AC helps community servers keep it that way.
 <table>
 <tr>
 <td width="22%"><strong>Autostrafe</strong></td>
-<td><strong>Cheat:</strong> Steers through the air automatically to keep speed and make every strafe count.<br><strong>CS2AC:</strong> Looks for jump after jump with movement that is too fast, efficient, and perfectly timed.</td>
+<td><strong>What it catches:</strong> Automatic air strafes that preserve speed and make every movement count.<br><strong>How it knows:</strong> Jump after jump is too fast, efficient, and perfectly timed.</td>
 </tr>
 <tr>
 <td><strong>Bhop</strong></td>
-<td><strong>Cheat:</strong> Jumps at the exact moment the player touches the ground.<br><strong>CS2AC:</strong> Waits for a long chain of frame-perfect hops or the same landing pattern repeating over and over.</td>
+<td><strong>What it catches:</strong> Jump scripts that fire at the exact moment the player lands.<br><strong>How it knows:</strong> Frame-perfect hops or the same landing pattern keep repeating.</td>
 </tr>
 <tr>
 <td><strong>Hyperscroll</strong></td>
-<td><strong>Cheat:</strong> Floods the game with far more jump presses than normal mouse-wheel scrolling.<br><strong>CS2AC:</strong> Looks for excessive scrolling that also keeps producing frame-perfect hops.</td>
+<td><strong>What it catches:</strong> Far more jump presses than normal mouse-wheel scrolling can explain.<br><strong>How it knows:</strong> The excessive scrolling also keeps producing perfect hops.</td>
 </tr>
 <tr>
 <td><strong>Nulls</strong></td>
-<td><strong>Cheat:</strong> Switches opposite movement keys at the perfect moment while the player is airborne.<br><strong>CS2AC:</strong> Waits for a long chain of direction changes with timing that is simply too perfect.</td>
+<td><strong>What it catches:</strong> Opposite movement keys switching perfectly while the player is airborne.<br><strong>How it knows:</strong> The direction changes stay too perfect for too long.</td>
 </tr>
 </table>
 
@@ -126,35 +126,35 @@ CS2AC helps community servers keep it that way.
 <table>
 <tr>
 <td width="22%"><strong>Antiaim</strong></td>
-<td><strong>Cheat:</strong> Sends fake angles, making the player spin, jitter, or look in impossible directions.<br><strong>CS2AC:</strong> Watches for impossible views and aim that jumps away for a shot before snapping straight back.</td>
+<td><strong>What it catches:</strong> Fake angles that make the player spin, jitter, or look in impossible directions.<br><strong>How it knows:</strong> The view becomes impossible or jumps away for a shot before snapping straight back.</td>
 </tr>
 <tr>
 <td><strong>DLL Injection</strong></td>
-<td><strong>Cheat:</strong> Listens to hidden game events to power some of its features.<br><strong>CS2AC:</strong> Checks what events the player's game is listening to and finds ones linked to injected cheats.</td>
+<td><strong>What it catches:</strong> Injected cheats listening to hidden game events.<br><strong>How it knows:</strong> The player's game starts listening to events linked to cheat features.</td>
 </tr>
 <tr>
 <td><strong>Desubticking</strong></td>
-<td><strong>Cheat:</strong> Removes the normal timing from movement to make automated inputs behave differently.<br><strong>CS2AC:</strong> Looks for movement that keeps arriving at the exact same instant instead of naturally between ticks.</td>
+<td><strong>What it catches:</strong> Automated movement with its normal timing stripped away.<br><strong>How it knows:</strong> Movement keeps arriving at the exact same instant instead of naturally between ticks.</td>
 </tr>
 <tr>
 <td><strong>Doubletap</strong></td>
-<td><strong>Cheat:</strong> Makes the same weapon fire twice before it should be ready.<br><strong>CS2AC:</strong> Compares the two shots with that weapon's real firing speed.</td>
+<td><strong>What it catches:</strong> The same weapon firing twice before it should be ready.<br><strong>How it knows:</strong> The two shots are faster than that weapon can normally fire.</td>
 </tr>
 <tr>
 <td><strong>Invalid CVar</strong></td>
-<td><strong>Cheat:</strong> Changes protected game settings to values normal players should never have.<br><strong>CS2AC:</strong> Checks those settings directly and notices when the player's game reports an impossible value.</td>
+<td><strong>What it catches:</strong> Protected game settings changed to values normal players should never have.<br><strong>How it knows:</strong> The player's game reports a setting that is unsafe or impossible.</td>
 </tr>
 <tr>
 <td><strong>Invalid Input</strong></td>
-<td><strong>Cheat:</strong> Changes movement buttons without leaving the normal record of those presses.<br><strong>CS2AC:</strong> Checks whether the player's button presses tell the same story as their movement.</td>
+<td><strong>What it catches:</strong> Movement buttons changing without the normal record of those presses.<br><strong>How it knows:</strong> The button presses and the player's movement tell two different stories.</td>
 </tr>
 <tr>
 <td><strong>Namechanger</strong></td>
-<td><strong>Cheat:</strong> Rapidly changes the player's name to distract people or show off.<br><strong>CS2AC:</strong> Notices when the same player changes name five times within one minute.</td>
+<td><strong>What it catches:</strong> Rapid name changes used to distract people or show off.<br><strong>How it knows:</strong> The same player changes name five times within one minute.</td>
 </tr>
 <tr>
 <td><strong>Subtick Spam</strong></td>
-<td><strong>Cheat:</strong> Packs too many movement and aim changes into the same instant.<br><strong>CS2AC:</strong> Waits for those unnatural bursts to repeat within a very short time.</td>
+<td><strong>What it catches:</strong> Too many movement and aim changes packed into the same instant.<br><strong>How it knows:</strong> Those unnatural bursts keep repeating within a very short time.</td>
 </tr>
 </table>
 
