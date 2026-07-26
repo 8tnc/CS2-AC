@@ -20,8 +20,6 @@ CS2AC helps community servers keep it that way.
 
 ## See it catch
 
-Real in-game clips. No mockups.
-
 <table>
 <tr>
 <td width="50%" align="center">
