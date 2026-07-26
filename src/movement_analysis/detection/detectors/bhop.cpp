@@ -8,6 +8,7 @@
 #include "movement_analysis/detection/movement_detection.h"
 #include "movement_analysis/settings/movement_settings.h"
 #include "sdk/usercmd.h"
+#include "settings.h"
 
 #define MIN_AIR_TIME_FOR_BHOP    (4.0f * ENGINE_FIXED_TICK_INTERVAL) // Minimum air time to consider a jump for bhop hack detection
 #define BHOP_IGNORE_DURATION     (4.0f * ENGINE_FIXED_TICK_INTERVAL) // Ignore teleports/noclips in the last 4 ticks
@@ -109,6 +110,8 @@ void MovementDetectionService::CreateLandEvent()
 	event.cmdNum = this->currentCmdNum;
 	event.landingTime = this->player->landingTime;
 	event.numJumpBefore = this->recentJumps.size();
+	event.shouldCountTowardsPerfChains =
+		this->player->GetMovementSetting(MOVEMENT_SETTING_SV_JUMP_SPAM_PENALTY_TIME)->m_fl32Value >= ENGINE_FIXED_TICK_INTERVAL;
 }
 
 void MovementDetectionService::OnChangeMoveType(MoveType_t oldMoveType)
@@ -151,8 +154,6 @@ void MovementDetectionService::OnJump()
 	if (this->player->IsPerfing(true) && !this->recentLandingEvents.empty() && this->recentLandingEvents.back().pendingPerf)
 	{
 		recentLandingEvents.back().hasPerfectBhop = true;
-		recentLandingEvents.back().shouldCountTowardsPerfChains =
-			this->player->GetMovementSetting(MOVEMENT_SETTING_SV_JUMP_SPAM_PENALTY_TIME)->m_fl32Value >= ENGINE_FIXED_TICK_INTERVAL;
 	}
 }
 
@@ -210,7 +211,7 @@ void MovementDetectionService::CheckLandingEvents()
 		f32 averagePattern = totalPatternOccurrences > 0 ? (f32)weightedPatternSum / (f32)totalPatternOccurrences : 0.0f;
 
 		// Hard consecutive perf chain check.
-		if (maxPerfChain >= NUM_CONSECUTIVE_PERFS_FOR_INFRACTION)
+		if (maxPerfChain >= NUM_CONSECUTIVE_PERFS_FOR_INFRACTION && settings::IsDetectionEnabled(DetectionType::Bhop))
 		{
 			this->MarkInfraction(MovementDetectionService::Infraction::Type::BhopHack,
 								 tfm::format("%d/%d consecutive perfect bhops", maxPerfChain, totalChainEligibleEvents));
@@ -222,7 +223,7 @@ void MovementDetectionService::CheckLandingEvents()
 		if (maxPerfChain >= NUM_CONSECUTIVE_PERFS_FOR_PATTERN_CHECK)
 		{
 			if (totalPatternOccurrences > 0 && mostCommonPatternCount >= totalPatternOccurrences * REPETITIVE_PATTERN_THRESHOLD
-				&& mostCommonPattern < LOW_PATTERN_THRESHOLD)
+				&& mostCommonPattern < LOW_PATTERN_THRESHOLD && settings::IsDetectionEnabled(DetectionType::Bhop))
 			{
 				this->MarkInfraction(MovementDetectionService::Infraction::Type::BhopHack,
 									 tfm::format("%d/%d occurrences of pattern %d (avg pattern %.2f)", mostCommonPatternCount,
@@ -235,7 +236,7 @@ void MovementDetectionService::CheckLandingEvents()
 		// Hyperscroll check
 		f32 perfectRatio = totalChainEligibleEvents > 0 ? (f32)numPerfs / (f32)totalChainEligibleEvents : 0.0f;
 		if (averagePattern >= HIGH_PATTERN_THRESHOLD && perfectRatio > PERF_RATIO_FOR_HYPERSCROLL_INFRACTION
-			&& totalChainEligibleEvents >= MIN_SAMPLE_COUNT)
+			&& totalChainEligibleEvents >= MIN_SAMPLE_COUNT && settings::IsDetectionEnabled(DetectionType::Hyperscroll))
 		{
 			this->MarkInfraction(MovementDetectionService::Infraction::Type::Hyperscroll,
 								 tfm::format("Average pattern %.2f >= %.2f with %.2f%% perfect ratio (%d/%d)", averagePattern, HIGH_PATTERN_THRESHOLD,
