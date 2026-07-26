@@ -5,9 +5,12 @@
 #include "utils/interfaces.h"
 #include "utils/utils.h"
 
+#include <bitset>
+
 namespace
 {
-	constexpr auto scanInterval = std::chrono::seconds(10);
+	constexpr auto initialScanDelay = std::chrono::seconds(10);
+	constexpr auto scanInterval = std::chrono::minutes(2);
 
 	// Keep normal client and game-instructor subscriptions out of this list.
 	constexpr std::array<const char *, 118> blacklistedEvents = {
@@ -144,25 +147,18 @@ namespace detection
 
 	void DllInjectionModule::Unload()
 	{
-		activeEvents = {};
+		nextScans = {};
 		announce = nullptr;
 	}
 
 	void DllInjectionModule::Reset()
 	{
-		activeEvents = {};
-		nextScan = std::chrono::steady_clock::now() + scanInterval;
+		nextScans = {};
 	}
 
 	void DllInjectionModule::OnGameFrame()
 	{
 		auto now = std::chrono::steady_clock::now();
-		if (now < nextScan)
-		{
-			return;
-		}
-		nextScan = now + scanInterval;
-
 		if (!announce || !interfaces::pGameEventManager || !g_pCS2ACPlayerManager || !g_pCS2ACUtils)
 		{
 			return;
@@ -182,13 +178,26 @@ namespace detection
 				continue;
 			}
 
-			auto *listener = g_pCS2ACUtils->GetLegacyGameEventListener(player->GetPlayerSlot());
-			if (!listener)
+			auto &nextScan = nextScans[slot];
+			if (nextScan == Clock::time_point {})
+			{
+				nextScan = now + initialScanDelay;
+				continue;
+			}
+			if (now < nextScan)
 			{
 				continue;
 			}
 
-			std::bitset<136> current;
+			auto *listener = g_pCS2ACUtils->GetLegacyGameEventListener(player->GetPlayerSlot());
+			if (!listener)
+			{
+				nextScan = now + initialScanDelay;
+				continue;
+			}
+			nextScan = now + scanInterval;
+
+			std::bitset<blacklistedEvents.size()> current;
 			for (size_t eventIndex = 0; eventIndex < blacklistedEvents.size(); ++eventIndex)
 			{
 				if (!interfaces::pGameEventManager->FindListener(listener, blacklistedEvents[eventIndex]))
@@ -199,7 +208,6 @@ namespace detection
 				current.set(eventIndex);
 			}
 			const bool detected = current.any();
-			activeEvents[slot] = current;
 
 			if (!detected)
 			{
@@ -240,7 +248,7 @@ namespace detection
 		const int slot = player->GetPlayerSlot().Get();
 		if (slot >= 0 && slot < MAXPLAYERS)
 		{
-			activeEvents[slot].reset();
+			nextScans[slot] = {};
 		}
 	}
 } // namespace detection

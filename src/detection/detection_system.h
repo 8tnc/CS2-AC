@@ -4,7 +4,6 @@
 #include "sdk/datatypes.h"
 
 #include <array>
-#include <bitset>
 #include <chrono>
 #include <cstdint>
 #include <deque>
@@ -287,8 +286,7 @@ namespace detection
 
 	private:
 		AnnounceCallback announce {};
-		std::array<std::bitset<136>, MAXPLAYERS> activeEvents;
-		Clock::time_point nextScan;
+		std::array<Clock::time_point, MAXPLAYERS> nextScans;
 	};
 
 	struct AntiAimCommand
