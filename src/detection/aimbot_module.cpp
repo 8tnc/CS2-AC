@@ -22,8 +22,15 @@ namespace
 	constexpr size_t commandHistorySize = 128;
 	constexpr int snapWindowTicks = static_cast<int>(ENGINE_FIXED_TICK_RATE * 0.5f);
 	constexpr float minimumDistance = 100.0f;
-	constexpr int detectionThreshold = 4;
+	constexpr int detectionThreshold = 5;
 	constexpr auto evidenceWindow = std::chrono::minutes(10);
+
+	enum class AimbotRule
+	{
+		None,
+		Convergence,
+		SnapReturn,
+	};
 
 	float AimError(const Vector &eye, const QAngle &angles, const Vector &target)
 	{
@@ -224,6 +231,14 @@ namespace detection
 			clearPending();
 			return true;
 		}
+		const bool attackerHasPlayingTeam = shotAttacker->team == CS_TEAM_T || shotAttacker->team == CS_TEAM_CT;
+		const bool targetHasPlayingTeam = shotTarget->team == CS_TEAM_T || shotTarget->team == CS_TEAM_CT;
+		if (!attackerHasPlayingTeam || !targetHasPlayingTeam || shotTarget->team == shotAttacker->team)
+		{
+			AIMBOT_DEBUG("%s rejected because the damaging shot was not against an enemy.\n", attacker->GetName());
+			clearPending();
+			return true;
+		}
 		const float distance = (shotTarget->origin - shotAttacker->eyePosition).Length();
 		if (!std::isfinite(distance) || distance < minimumDistance)
 		{
@@ -236,6 +251,8 @@ namespace detection
 		float largestSnap = 0.0f;
 		float bestBefore = 0.0f;
 		float bestAfter = 0.0f;
+		bool reusedSnap = false;
+		AimbotRule matchedRule = AimbotRule::None;
 		auto findCommand = [&](int commandNumber) -> AimCommand *
 		{
 			auto found = std::find_if(data.commands.begin(), data.commands.end(),
@@ -276,15 +293,22 @@ namespace detection
 			{
 				break;
 			}
-			if ((snap > 10.0f && after < before * 0.2f) || (snap > 5.0f && after < before * 0.1f))
+			const bool converged = (snap > 10.0f && after < before * 0.2f) || (snap > 5.0f && after < before * 0.1f);
+			const bool fresh = !data.hasCountedIncident || newer->commandNumber > data.lastCountedIncidentCommand;
+			if (converged && fresh)
 			{
 				suspicious = true;
+				matchedRule = AimbotRule::Convergence;
 				if (snap > largestSnap)
 				{
 					largestSnap = snap;
 					bestBefore = before;
 					bestAfter = after;
 				}
+			}
+			else if (converged)
+			{
+				reusedSnap = true;
 			}
 			newer = older;
 		}
@@ -311,20 +335,36 @@ namespace detection
 		{
 			const float surrounding = AngularDistance(previous->angles, next->angles);
 			const float snap = AngularDistance(previous->angles, shot->angles);
-			if (std::isfinite(surrounding) && std::isfinite(snap) && surrounding < 10.0f && snap > 0.5f && snap > surrounding * 5.0f)
+			const bool fresh = !data.hasCountedIncident || shot->commandNumber > data.lastCountedIncidentCommand;
+			if (fresh && std::isfinite(surrounding) && std::isfinite(snap) && surrounding < 10.0f && snap > 0.5f
+				&& snap > surrounding * 5.0f)
 			{
+				if (!suspicious)
+				{
+					matchedRule = AimbotRule::SnapReturn;
+					largestSnap = snap;
+				}
 				suspicious = true;
-				largestSnap = (std::max)(largestSnap, snap);
 			}
 		}
 
+		const int incidentCommand = shot->commandNumber;
 		clearPending();
 		if (!suspicious)
 		{
-			AIMBOT_DEBUG("%s damaging shot did not converge suspiciously.\n", attacker->GetName());
+			if (reusedSnap)
+			{
+				AIMBOT_DEBUG("%s ignored a snap that already counted for an earlier damaging shot.\n", attacker->GetName());
+			}
+			else
+			{
+				AIMBOT_DEBUG("%s damaging shot did not converge suspiciously.\n", attacker->GetName());
+			}
 			return true;
 		}
 
+		data.lastCountedIncidentCommand = incidentCommand;
+		data.hasCountedIncident = true;
 		const auto now = Clock::now();
 		auto &incidents = evidence[attacker->index];
 		while (!incidents.empty() && now - incidents.front() >= evidenceWindow)
@@ -332,15 +372,27 @@ namespace detection
 			incidents.pop_front();
 		}
 		incidents.push_back(now);
-		AIMBOT_DEBUG("%s counted snap %.2f, target error %.2f -> %.2f, evidence %d/%d.\n", attacker->GetName(), largestSnap, bestBefore, bestAfter,
-					 static_cast<int>(incidents.size()), detectionThreshold);
+		if (matchedRule == AimbotRule::SnapReturn)
+		{
+			AIMBOT_DEBUG("%s counted snap-return %.2f, evidence %d/%d.\n", attacker->GetName(), largestSnap, static_cast<int>(incidents.size()),
+						 detectionThreshold);
+		}
+		else
+		{
+			AIMBOT_DEBUG("%s counted convergence %.2f, target error %.2f -> %.2f, evidence %d/%d.\n", attacker->GetName(), largestSnap, bestBefore,
+						 bestAfter, static_cast<int>(incidents.size()), detectionThreshold);
+		}
 		if (incidents.size() >= detectionThreshold)
 		{
 			if (announce)
 			{
-				announce("AIMBOT", attacker,
-						 tfm::format("%zu snap-hit incidents reached the threshold; latest snap %.2f degrees, target error %.2f -> %.2f degrees.",
-									 incidents.size(), largestSnap, bestBefore, bestAfter));
+				const std::string details =
+					matchedRule == AimbotRule::SnapReturn
+						? tfm::format("%zu snap-hit incidents reached the threshold; the latest was a %.2f-degree snap-return.",
+									  incidents.size(), largestSnap)
+						: tfm::format("%zu snap-hit incidents reached the threshold; latest snap %.2f degrees, target error %.2f -> %.2f degrees.",
+									  incidents.size(), largestSnap, bestBefore, bestAfter);
+				announce("AIMBOT", attacker, details);
 			}
 			incidents.clear();
 		}

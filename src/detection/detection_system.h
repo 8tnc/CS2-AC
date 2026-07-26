@@ -189,10 +189,12 @@ namespace detection
 		std::deque<AimCommand> commands;
 		int pendingShot {-1};
 		int victimIndex {-1};
+		int lastCountedIncidentCommand {};
 		bool pending {};
+		bool hasCountedIncident {};
 	};
 
-	// Detects damaging visible aim snaps that rapidly converge on a target.
+	// Detects damaging command-angle snaps that rapidly converge on an enemy.
 	class AimbotModule
 	{
 	public:
