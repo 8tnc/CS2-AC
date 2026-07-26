@@ -12,14 +12,9 @@
 
 **17 detections. One server-side plugin. Zero player installs.**
 
-<br>
-
-<img src="docs/showcase/aimbot.gif" width="800" alt="CS2AC detecting a blatant snap-hit aimbot">
-
-<strong>AIMBOT caught live.</strong><br>
-<sub>A blatant snap lands on target. CS2AC keeps the evidence, announces it, and acts.</sub>
-
 No client. No kernel driver. No player downloads.
+
+Install it on the server. Players just join.
 
 [Download](https://github.com/karola3vax/CS2AC/releases) · [Install](#quickstart) · [See every detection](#17-detections-one-plugin) · [Pair it with CS2FOW](#want-wallhack-protection-too)
 
@@ -36,21 +31,21 @@ Cheats can hide their menus. They cannot hide every command, shot, view angle, a
 - **A safe whitelist:** trusted players are still detected and announced, but never punished.
 - **Windows and Linux:** one Metamod:Source plugin, no CounterStrikeSharp required.
 
-## More detections in action
+## See it catch
 
 Real in-game clips. No mockups.
 
 <table>
 <tr>
 <td width="50%" align="center">
+<img src="docs/showcase/aimbot.gif" width="100%" alt="CS2AC detecting a blatant snap-hit aimbot">
+<br><strong>AIMBOT</strong><br>
+<sub>A blatant snap lands on target. CS2AC keeps the evidence.</sub>
+</td>
+<td width="50%" align="center">
 <img src="docs/showcase/aimlock.gif" width="100%" alt="CS2AC detecting inhumanly precise target tracking">
 <br><strong>AIMLOCK</strong><br>
 <sub>The crosshair follows a moving target with inhuman precision.</sub>
-</td>
-<td width="50%" align="center">
-<img src="docs/showcase/silentaim.gif" width="100%" alt="CS2AC detecting bullets that disagree with visible aim">
-<br><strong>SILENTAIM</strong><br>
-<sub>The bullets hit somewhere the visible aim never pointed.</sub>
 </td>
 </tr>
 <tr>
@@ -66,10 +61,15 @@ Real in-game clips. No mockups.
 </td>
 </tr>
 <tr>
-<td colspan="2" align="center">
-<img src="docs/showcase/irregular-behavior.gif" width="65%" alt="CS2AC detecting repeated irregular airborne and no-scope results">
+<td width="50%" align="center">
+<img src="docs/showcase/irregular-behavior.gif" width="100%" alt="CS2AC detecting repeated irregular airborne and no-scope results">
 <br><strong>IRREGULAR BEHAVIOR</strong><br>
 <sub>Too many rage-level airborne and no-scope results.</sub>
+</td>
+<td width="50%" align="center">
+<img src="docs/showcase/silentaim.gif" width="100%" alt="CS2AC detecting bullets that disagree with visible aim">
+<br><strong>SILENTAIM</strong><br>
+<sub>The bullets hit somewhere the visible aim never pointed.</sub>
 </td>
 </tr>
 </table>
