@@ -14,7 +14,7 @@
 
 CS2AC helps community servers keep it that way.
 
-[Download](https://github.com/karola3vax/CS2AC/releases) · [Install](#quickstart) · [See every detection](#the-seventeen-detection-modules) · [Pair it with CS2FOW](#want-wallhack-protection-too)
+[Install](#quickstart) · [See every detection](#the-seventeen-detection-modules) · [Pair it with CS2FOW](#want-wallhack-protection-too)
 
 </div>
 
@@ -201,7 +201,7 @@ Whitelisting does not silence CS2AC. The detection still appears in chat, on scr
 
 You need a Windows x64 or Linux x64 CS2 dedicated server running [Metamod:Source](https://www.sourcemm.net/) 2.x.
 
-1. Download the matching package from [GitHub Releases](https://github.com/karola3vax/CS2AC/releases).
+1. Open this repository's **Releases** tab and choose the matching Windows or Linux package.
 2. Extract it into the CS2 server root without rearranging anything. The package begins with the `game` folder.
 3. Edit `game/csgo/cfg/cs2ac.cfg`.
 4. Start the server.
