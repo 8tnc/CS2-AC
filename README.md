@@ -14,13 +14,9 @@
 
 CS2AC helps community servers keep it that way.
 
-Server-side only. Nothing for players to install. Just join and play.
-
 [Download](https://github.com/karola3vax/CS2AC/releases) · [Install](#quickstart) · [See every detection](#17-detections-one-plugin) · [Pair it with CS2FOW](#want-wallhack-protection-too)
 
 </div>
-
-Some cheaters rage. Others smooth the aim and try to look legit. CS2AC looks for both in the aim, shots, movement, and inputs sent to the server.
 
 <table>
 <tr>
