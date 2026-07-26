@@ -24,7 +24,7 @@ namespace
 	constexpr int spinSamples = 16;
 	constexpr float invalidPitch = 89.01f;
 	constexpr float invalidRoll = 50.01f;
-	constexpr float minimumSpinRate = 500.0f;
+	constexpr float minimumSpinRate = 320.0f;
 	constexpr float mediumSpinRate = 1000.0f;
 	constexpr float fastSpinRate = 2200.0f;
 	constexpr float slowSpinSeconds = 15.0f;
