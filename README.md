@@ -6,7 +6,7 @@
 
 [![Build](https://img.shields.io/github/actions/workflow/status/karola3vax/CS2AC/build.yml?branch=main&style=for-the-badge&label=build)](https://github.com/karola3vax/CS2AC/actions/workflows/build.yml)
 [![Version](https://img.shields.io/badge/version-1.0.0-blue?style=for-the-badge)](https://github.com/karola3vax/CS2AC)
-[![Detections](https://img.shields.io/badge/detections-17-red?style=for-the-badge)](#17-detections-one-plugin)
+[![Detections](https://img.shields.io/badge/detections-17-red?style=for-the-badge)](#the-seventeen-detection-modules)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-5c7cfa?style=for-the-badge)](#quickstart)
 [![License](https://img.shields.io/badge/license-AGPL--3.0-2ea44f?style=for-the-badge)](LICENSE)
 
@@ -14,7 +14,7 @@
 
 CS2AC helps community servers keep it that way.
 
-[Download](https://github.com/karola3vax/CS2AC/releases) · [Install](#quickstart) · [See every detection](#17-detections-one-plugin) · [Pair it with CS2FOW](#want-wallhack-protection-too)
+[Download](https://github.com/karola3vax/CS2AC/releases) · [Install](#quickstart) · [See every detection](#the-seventeen-detection-modules) · [Pair it with CS2FOW](#want-wallhack-protection-too)
 
 </div>
 
@@ -73,7 +73,7 @@ CS2AC helps community servers keep it that way.
 
 </div>
 
-## 17 detections. One plugin.
+## The Seventeen Detection Modules
 
 ### Aim and accuracy
 
