@@ -31,6 +31,17 @@ namespace
 	constexpr auto evidenceWindow = std::chrono::minutes(10);
 	constexpr float bodyHeights[] = {8.0f, 46.0f, 64.0f};
 
+	constexpr bool IsContinuousSequence(std::int64_t commandDelta, std::int64_t clientTickDelta, std::int64_t serverTickDelta)
+	{
+		return commandDelta >= 0 && clientTickDelta >= 0 && serverTickDelta == 1;
+	}
+
+	static_assert(IsContinuousSequence(0, 0, 1));
+	static_assert(IsContinuousSequence(2, 2, 1));
+	static_assert(!IsContinuousSequence(-1, 1, 1));
+	static_assert(!IsContinuousSequence(1, -1, 1));
+	static_assert(!IsContinuousSequence(1, 1, 2));
+
 	struct Candidate
 	{
 		QAngle bearing;
@@ -59,7 +70,6 @@ namespace
 		data.pending = {};
 		data.track = {};
 		data.latchedTarget = -1;
-		data.latchedBodyPoint = -1;
 		data.breakStartTick = -1;
 		data.latched = false;
 	}
@@ -261,7 +271,7 @@ namespace detection
 
 		if (data.latched)
 		{
-			if (candidate.valid && candidate.targetIndex == data.latchedTarget && candidate.bodyPoint == data.latchedBodyPoint)
+			if (candidate.valid && candidate.targetIndex == data.latchedTarget)
 			{
 				data.breakStartTick = -1;
 				return;
@@ -276,7 +286,6 @@ namespace detection
 			}
 			data.latched = false;
 			data.latchedTarget = -1;
-			data.latchedBodyPoint = -1;
 			data.breakStartTick = -1;
 			AIMLOCK_DEBUG("%s rearmed after a half-second break.\n", player->GetName());
 		}
@@ -305,24 +314,33 @@ namespace detection
 			startTrack();
 			return;
 		}
-		if (!candidate.valid || candidate.targetIndex != data.track.targetIndex || candidate.bodyPoint != data.track.bodyPoint
-			|| static_cast<std::int64_t>(sample.commandNumber) - data.track.lastCommandNumber != 1
-			|| static_cast<std::int64_t>(sample.clientTick) - data.track.lastClientTick != 1
-			|| static_cast<std::int64_t>(sample.serverTick) - data.track.lastServerTick != 1)
+		const std::int64_t commandDelta = static_cast<std::int64_t>(sample.commandNumber) - data.track.lastCommandNumber;
+		const std::int64_t clientTickDelta = static_cast<std::int64_t>(sample.clientTick) - data.track.lastClientTick;
+		const std::int64_t serverTickDelta = static_cast<std::int64_t>(sample.serverTick) - data.track.lastServerTick;
+		if (serverTickDelta == 0 && commandDelta >= 0 && clientTickDelta >= 0)
 		{
+			return;
+		}
+		if (!candidate.valid || candidate.targetIndex != data.track.targetIndex
+			|| !IsContinuousSequence(commandDelta, clientTickDelta, serverTickDelta))
+		{
+			AIMLOCK_DEBUG("%s tracking reset: target %d->%d, command delta %lld, client tick delta %lld, server tick delta %lld.\n",
+						  player->GetName(), data.track.targetIndex, candidate.valid ? candidate.targetIndex : -1,
+						  static_cast<long long>(commandDelta), static_cast<long long>(clientTickDelta), static_cast<long long>(serverTickDelta));
 			ClearTrack(data);
 			startTrack();
 			return;
 		}
 
+		const bool bodyPointChanged = candidate.bodyPoint != data.track.bodyPoint;
 		const Vector lastTarget = AimForward(data.track.lastBearing);
 		const Vector target = AimForward(candidate.bearing);
 		const Vector lastView = AimForward(data.track.lastView);
 		const Vector view = AimForward(sample.angles);
 		Vector targetDelta = target - lastTarget;
 		Vector viewDelta = view - lastView;
-		const float targetTravel = AngularDistance(data.track.lastBearing, candidate.bearing);
-		const float viewTravel = AngularDistance(data.track.lastView, sample.angles);
+		const float targetTravel = bodyPointChanged ? 0.0f : AngularDistance(data.track.lastBearing, candidate.bearing);
+		const float viewTravel = bodyPointChanged ? 0.0f : AngularDistance(data.track.lastView, sample.angles);
 		const bool moving = std::isfinite(targetTravel) && targetTravel >= meaningfulMovement;
 		const bool viewMoving = std::isfinite(viewTravel) && viewTravel >= meaningfulMovement;
 		float alignment = 0.0f;
@@ -356,6 +374,7 @@ namespace detection
 		data.track.lastCommandNumber = sample.commandNumber;
 		data.track.lastView = sample.angles;
 		data.track.lastBearing = candidate.bearing;
+		data.track.bodyPoint = candidate.bodyPoint;
 
 		if (static_cast<std::int64_t>(sample.serverTick) - data.track.startServerTick < trackingTicks || data.track.targetTravel < minimumTargetTravel
 			|| data.track.targetTravel / 2.0f < minimumTargetRate || data.track.movingSamples == 0
@@ -392,7 +411,6 @@ namespace detection
 
 		data.latched = true;
 		data.latchedTarget = data.track.targetIndex;
-		data.latchedBodyPoint = data.track.bodyPoint;
 		data.breakStartTick = -1;
 		ClearTrack(data);
 	}

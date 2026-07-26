@@ -263,7 +263,6 @@ namespace detection
 		AimlockSample pending;
 		AimlockTrack track;
 		int latchedTarget {-1};
-		int latchedBodyPoint {-1};
 		int breakStartTick {-1};
 		bool latched {};
 	};
