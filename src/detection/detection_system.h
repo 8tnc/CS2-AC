@@ -297,7 +297,7 @@ namespace detection
 		int serverTick {-1};
 		QAngle baseAngles;
 		QAngle shotAngles;
-		float historyDifference {};
+		float historyYawDifference {};
 		float subtickPitch {};
 		float subtickYaw {};
 		int mouseX {};

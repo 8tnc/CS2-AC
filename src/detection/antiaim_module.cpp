@@ -34,7 +34,7 @@ namespace
 	constexpr float spinConsistency = 0.85f;
 	constexpr float jitterTolerance = 0.25f;
 	constexpr float minimumJitterSpan = 10.0f;
-	constexpr float commandMismatchAngle = 90.0f;
+	constexpr float commandYawMismatchAngle = 90.0f;
 	constexpr float minimumAttackReturnAngle = 30.0f;
 	constexpr int commandMismatchSpacing = 4;
 	constexpr float detectionThreshold = 20.0f;
@@ -204,8 +204,8 @@ namespace detection
 					continue;
 				}
 				captured.hasHistoryAngles = true;
-				float difference = AngularDistance(captured.baseAngles, historyAngles);
-				captured.historyDifference = (std::max)(captured.historyDifference, difference);
+				float yawDifference = std::abs(YawDelta(captured.baseAngles.y, historyAngles.y));
+				captured.historyYawDifference = (std::max)(captured.historyYawDifference, yawDifference);
 				if (historyIndex == attackIndex)
 				{
 					captured.shotAngles = historyAngles;
@@ -444,13 +444,13 @@ namespace detection
 
 		float surrounding = AngularDistance(previous->baseAngles, next->baseAngles);
 		float snap = AngularDistance(previous->baseAngles, shot->baseAngles);
-		ANTIAIM_DEBUG("%s shot command %d: base/shot-history %.2f, surrounding %.2f, snap %.2f, mouse %d/%d, subtick %.2f/%.2f.\n", player->GetName(),
-					  shot->commandNumber, shot->historyDifference, surrounding, snap, shot->mouseX, shot->mouseY, shot->subtickPitch,
+		ANTIAIM_DEBUG("%s shot command %d: base/history yaw %.2f, surrounding %.2f, snap %.2f, mouse %d/%d, subtick %.2f/%.2f.\n", player->GetName(),
+					  shot->commandNumber, shot->historyYawDifference, surrounding, snap, shot->mouseX, shot->mouseY, shot->subtickPitch,
 					  shot->subtickYaw);
 		if (std::isfinite(surrounding) && std::isfinite(snap) && surrounding < 10.0f && snap > minimumAttackReturnAngle
 			&& snap > surrounding * 5.0f)
 		{
-			AddEvidence(player, data, 2.0f, "one-command attack return", false);
+			AddEvidence(player, data, 5.0f, "one-command attack return", false);
 		}
 		else
 		{
@@ -509,7 +509,8 @@ namespace detection
 
 		bool wasInconsistent = data.inconsistencyActive;
 		bool historyMismatch =
-			!found->attack && found->hasHistoryAngles && std::isfinite(found->historyDifference) && found->historyDifference > commandMismatchAngle;
+			!found->attack && found->hasHistoryAngles && std::isfinite(found->historyYawDifference)
+			&& found->historyYawDifference >= commandYawMismatchAngle;
 		data.inconsistencyActive = found->problems != 0 || historyMismatch;
 		if (found->problems != 0 && !data.suppressContinuous)
 		{
@@ -521,8 +522,8 @@ namespace detection
 					 || static_cast<std::int64_t>(found->commandNumber) - data.lastMismatchEvidenceCommand >= commandMismatchSpacing))
 		{
 			data.lastMismatchEvidenceCommand = found->commandNumber;
-			ANTIAIM_DEBUG("%s command %d base/input-history mismatch is %.2f degrees.\n", player->GetName(), found->commandNumber,
-						  found->historyDifference);
+			ANTIAIM_DEBUG("%s command %d base/input-history yaw mismatch is %.2f degrees.\n", player->GetName(), found->commandNumber,
+						  found->historyYawDifference);
 			AddEvidence(player, data, 2.0f, "a repeated base and input-history mismatch", true);
 		}
 		else if (!data.inconsistencyActive && wasInconsistent)
