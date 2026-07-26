@@ -80,7 +80,7 @@ namespace
 		CConVar<bool> irregularBehaviorEnabled {"cs2ac_irregular_behavior_enabled", FCVAR_NONE,
 											   "Detect repeated success with unusually difficult shots", true};
 		CConVar<bool> namechangerEnabled {"cs2ac_namechanger_enabled", FCVAR_NONE, "Detect repeated player name changes", true};
-		CConVar<bool> nullsEnabled {"cs2ac_nulls_enabled", FCVAR_NONE, "Detect automated opposite-direction input timing", true};
+		CConVar<bool> nullsEnabled {"cs2ac_nulls_enabled", FCVAR_NONE, "Detect mechanically perfect airborne opposite-direction switches", true};
 		CConVar<bool> silentaimEnabled {"cs2ac_silentaim_enabled", FCVAR_NONE,
 									  "Detect damaging shots that disagree with the visible aim", true};
 		CConVar<bool> subtickSpamEnabled {"cs2ac_subtick_spam_enabled", FCVAR_NONE,

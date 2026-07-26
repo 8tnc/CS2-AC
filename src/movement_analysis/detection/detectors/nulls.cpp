@@ -1,4 +1,4 @@
-// Detects mechanically perfect opposite-direction input timing.
+// Detects mechanically perfect airborne opposite-direction switches.
 #include "movement_analysis/detection/movement_detection.h"
 #include "sdk/usercmd.h"
 
@@ -155,6 +155,12 @@ void MovementDetectionService::CreateInputEvents(PlayerCommand *cmd)
 		{
 			// Analog movement input changes
 			const CSubtickMoveStep &step = cmd->base().subtick_moves(i);
+			if ((step.has_analog_forward_delta() && !std::isfinite(step.analog_forward_delta()))
+				|| (step.has_analog_left_delta() && !std::isfinite(step.analog_left_delta())))
+			{
+				invalidInput = true;
+				continue;
+			}
 			// Helper to record an input event
 			auto recordAnalogEvent = [&](u64 button, bool pressed) { recordEvent(button, pressed, true, step.when()); };
 
@@ -529,10 +535,12 @@ void MovementDetectionService::AnalyzeNullsForAxis(const std::deque<InputEvent> 
 
 	if (maxConsecutivePerfect >= adjustedRequiredPerfectCstrafes)
 	{
+		const char *axis = button1 == IN_FORWARD ? "forward/backward" : "left/right";
 		std::string details =
-			tinyformat::format("Nulls detection on axis %s. Streak: %d/%d, total %d/%d, OL: %d, DA median: %.2f ms, FPS: %.2f",
-							   (button1 == IN_FORWARD || button2 == IN_BACK) ? "forward/backward" : "left/right", maxConsecutivePerfect,
-							   adjustedRequiredPerfectCstrafes, numPerfect, total, numOverlaps, underlapMedian * 1000, 1 / medianFramerate);
+			tinyformat::format("The %s inputs reached a perfect-timing score of %u; %u was required. "
+							   "Median release-to-press gap: %.2f ms; overlap score: %u; measured FPS: %.2f.",
+							   axis, maxConsecutivePerfect, adjustedRequiredPerfectCstrafes, underlapMedian * 1000, numOverlaps,
+							   1 / medianFramerate);
 		this->MarkInfraction(MovementDetectionService::Infraction::Type::Nulls, details);
 		if (button1 == IN_FORWARD)
 		{

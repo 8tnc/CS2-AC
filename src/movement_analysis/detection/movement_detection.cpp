@@ -97,7 +97,10 @@ void MovementDetectionService::OnSetupMove(PlayerCommand *command)
 
 	currentCmdNum = command->cmdNum;
 	CheckSubtickAbuse(command);
-	CreateInputEvents(command);
+	if (settings::IsDetectionEnabled(DetectionType::Nulls))
+	{
+		CreateInputEvents(command);
+	}
 	ParseCommandForJump(command);
 	DetectOptimization(command);
 }
@@ -109,9 +112,12 @@ void MovementDetectionService::OnPhysicsSimulatePost()
 	{
 		return;
 	}
-	CheckNulls();
+	if (settings::IsDetectionEnabled(DetectionType::Nulls))
+	{
+		CheckNulls();
+		CleanupOldInputEvents();
+	}
 	CheckSuspiciousSubtickCommands();
-	CleanupOldInputEvents();
 	CheckLandingEvents();
 }
 

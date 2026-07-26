@@ -25,7 +25,7 @@ public:
 			InvalidCvar,
 			// Detects movement button changes without matching subtick records.
 			InvalidInput,
-			// Detects automated opposite-direction input release timing.
+			// Detects mechanically perfect airborne opposite-direction switches.
 			Nulls,
 			// Detects repeated same-time button aliases carrying pitch or yaw changes.
 			SubtickSpam,
