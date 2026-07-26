@@ -72,6 +72,20 @@ Real in-game clips. No mockups.
 </tr>
 </table>
 
+<div align="center">
+
+### CS2AC + CS2FOW
+
+<a href="https://github.com/karola3vax/CS2FOW">
+<img src="docs/showcase/cs2fow-wallhack.gif" width="100%" alt="CS2FOW hiding enemies behind solid map geometry on Ancient">
+</a>
+
+**Catch the cheat. Starve the wallhack.**
+
+<sub>CS2AC catches cheating behavior. CS2FOW stops hidden enemies from being sent to the cheater in the first place.</sub>
+
+</div>
+
 ## 17 detections. One plugin.
 
 ### Aim and accuracy
