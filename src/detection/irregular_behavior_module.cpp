@@ -90,6 +90,12 @@ namespace detection
 		{
 			return;
 		}
+		auto *attackerPawn = attacker->GetPlayerPawn();
+		auto *victimPawn = victim->GetPlayerPawn();
+		if (!attackerPawn || !victimPawn || !AreOpponents(attackerPawn->GetTeam(), victimPawn->GetTeam()))
+		{
+			return;
+		}
 		shot.irregularConsumed = true;
 		auto &data = playerData[attacker->index];
 		auto attempt =

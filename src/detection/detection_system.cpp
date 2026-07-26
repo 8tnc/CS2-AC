@@ -188,7 +188,7 @@ namespace detection
 		const bool grounded = pawn->m_bOnGroundLastTick() || ((pawn->m_fFlags() & FL_ONGROUND) && pawn->m_hGroundEntity().IsValid());
 		found->serverTick = currentTick;
 		found->eyePosition = eye;
-		found->airborne = !grounded;
+		found->airborne = !grounded && pawn->m_MoveType() == MOVETYPE_WALK && pawn->m_nActualMoveType() == MOVETYPE_WALK;
 		found->scoped = pawn->m_bIsScoped();
 		found->simulated = true;
 	}
