@@ -31,18 +31,16 @@ namespace interfaces
 	inline void Initialize(ISmmAPI *ismm, std::vector<std::string> &missing)
 	{
 		Find(ismm, ismm->GetEngineFactory(), CVAR_INTERFACE_VERSION, "the console variable interface", g_pCVar, missing);
-		Find(ismm, ismm->GetEngineFactory(), GAMERESOURCESERVICESERVER_INTERFACE_VERSION, "the game resource service",
-			 pGameResourceServiceServer, missing);
-		Find(ismm, ismm->GetServerFactory(), INTERFACEVERSION_SERVERGAMECLIENTS, "the game client interface", g_pSource2GameClients, missing);
-		Find(ismm, ismm->GetServerFactory(), SOURCE2GAMEENTITIES_INTERFACE_VERSION, "the game entity interface", g_pSource2GameEntities,
+		Find(ismm, ismm->GetEngineFactory(), GAMERESOURCESERVICESERVER_INTERFACE_VERSION, "the game resource service", pGameResourceServiceServer,
 			 missing);
+		Find(ismm, ismm->GetServerFactory(), INTERFACEVERSION_SERVERGAMECLIENTS, "the game client interface", g_pSource2GameClients, missing);
+		Find(ismm, ismm->GetServerFactory(), SOURCE2GAMEENTITIES_INTERFACE_VERSION, "the game entity interface", g_pSource2GameEntities, missing);
 		Find(ismm, ismm->GetEngineFactory(), INTERFACEVERSION_VENGINESERVER, "the engine server interface", pEngine, missing);
 		Find(ismm, ismm->GetServerFactory(), INTERFACEVERSION_SERVERGAMEDLL, "the game server interface", pServer, missing);
 		Find(ismm, ismm->GetEngineFactory(), SCHEMASYSTEM_INTERFACE_VERSION, "the schema interface", g_pSchemaSystem, missing);
-		Find(ismm, ismm->GetEngineFactory(), NETWORKSERVERSERVICE_INTERFACE_VERSION, "the network server interface",
-			 g_pNetworkServerService, missing);
-		Find(ismm, ismm->GetEngineFactory(), NETWORKMESSAGES_INTERFACE_VERSION, "the network message interface", g_pNetworkMessages,
+		Find(ismm, ismm->GetEngineFactory(), NETWORKSERVERSERVICE_INTERFACE_VERSION, "the network server interface", g_pNetworkServerService,
 			 missing);
+		Find(ismm, ismm->GetEngineFactory(), NETWORKMESSAGES_INTERFACE_VERSION, "the network message interface", g_pNetworkMessages, missing);
 		Find(ismm, ismm->GetEngineFactory(), GAMEEVENTSYSTEM_INTERFACE_VERSION, "the game event interface", pGameEventSystem, missing);
 		Find(ismm, ismm->GetFileSystemFactory(), FILESYSTEM_INTERFACE_VERSION, "the filesystem interface", g_pFullFileSystem, missing);
 	}

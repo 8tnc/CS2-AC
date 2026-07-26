@@ -27,10 +27,9 @@ PLUGIN_EXPOSE(CS2ACPlugin, g_CS2AC);
 namespace
 {
 	static constexpr const char *detectionNames[] = {
-		"AIMBOT",          "AIMLOCK",       "ANTIAIM",        "AUTOSTRAFE", "BHOP",         "DLL INJECTION",
-		"DESUBTICKING",    "DOUBLETAP",     "HYPERSCROLL",    "INHUMAN ACCURACY",          "INVALID CVAR",
-		"INVALID INPUT",   "IRREGULAR BEHAVIOR",              "NAMECHANGER", "NULLS",       "SILENTAIM",
-		"SUBTICK SPAM",
+		"AIMBOT",    "AIMLOCK",     "ANTIAIM",          "AUTOSTRAFE",   "BHOP",          "DLL INJECTION",      "DESUBTICKING",
+		"DOUBLETAP", "HYPERSCROLL", "INHUMAN ACCURACY", "INVALID CVAR", "INVALID INPUT", "IRREGULAR BEHAVIOR", "NAMECHANGER",
+		"NULLS",     "SILENTAIM",   "SUBTICK SPAM",
 	};
 	static_assert(CS2AC_ARRAYSIZE(detectionNames) == static_cast<size_t>(DetectionType::Count));
 
@@ -80,8 +79,7 @@ namespace
 		const std::string command = commandTemplate;
 		if (command.front() == '"' || command.back() == '"')
 		{
-			Msg("[CS2AC] Review %s: the command itself starts or ends with a quote. Keep only the cfg value's outer quotes.\n",
-				settingName);
+			Msg("[CS2AC] Review %s: the command itself starts or ends with a quote. Keep only the cfg value's outer quotes.\n", settingName);
 			++findings;
 		}
 		for (size_t position = 0; position < command.size();)
@@ -604,7 +602,8 @@ void CS2ACPlugin::HandleDetection(const char *detection, MovementPlayer *player,
 
 	const std::string playerName = SanitizeConsoleText(player->GetName());
 	const std::uint64_t steamId = player->GetSteamId64(false);
-	const auto finish = [&](utils::DetectionOutcome outcome) {
+	const auto finish = [&](utils::DetectionOutcome outcome)
+	{
 		utils::AnnounceDetection(detection, player->GetName(), outcome);
 		if (webhook)
 		{
@@ -914,8 +913,8 @@ void CS2ACPlugin::PrintStatus() const
 	Msg("[CS2AC] Players: %d connected (%d human, %d bots).\n", connected, humans, bots);
 	Msg("[CS2AC] Detectors: %zu/%zu enabled.\n", settings::GetEnabledDetectionCount(), static_cast<size_t>(DetectionType::Count));
 	Msg("[CS2AC] Enabled detectors: %s.\n", enabledNames.empty() ? "none" : enabledNames.c_str());
-	Msg("[CS2AC] Whitelist: %zu valid entries, %zu rejected, %zu duplicates ignored during the last update.\n",
-		settings::GetWhitelistCount(), settings::GetRejectedWhitelistCount(), settings::GetDuplicateWhitelistCount());
+	Msg("[CS2AC] Whitelist: %zu valid entries, %zu rejected, %zu duplicates ignored during the last update.\n", settings::GetWhitelistCount(),
+		settings::GetRejectedWhitelistCount(), settings::GetDuplicateWhitelistCount());
 	Msg("[CS2AC] Announcements: chat %s, center screen %s.\n", settings::ShowChatAnnouncements() ? "on" : "off",
 		settings::ShowCenterAnnouncements() ? "on" : "off");
 	Msg("[CS2AC] Punishments: permanent ban %s, kick %s.\n",
@@ -923,8 +922,8 @@ void CS2ACPlugin::PrintStatus() const
 		settings::GetKickCommand() && *settings::GetKickCommand() ? "configured" : "disabled");
 	const size_t webhookQueueSize = webhook ? webhook->QueueSize() : 0;
 	Msg("[CS2AC] Discord webhook: %s, %zu queued report%s.\n",
-		webhook && webhook->IsConfigured() ? (webhook->IsDisabled() ? "disabled after an error" : "configured") : "not configured",
-		webhookQueueSize, webhookQueueSize == 1 ? "" : "s");
+		webhook && webhook->IsConfigured() ? (webhook->IsDisabled() ? "disabled after an error" : "configured") : "not configured", webhookQueueSize,
+		webhookQueueSize == 1 ? "" : "s");
 	Msg("[CS2AC] sv_cheats testing: %s.\n", MovementDetectionService::IsSvCheatsTestingAllowed() ? "allowed" : "not allowed");
 }
 

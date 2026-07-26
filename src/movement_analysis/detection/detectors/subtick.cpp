@@ -14,8 +14,7 @@
 #define SUBTICK_SUBTICK_INPUTS_THRESHOLD   30
 #define SUBTICK_ZERO_WHEN_RATIO_THRESHOLD  0.9f
 
-CConVar<bool> cs2ac_subtick_debug("cs2ac_subtick_debug", FCVAR_NONE, "Show Invalid Input, Subtick Spam, and Desubticking evidence",
-								  false);
+CConVar<bool> cs2ac_subtick_debug("cs2ac_subtick_debug", FCVAR_NONE, "Show Invalid Input, Subtick Spam, and Desubticking evidence", false);
 
 // Every command should have all button presses/releases accounted for in subtick moves.
 // Only cheats that modify buttons without updating subtick moves would fail this.
@@ -215,9 +214,8 @@ void MovementDetectionService::CheckSuspiciousSubtickCommands()
 		f32 ratio = (f32)this->zeroWhenCommandTimes.size() / (f32)this->numCommandsWithSubtickInputs.size();
 		if (ratio >= SUBTICK_ZERO_WHEN_RATIO_THRESHOLD)
 		{
-			std::string details =
-				tfm::format("%zu of %zu commands with subtick input had zero timing (%.1f%%).", this->zeroWhenCommandTimes.size(),
-							this->numCommandsWithSubtickInputs.size(), ratio * 100.0f);
+			std::string details = tfm::format("%zu of %zu commands with subtick input had zero timing (%.1f%%).", this->zeroWhenCommandTimes.size(),
+											  this->numCommandsWithSubtickInputs.size(), ratio * 100.0f);
 			if (cs2ac_subtick_debug.GetBool())
 			{
 				Msg("[CS2AC Desubticking] Player slot %d: %s\n", this->player->GetPlayerSlot().Get(), details.c_str());

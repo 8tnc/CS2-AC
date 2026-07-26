@@ -18,8 +18,17 @@ public:
 	void Test();
 
 	bool IsConfigured() const;
-	bool IsDisabled() const { return disabled; }
-	std::size_t QueueSize() const { return queue.size(); }
+
+	bool IsDisabled() const
+	{
+		return disabled;
+	}
+
+	std::size_t QueueSize() const
+	{
+		return queue.size();
+	}
+
 	static bool IsValidUrl(const char *url);
 	static bool IsValidRoleId(const char *roleId);
 	static bool IsValidLogoUrl(const char *url);

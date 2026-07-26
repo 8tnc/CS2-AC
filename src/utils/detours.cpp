@@ -33,8 +33,7 @@ bool FlushAllDetours()
 			{
 				if (!disabled[rollback]->EnableDetour())
 				{
-					Warning("[CS2AC] The %s server hook could not be restored after an unload was refused.\n",
-							disabled[rollback]->GetName());
+					Warning("[CS2AC] The %s server hook could not be restored after an unload was refused.\n", disabled[rollback]->GetName());
 					restored = false;
 				}
 			}

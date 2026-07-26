@@ -13,18 +13,29 @@ class Player
 {
 public:
 	explicit Player(i32 i) : index(i) {}
+
 	virtual ~Player() = default;
 
 	virtual void Init() {}
-	virtual void Reset() { unauthenticatedSteamID = 0; }
+
+	virtual void Reset()
+	{
+		unauthenticatedSteamID = 0;
+	}
+
 	virtual void OnPlayerActive() {}
+
 	virtual void OnPlayerFullyConnect() {}
 
 	CCSPlayerController *GetController();
 	CBasePlayerPawn *GetCurrentPawn();
 	CCSPlayerPawn *GetPlayerPawn();
 
-	CPlayerSlot GetPlayerSlot() const { return index - 1; }
+	CPlayerSlot GetPlayerSlot() const
+	{
+		return index - 1;
+	}
+
 	CServerSideClient *GetClient();
 
 	bool IsConnected();
@@ -35,7 +46,10 @@ public:
 	const char *GetName();
 	u64 GetSteamId64(bool validated = true);
 
-	void SetUnauthenticatedSteamID(u64 xuid) { unauthenticatedSteamID = xuid; }
+	void SetUnauthenticatedSteamID(u64 xuid)
+	{
+		unauthenticatedSteamID = xuid;
+	}
 
 	const i32 index;
 

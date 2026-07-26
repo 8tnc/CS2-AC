@@ -11,16 +11,16 @@
 #include "settings.h"
 
 #define JUMP_PATTERN_WINDOW      0.25f
-#define MIN_AIR_TIME_FOR_BHOP    (4.0f * ENGINE_FIXED_TICK_INTERVAL) // Minimum air time to consider a jump for bhop hack detection
-#define BHOP_IGNORE_DURATION     (4.0f * ENGINE_FIXED_TICK_INTERVAL) // Ignore teleports/noclips in the last 4 ticks
+#define MIN_AIR_TIME_FOR_BHOP    (4.0f * ENGINE_FIXED_TICK_INTERVAL)            // Minimum air time to consider a jump for bhop hack detection
+#define BHOP_IGNORE_DURATION     (4.0f * ENGINE_FIXED_TICK_INTERVAL)            // Ignore teleports/noclips in the last 4 ticks
 #define OLD_JUMP_PURGE_THRESHOLD (JUMP_PATTERN_WINDOW * ENGINE_FIXED_TICK_RATE) // Purge jump attempts older than 0.25s
-#define MIN_SAMPLE_COUNT         20                                  // Minimum number of samples before we start checking for bhop hacks
-#define WINDOW_SIZE              30                                  // Number of recent jumps to consider for bhop hack detection
+#define MIN_SAMPLE_COUNT         20                                             // Minimum number of samples before we start checking for bhop hacks
+#define WINDOW_SIZE              30                                             // Number of recent jumps to consider for bhop hack detection
 // Number of consecutive perfect bhops in the window to trigger a bhop hack infraction, regardless of ratio
 #define NUM_CONSECUTIVE_PERFS_FOR_INFRACTION 25
 // Number of consecutive perfs in the window to trigger a pattern check for bhop hack detection, regardless of ratio.
 #define NUM_CONSECUTIVE_PERFS_FOR_PATTERN_CHECK 18
-#define PERF_RATIO_FOR_HYPERSCROLL_INFRACTION 0.6f
+#define PERF_RATIO_FOR_HYPERSCROLL_INFRACTION   0.6f
 
 #define REPETITIVE_PATTERN_THRESHOLD 0.9f // If 90% of the perfs are the same pattern, it might be a cheat...
 #define LOW_PATTERN_THRESHOLD        4    // ...if the most common pattern is smaller than 4.
@@ -41,7 +41,8 @@ void MovementDetectionService::ParseCommandForJump(PlayerCommand *cmd)
 		return;
 	}
 
-	auto recordJump = [this](f32 jumpTime) {
+	auto recordJump = [this](f32 jumpTime)
+	{
 		this->recentJumps.push_back(jumpTime);
 		for (auto &event : this->recentLandingEvents)
 		{
@@ -254,9 +255,9 @@ void MovementDetectionService::CheckLandingEvents()
 		// Hard consecutive perf chain check.
 		if (maxPerfChain >= NUM_CONSECUTIVE_PERFS_FOR_INFRACTION && settings::IsDetectionEnabled(DetectionType::Bhop))
 		{
-			this->MarkInfraction(MovementDetectionService::Infraction::Type::BhopHack,
-								 tfm::format("%u of %u eligible landings formed one consecutive frame-perfect bhop chain.", maxPerfChain,
-											 totalChainEligibleEvents));
+			this->MarkInfraction(
+				MovementDetectionService::Infraction::Type::BhopHack,
+				tfm::format("%u of %u eligible landings formed one consecutive frame-perfect bhop chain.", maxPerfChain, totalChainEligibleEvents));
 			this->recentLandingEvents.clear();
 			this->bhopDirty = false;
 			return;
@@ -266,8 +267,8 @@ void MovementDetectionService::CheckLandingEvents()
 		if (maxPerfChain >= NUM_CONSECUTIVE_PERFS_FOR_PATTERN_CHECK)
 		{
 			if (totalPatternOccurrences >= NUM_CONSECUTIVE_PERFS_FOR_PATTERN_CHECK
-				&& mostCommonPatternCount >= totalPatternOccurrences * REPETITIVE_PATTERN_THRESHOLD
-				&& mostCommonPattern < LOW_PATTERN_THRESHOLD && settings::IsDetectionEnabled(DetectionType::Bhop))
+				&& mostCommonPatternCount >= totalPatternOccurrences * REPETITIVE_PATTERN_THRESHOLD && mostCommonPattern < LOW_PATTERN_THRESHOLD
+				&& settings::IsDetectionEnabled(DetectionType::Bhop))
 			{
 				this->MarkInfraction(MovementDetectionService::Infraction::Type::BhopHack,
 									 tfm::format("%u of %u completed jump patterns repeated %u inputs, with an average of %.2f inputs.",

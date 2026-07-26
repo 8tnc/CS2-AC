@@ -232,9 +232,9 @@ namespace detection
 					break;
 				}
 			}
-			announce("DLL INJECTION", player,
-					 tfm::format("%zu blacklisted client event subscription%s found: %s.", current.count(), current.count() == 1 ? "" : "s",
-								 matches));
+			announce(
+				"DLL INJECTION", player,
+				tfm::format("%zu blacklisted client event subscription%s found: %s.", current.count(), current.count() == 1 ? "" : "s", matches));
 		}
 	}
 

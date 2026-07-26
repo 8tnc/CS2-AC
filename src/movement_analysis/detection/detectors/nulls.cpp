@@ -7,9 +7,9 @@
 #define NUM_CONSECUTIVE_PERFECT_CSTRAFE_FOR_DETECTION_MAXIMUM 640
 
 // The higher the FPS, the less likely player can get perfect counter-strafes by chance.
-#define FPS_FOR_MINIMUM_SUSPICION   64.0f // We shouldn't count any attempt below this FPS.
-#define FPS_FOR_MAXIMUM_SUSPICION   256.0f
-#define ANALOG_CSTRAFE_WEIGHT       2.0f // Perfect analog strafes are extremely suspicious. Most (if not all) ingame null aliases abuse analog inputs.
+#define FPS_FOR_MINIMUM_SUSPICION 64.0f // We shouldn't count any attempt below this FPS.
+#define FPS_FOR_MAXIMUM_SUSPICION 256.0f
+#define ANALOG_CSTRAFE_WEIGHT     2.0f // Perfect analog strafes are extremely suspicious. Most (if not all) ingame null aliases abuse analog inputs.
 #define MIN_AIR_SPEED_FOR_DETECTION 100.0f // Only consider airstrafes with at least this airspeed to avoid false positives.
 // Only count counterstrafe attempts as underlap if the keypresses are at most this far apart. Consider higher values as brand new inputs.
 #define UNDERLAP_COUNT_THRESHOLD      0.2f
@@ -542,8 +542,7 @@ void MovementDetectionService::AnalyzeNullsForAxis(const std::deque<InputEvent> 
 		std::string details =
 			tinyformat::format("The %s inputs reached a perfect-timing score of %u; %u was required. "
 							   "Median release-to-press gap: %.2f ms; overlap score: %u; measured FPS: %.2f.",
-							   axis, maxConsecutivePerfect, adjustedRequiredPerfectCstrafes, underlapMedian * 1000, numOverlaps,
-							   1 / medianFramerate);
+							   axis, maxConsecutivePerfect, adjustedRequiredPerfectCstrafes, underlapMedian * 1000, numOverlaps, 1 / medianFramerate);
 		this->MarkInfraction(MovementDetectionService::Infraction::Type::Nulls, details);
 		if (button1 == IN_FORWARD)
 		{

@@ -140,8 +140,7 @@ namespace
 		}
 		const std::string url(xml.substr(valueStart, end - valueStart));
 		const bool steamStatic = url.rfind("https://avatars.", 0) == 0 && url.find(".steamstatic.com/") != std::string::npos;
-		const bool steamCdn =
-			url.rfind("https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/", 0) == 0;
+		const bool steamCdn = url.rfind("https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/", 0) == 0;
 		return steamStatic || steamCdn ? url : "";
 	}
 
@@ -204,8 +203,7 @@ bool WebhookService::IsValidLogoUrl(const char *url)
 	}
 	const std::string_view value(url);
 	constexpr std::string_view prefix = "https://";
-	return value.size() > prefix.size() && value.substr(0, prefix.size()) == prefix
-		   && value.find_first_of(" \t\r\n") == std::string_view::npos;
+	return value.size() > prefix.size() && value.substr(0, prefix.size()) == prefix && value.find_first_of(" \t\r\n") == std::string_view::npos;
 }
 
 bool WebhookService::IsConfigured() const
@@ -375,7 +373,7 @@ void WebhookService::SendNext()
 	request = http->CreateHTTPRequest(k_EHTTPMethodPOST, url.c_str());
 	if (request == INVALID_HTTPREQUEST_HANDLE
 		|| !http->SetHTTPRequestRawPostBody(request, "application/json", reinterpret_cast<uint8 *>(queue.front().payload.data()),
-										   static_cast<uint32>(queue.front().payload.size()))
+											static_cast<uint32>(queue.front().payload.size()))
 		|| !http->SetHTTPRequestNetworkActivityTimeout(request, 5) || !http->SetHTTPRequestAbsoluteTimeoutMS(request, 10000)
 		|| !http->SetHTTPRequestRequiresVerifiedCertificate(request, true))
 	{
@@ -404,12 +402,10 @@ void WebhookService::SendNext()
 bool WebhookService::SendAvatarLookup()
 {
 	// Steam's public XML profile supplies avatarFull without requiring a Web API key.
-	const std::string url = tfm::format("https://steamcommunity.com/profiles/%llu?xml=1",
-										static_cast<unsigned long long>(queue.front().steamId));
+	const std::string url = tfm::format("https://steamcommunity.com/profiles/%llu?xml=1", static_cast<unsigned long long>(queue.front().steamId));
 	request = http->CreateHTTPRequest(k_EHTTPMethodGET, url.c_str());
 	if (request == INVALID_HTTPREQUEST_HANDLE || !http->SetHTTPRequestNetworkActivityTimeout(request, 5)
-		|| !http->SetHTTPRequestAbsoluteTimeoutMS(request, 5000)
-		|| !http->SetHTTPRequestRequiresVerifiedCertificate(request, true))
+		|| !http->SetHTTPRequestAbsoluteTimeoutMS(request, 5000) || !http->SetHTTPRequestRequiresVerifiedCertificate(request, true))
 	{
 		if (request != INVALID_HTTPREQUEST_HANDLE)
 		{
@@ -445,14 +441,13 @@ void WebhookService::OnCompleted(HTTPRequestCompleted_t *result, bool failed)
 	{
 		std::string avatarUrl;
 		uint32 size {};
-		if (!failed && result->m_bRequestSuccessful && status >= 200 && status <= 299
-			&& http->GetHTTPResponseBodySize(request, &size) && size > 0 && size <= maximumProfileSize)
+		if (!failed && result->m_bRequestSuccessful && status >= 200 && status <= 299 && http->GetHTTPResponseBodySize(request, &size) && size > 0
+			&& size <= maximumProfileSize)
 		{
 			std::vector<uint8> body(size);
 			if (http->GetHTTPResponseBodyData(request, body.data(), size))
 			{
-				avatarUrl = AvatarFromProfileXml(
-					std::string_view(reinterpret_cast<const char *>(body.data()), body.size()));
+				avatarUrl = AvatarFromProfileXml(std::string_view(reinterpret_cast<const char *>(body.data()), body.size()));
 			}
 		}
 		http->ReleaseHTTPRequest(request);
@@ -531,8 +526,7 @@ void WebhookService::RetryOrDrop(int status)
 		nextAttempt = std::chrono::steady_clock::now() + std::chrono::seconds(2);
 		return;
 	}
-	Msg("[CS2AC] A Discord webhook report failed after one retry and was dropped%s.\n",
-		status ? tfm::format(" (HTTP %d)", status).c_str() : "");
+	Msg("[CS2AC] A Discord webhook report failed after one retry and was dropped%s.\n", status ? tfm::format(" (HTTP %d)", status).c_str() : "");
 	if (!queue.empty())
 	{
 		queue.pop_front();
@@ -573,17 +567,14 @@ std::string WebhookService::ServerAddress()
 		return "";
 	}
 	const uint32 value = ip.m_unIPv4;
-	return tfm::format("%u.%u.%u.%u:%d", (value >> 24) & 255, (value >> 16) & 255, (value >> 8) & 255, value & 255,
-					   ConVarInt("hostport", 27015));
+	return tfm::format("%u.%u.%u.%u:%d", (value >> 24) & 255, (value >> 16) & 255, (value >> 8) & 255, value & 255, ConVarInt("hostport", 27015));
 }
 
 std::string WebhookService::BuildPayload(const ReportData &report)
 {
 	const std::string name = Limit(MarkdownEscape(report.playerName), 240);
-	const std::string playerValue = report.steamId
-										? tfm::format("[%s](https://steamcommunity.com/profiles/%llu)", name,
-													  static_cast<unsigned long long>(report.steamId))
-										: name;
+	const std::string playerValue =
+		report.steamId ? tfm::format("[%s](https://steamcommunity.com/profiles/%llu)", name, static_cast<unsigned long long>(report.steamId)) : name;
 	const std::string steamIdValue =
 		report.steamId ? tfm::format("||%llu||", static_cast<unsigned long long>(report.steamId)) : "SteamID64 is unavailable.";
 	const auto *globals = g_pCS2ACUtils ? g_pCS2ACUtils->GetServerGlobals() : nullptr;
@@ -593,35 +584,27 @@ std::string WebhookService::BuildPayload(const ReportData &report)
 	const std::string allowed = role.empty() ? "{\"parse\":[]}" : "{\"parse\":[],\"roles\":[\"" + role + "\"]}";
 	const std::string logo = settings::GetWebhookLogoUrl();
 	const std::string thumbnailUrl = report.avatarUrl.empty() ? logo : report.avatarUrl;
-	const std::string thumbnail =
-		thumbnailUrl.empty() ? "" : tfm::format(",\"thumbnail\":{\"url\":\"%s\"}", JsonEscape(Limit(thumbnailUrl, 2048)));
-	const std::string authorIcon =
-		logo.empty() ? "" : tfm::format(",\"icon_url\":\"%s\"", JsonEscape(Limit(logo, 2048)));
-	const std::string footerIcon =
-		logo.empty() ? "" : tfm::format(",\"icon_url\":\"%s\"", JsonEscape(Limit(logo, 2048)));
+	const std::string thumbnail = thumbnailUrl.empty() ? "" : tfm::format(",\"thumbnail\":{\"url\":\"%s\"}", JsonEscape(Limit(thumbnailUrl, 2048)));
+	const std::string authorIcon = logo.empty() ? "" : tfm::format(",\"icon_url\":\"%s\"", JsonEscape(Limit(logo, 2048)));
+	const std::string footerIcon = logo.empty() ? "" : tfm::format(",\"icon_url\":\"%s\"", JsonEscape(Limit(logo, 2048)));
 	const std::string address = ServerAddress();
 	const std::string addressField =
-		address.empty()
-			? ""
-			: tfm::format(",{\"name\":\"Address\",\"value\":\"`%s`\",\"inline\":true}",
-						  JsonEscape(Limit(address, 512)));
+		address.empty() ? "" : tfm::format(",{\"name\":\"Address\",\"value\":\"`%s`\",\"inline\":true}", JsonEscape(Limit(address, 512)));
 	const std::string evidenceText =
 		Limit(CompleteSentence(report.evidence.empty() ? "The detector reached its configured threshold" : report.evidence), 1000);
 	const std::string serverName = Limit(ConVarString("hostname", "CS2 Server"), 256);
 
-	return tfm::format(
-		"{\"username\":\"CS2AC\",\"content\":\"%s\",\"allowed_mentions\":%s,"
-		"\"embeds\":[{\"author\":{\"name\":\"%s\"%s},\"color\":15548997%s,\"fields\":["
-		"{\"name\":\"Player\",\"value\":\"%s\",\"inline\":true},"
-		"{\"name\":\"STEAMID64\",\"value\":\"%s\",\"inline\":true},"
-		"{\"name\":\"Detection\",\"value\":\"`%s`\"},"
-		"{\"name\":\"Evidence\",\"value\":\"```text\\n%s\\n```\"},"
-		"{\"name\":\"Punishment\",\"value\":\"%s\"},"
-		"{\"name\":\"Map\",\"value\":\"`%s`\",\"inline\":true}%s],"
-		"\"timestamp\":\"%s\",\"footer\":{\"text\":\"CS2AC 1.0.0 \\u2022 Detection report\"%s},"
-		"\"image\":{\"url\":\"https://raw.githubusercontent.com/karola3vax/CS2AC/main/docs/cs2ac-logo.png\"}}]}",
-		JsonEscape(content), allowed, JsonEscape(serverName), authorIcon, thumbnail, JsonEscape(playerValue),
-		JsonEscape(steamIdValue), JsonEscape(Limit(report.detection.empty() ? "UNKNOWN" : report.detection, 256)),
-		JsonEscape(evidenceText), JsonEscape(OutcomeText(report.outcome)), JsonEscape(Limit(map, 256)), addressField, UtcTimestamp(),
-		footerIcon);
+	return tfm::format("{\"username\":\"CS2AC\",\"content\":\"%s\",\"allowed_mentions\":%s,"
+					   "\"embeds\":[{\"author\":{\"name\":\"%s\"%s},\"color\":15548997%s,\"fields\":["
+					   "{\"name\":\"Player\",\"value\":\"%s\",\"inline\":true},"
+					   "{\"name\":\"STEAMID64\",\"value\":\"%s\",\"inline\":true},"
+					   "{\"name\":\"Detection\",\"value\":\"`%s`\"},"
+					   "{\"name\":\"Evidence\",\"value\":\"```text\\n%s\\n```\"},"
+					   "{\"name\":\"Punishment\",\"value\":\"%s\"},"
+					   "{\"name\":\"Map\",\"value\":\"`%s`\",\"inline\":true}%s],"
+					   "\"timestamp\":\"%s\",\"footer\":{\"text\":\"CS2AC 1.0.0 \\u2022 Detection report\"%s},"
+					   "\"image\":{\"url\":\"https://raw.githubusercontent.com/karola3vax/CS2AC/main/docs/cs2ac-logo.png\"}}]}",
+					   JsonEscape(content), allowed, JsonEscape(serverName), authorIcon, thumbnail, JsonEscape(playerValue), JsonEscape(steamIdValue),
+					   JsonEscape(Limit(report.detection.empty() ? "UNKNOWN" : report.detection, 256)), JsonEscape(evidenceText),
+					   JsonEscape(OutcomeText(report.outcome)), JsonEscape(Limit(map, 256)), addressField, UtcTimestamp(), footerIcon);
 }

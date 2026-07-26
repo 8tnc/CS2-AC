@@ -39,10 +39,10 @@ bool MovementDetectionService::ShouldCheckClientCvars() const
 
 extern IClientCvarValue *g_pClientCvarValue;
 
-#define INTEGRITY_CHECK_MIN_INTERVAL    1.0f
-#define INTEGRITY_CHECK_MAX_INTERVAL    5.0f
-#define MINIMUM_FPS_MAX                 64.0f
-#define MAXIMUM_M_YAW                   0.3f
+#define INTEGRITY_CHECK_MIN_INTERVAL 1.0f
+#define INTEGRITY_CHECK_MAX_INTERVAL 5.0f
+#define MINIMUM_FPS_MAX              64.0f
+#define MAXIMUM_M_YAW                0.3f
 
 static constexpr auto SV_CHEATS_MAX_PROPAGATION_DELAY = std::chrono::seconds(30);
 
@@ -244,7 +244,7 @@ static_function void ValidateQueriedCvar(CPlayerSlot nSlot, ECvarValueStatus eSt
 		if (!std::isfinite(fovValue) || fovValue != 0.0f)
 		{
 			std::string reason = std::isfinite(fovValue) ? tinyformat::format("fov_cs_debug is %.6g, but it must be 0.", fovValue)
-														: "fov_cs_debug did not return a valid finite number.";
+														 : "fov_cs_debug did not return a valid finite number.";
 			markInvalid(reason);
 		}
 	}
@@ -265,8 +265,8 @@ static_function void ValidateQueriedCvar(CPlayerSlot nSlot, ECvarValueStatus eSt
 		const f64 value = numeric ? atof(pszCvarValue) : 0.0;
 		if (!numeric || value != 89.0)
 		{
-			std::string reason = numeric ? tinyformat::format("cl_pitchup is %.6g, but it must be 89.", value)
-										 : "cl_pitchup did not return a valid finite number.";
+			std::string reason =
+				numeric ? tinyformat::format("cl_pitchup is %.6g, but it must be 89.", value) : "cl_pitchup did not return a valid finite number.";
 			markInvalid(reason);
 		}
 	}
@@ -276,8 +276,8 @@ static_function void ValidateQueriedCvar(CPlayerSlot nSlot, ECvarValueStatus eSt
 		const f64 value = numeric ? atof(pszCvarValue) : 0.0;
 		if (!numeric || value != 210.0)
 		{
-			std::string reason = numeric ? tinyformat::format("cl_yawspeed is %.6g, but it must be 210.", value)
-										 : "cl_yawspeed did not return a valid finite number.";
+			std::string reason =
+				numeric ? tinyformat::format("cl_yawspeed is %.6g, but it must be 210.", value) : "cl_yawspeed did not return a valid finite number.";
 			markInvalid(reason);
 		}
 	}
@@ -311,8 +311,8 @@ static_function void CheckUserInfoCvars(CS2ACPlayer *player)
 			}
 			else if (const f64 yaw = atof(value); yaw > MAXIMUM_M_YAW)
 			{
-				player->movementDetection->MarkCvarSource(
-					name, tinyformat::format("m_yaw is %.6g, but the maximum allowed value is 0.3.", yaw), true, true, true);
+				player->movementDetection->MarkCvarSource(name, tinyformat::format("m_yaw is %.6g, but the maximum allowed value is 0.3.", yaw), true,
+														  true, true);
 			}
 			else
 			{

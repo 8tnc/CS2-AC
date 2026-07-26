@@ -334,8 +334,7 @@ namespace detection
 			const float surrounding = AngularDistance(previous->angles, next->angles);
 			const float snap = AngularDistance(previous->angles, shot->angles);
 			const bool fresh = !data.hasCountedIncident || shot->commandNumber > data.lastCountedIncidentCommand;
-			if (fresh && std::isfinite(surrounding) && std::isfinite(snap) && surrounding < 10.0f && snap > 0.5f
-				&& snap > surrounding * 5.0f)
+			if (fresh && std::isfinite(surrounding) && std::isfinite(snap) && surrounding < 10.0f && snap > 0.5f && snap > surrounding * 5.0f)
 			{
 				if (!suspicious)
 				{
@@ -386,8 +385,8 @@ namespace detection
 			{
 				const std::string details =
 					matchedRule == AimbotRule::SnapReturn
-						? tfm::format("%zu snap-hit incidents reached the threshold; the latest was a %.2f-degree snap-return.",
-									  incidents.size(), largestSnap)
+						? tfm::format("%zu snap-hit incidents reached the threshold; the latest was a %.2f-degree snap-return.", incidents.size(),
+									  largestSnap)
 						: tfm::format("%zu snap-hit incidents reached the threshold; latest snap %.2f degrees, target error %.2f -> %.2f degrees.",
 									  incidents.size(), largestSnap, bestBefore, bestAfter);
 				announce("AIMBOT", attacker, details);

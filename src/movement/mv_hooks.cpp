@@ -12,9 +12,9 @@ static_global struct
 	}
 } playerManager;
 
-static_global CDetourBase *movementDetours[] = {&PhysicsSimulate, &ProcessUsercmds, &SetupMove, &ProcessMovement, &Duck, &LadderMove,
-											&OnJumpLegacy, &OnJumpModern, &AirMove, &AirAccelerate, &WalkMove, &TryPlayerMove,
-											&CategorizePosition};
+static_global CDetourBase *movementDetours[] = {&PhysicsSimulate, &ProcessUsercmds, &SetupMove,         &ProcessMovement, &Duck,
+												&LadderMove,      &OnJumpLegacy,    &OnJumpModern,      &AirMove,         &AirAccelerate,
+												&WalkMove,        &TryPlayerMove,   &CategorizePosition};
 
 void movement::ValidateDetours(std::vector<std::string> &missing)
 {
@@ -212,8 +212,8 @@ void FASTCALL movement::Detour_WalkMove(CCSPlayer_MovementServices *services, CM
 	player->OnWalkMovePost();
 }
 
-void FASTCALL movement::Detour_TryPlayerMove(CCSPlayer_MovementServices *services, CMoveData *move, Vector *firstDestination,
-										 trace_t *firstTrace, bool *isSurfing)
+void FASTCALL movement::Detour_TryPlayerMove(CCSPlayer_MovementServices *services, CMoveData *move, Vector *firstDestination, trace_t *firstTrace,
+											 bool *isSurfing)
 {
 	auto *player = playerManager->ToPlayer(services);
 	player->OnTryPlayerMove(firstDestination, firstTrace, isSurfing);

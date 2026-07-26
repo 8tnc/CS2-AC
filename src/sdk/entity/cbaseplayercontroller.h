@@ -42,5 +42,4 @@ public:
 	{
 		return entindex() - 1;
 	}
-
 };

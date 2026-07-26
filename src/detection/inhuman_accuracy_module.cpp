@@ -29,9 +29,9 @@ namespace
 	{
 		weapon = detection::NormalizeWeapon(weapon);
 		static constexpr std::string_view weapons[] = {
-			"ak47", "aug", "awp", "bizon", "cz75a", "deagle", "elite", "famas", "fiveseven", "g3sg1", "galilar", "glock", "hkp2000", "m4a1",
-			"m4a1_silencer", "mac10", "mp5sd", "mp7", "mp9", "p250", "p90", "revolver", "scar20", "sg556", "ssg08", "tec9", "ump45",
-			"usp_silencer",
+			"ak47",    "aug",      "awp",     "bizon", "cz75a",         "deagle", "elite", "famas",        "fiveseven", "g3sg1",
+			"galilar", "glock",    "hkp2000", "m4a1",  "m4a1_silencer", "mac10",  "mp5sd", "mp7",          "mp9",       "p250",
+			"p90",     "revolver", "scar20",  "sg556", "ssg08",         "tec9",   "ump45", "usp_silencer",
 		};
 		return std::find(std::begin(weapons), std::end(weapons), weapon) != std::end(weapons);
 	}
@@ -193,8 +193,7 @@ namespace detection
 		if (announce)
 		{
 			announce("INHUMAN ACCURACY", player,
-					 tfm::format("%d of %d qualifying shots hit (%.1f%% accuracy).", hits, attempts,
-								 attempts ? hits * 100.0 / attempts : 0.0));
+					 tfm::format("%d of %d qualifying shots hit (%.1f%% accuracy).", hits, attempts, attempts ? hits * 100.0 / attempts : 0.0));
 		}
 		data.evidence.clear();
 	}

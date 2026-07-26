@@ -104,6 +104,7 @@ public:
 		}
 #endif
 	}
+
 	~CModule()
 	{
 		if (m_hModule)
@@ -111,6 +112,7 @@ public:
 			dlclose(m_hModule);
 		}
 	}
+
 	CModule(const CModule &) = delete;
 	CModule &operator=(const CModule &) = delete;
 

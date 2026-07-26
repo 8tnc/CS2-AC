@@ -144,8 +144,7 @@ namespace
 		}
 		if (!SH_REMOVE_HOOK_ID(teleportHooks[slot.Get()]))
 		{
-			Warning("[CS2AC] The player teleport hook for slot %d could not be removed yet. Metamod will try again during unload.\n",
-					slot.Get());
+			Warning("[CS2AC] The player teleport hook for slot %d could not be removed yet. Metamod will try again during unload.\n", slot.Get());
 			return false;
 		}
 		teleportHooks[slot.Get()] = 0;

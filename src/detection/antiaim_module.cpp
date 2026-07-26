@@ -447,8 +447,7 @@ namespace detection
 		ANTIAIM_DEBUG("%s shot command %d: base/history yaw %.2f, surrounding %.2f, snap %.2f, mouse %d/%d, subtick %.2f/%.2f.\n", player->GetName(),
 					  shot->commandNumber, shot->historyYawDifference, surrounding, snap, shot->mouseX, shot->mouseY, shot->subtickPitch,
 					  shot->subtickYaw);
-		if (std::isfinite(surrounding) && std::isfinite(snap) && surrounding < 10.0f && snap > minimumAttackReturnAngle
-			&& snap > surrounding * 5.0f)
+		if (std::isfinite(surrounding) && std::isfinite(snap) && surrounding < 10.0f && snap > minimumAttackReturnAngle && snap > surrounding * 5.0f)
 		{
 			AddEvidence(player, data, 5.0f, "one-command attack return", false);
 		}
@@ -508,9 +507,8 @@ namespace detection
 		data.teleportGrace = false;
 
 		bool wasInconsistent = data.inconsistencyActive;
-		bool historyMismatch =
-			!found->attack && found->hasHistoryAngles && std::isfinite(found->historyYawDifference)
-			&& found->historyYawDifference >= commandYawMismatchAngle;
+		bool historyMismatch = !found->attack && found->hasHistoryAngles && std::isfinite(found->historyYawDifference)
+							   && found->historyYawDifference >= commandYawMismatchAngle;
 		data.inconsistencyActive = found->problems != 0 || historyMismatch;
 		if (found->problems != 0 && !data.suppressContinuous)
 		{

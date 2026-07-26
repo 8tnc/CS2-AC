@@ -77,7 +77,11 @@ public:
 	void TestAnnouncement() const;
 	void TestWebhook();
 	void ReportConfigLoadTimeout();
-	bool IsLoaded() const { return loaded; }
+
+	bool IsLoaded() const
+	{
+		return loaded;
+	}
 
 	bool simulatingPhysics {};
 	CGlobalVars serverGlobals {};

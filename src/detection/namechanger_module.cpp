@@ -7,7 +7,7 @@ namespace
 {
 	constexpr size_t detectionThreshold = 5;
 	constexpr auto evidenceWindow = std::chrono::seconds(60);
-}
+} // namespace
 
 namespace detection
 {

@@ -59,8 +59,7 @@ namespace detection
 		}
 
 		const std::int64_t delta = static_cast<std::int64_t>(currentTick) - previous.serverTick;
-		const bool detected = previous.serverTick >= 0 && delta >= 0
-							  && NormalizeWeapon(previous.weapon) == weaponName
+		const bool detected = previous.serverTick >= 0 && delta >= 0 && NormalizeWeapon(previous.weapon) == weaponName
 							  && static_cast<float>(delta) <= cycleTime * ENGINE_FIXED_TICK_RATE - 1.0f;
 		previous.serverTick = currentTick;
 		previous.weapon.assign(weaponName);
@@ -71,8 +70,8 @@ namespace detection
 			if (announce)
 			{
 				announce("DOUBLETAP", player,
-						 tfm::format("%s fired twice only %d server tick%s apart, sooner than its %.3f-second cycle allows.",
-									 weaponName, delta, delta == 1 ? "" : "s", cycleTime));
+						 tfm::format("%s fired twice only %d server tick%s apart, sooner than its %.3f-second cycle allows.", weaponName, delta,
+									 delta == 1 ? "" : "s", cycleTime));
 			}
 		}
 	}

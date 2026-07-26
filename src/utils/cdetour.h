@@ -35,7 +35,11 @@ public:
 	bool EnableDetour() override;
 	bool DisableDetour() override;
 	bool FreeDetour() override;
-	bool IsInstalled() const override { return m_bInstalled; }
+
+	bool IsInstalled() const override
+	{
+		return m_bInstalled;
+	}
 
 	const char *GetName() override
 	{

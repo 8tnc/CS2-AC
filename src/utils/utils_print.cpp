@@ -418,8 +418,7 @@ void utils::AnnounceTest()
 void utils::AnnounceWatermark()
 {
 	char coloredChat[256];
-	if (CFormat(coloredChat, sizeof(coloredChat),
-				"{red}[CS2AC]{default} This server is protected by {grey}karola3vax{default}'s anti-cheat."))
+	if (CFormat(coloredChat, sizeof(coloredChat), "{red}[CS2AC]{default} This server is protected by {grey}karola3vax{default}'s anti-cheat."))
 	{
 		CBroadcastRecipientFilter filter;
 		ClientPrintFilter(&filter, HUD_PRINTTALK, coloredChat, "", "", "", "");
