@@ -80,29 +80,29 @@ Real in-game clips. No mockups.
 
 ### Aim and accuracy
 
-- **Aimbot** — The aim snaps onto an enemy just before a damaging shot.
-- **Aimlock** — The aim follows a moving enemy with machine-like precision for too long, even through walls.
-- **Silentaim** — A damaging bullet lands far away from where the player's aim was pointing.
-- **Inhuman Accuracy** — A long run of shots lands with accuracy that normal play cannot sustain.
-- **Irregular Behavior** — The player repeatedly lands highly unlikely shots while airborne or without scoping.
+- **Aimbot** — Detects blatant snap-to-target aim. The cheat makes a sudden correction just before firing.<br>**What CS2AC sees:** the exact aim command behind a damaging shot moved sharply onto the victim, with the same behavior repeated across several hits.
+- **Aimlock** — Detects smooth tracking that is too clean to be human. The cheat keeps the crosshair glued to a moving enemy without needing to snap or shoot.<br>**What CS2AC sees:** two seconds of near-perfect following while the target is moving, even through walls, repeated across separate tracking episodes.
+- **Silentaim** — Detects bullets that do not agree with the player's visible aim. The cheat sends the shot in another direction while making the crosshair look normal.<br>**What CS2AC sees:** one confirmed weapon fire, bullet impact, and damaging hit whose direction is far away from the exact firing angle.
+- **Inhuman Accuracy** — Detects rage-level accuracy from strong aim assistance or no-spread. The cheat removes the misses that even great players still make.<br>**What CS2AC sees:** at least 20 hits from 24 qualifying shots aimed at one clear enemy from 100 units or farther.
+- **Irregular Behavior** — Detects repeated airborne and no-scope results associated with rage cheating and no-spread.<br>**What CS2AC sees:** every difficult attempt, hit or miss, along with distance and headshots; one lucky kill is never enough.
 
 ### Movement
 
-- **Autostrafe** — Air strafes repeat faster and more efficiently than a player can perform by hand.
-- **Bhop** — Too many jumps land and take off again with frame-perfect timing.
-- **Hyperscroll** — Jump inputs repeat too quickly and consistently for normal mouse-wheel scrolling.
-- **Nulls** — Opposite movement keys switch with perfectly automated timing while airborne.
+- **Autostrafe** — Detects cheats that steer through the air automatically to preserve or gain speed.<br>**What CS2AC sees:** recent jumps repeatedly contain impossible strafe speed, efficiency, or perfectly optimized direction changes.
+- **Bhop** — Detects scripts that press jump at the exact moment the player touches the ground.<br>**What CS2AC sees:** a long chain of frame-perfect hops or the same tiny landing pattern repeated again and again, with teleports, noclip, and bad collisions ignored.
+- **Hyperscroll** — Detects cheats that flood the game with far more jump inputs than normal mouse-wheel scrolling.<br>**What CS2AC sees:** a high number of jump presses around each landing combined with an unusually high rate of frame-perfect hops across a full sample.
+- **Nulls** — Detects movement binds that switch opposite keys with automated precision while airborne.<br>**What CS2AC sees:** the exact press-and-release timing, air speed, and player frame rate form a long chain of perfect direction switches.
 
 ### Exploits and client behavior
 
-- **Antiaim** — View angles spin, snap back after shots, or reach positions a normal client cannot produce.
-- **DLL Injection** — The player's game listens to hidden events commonly used by injected cheat DLLs.
-- **Desubticking** — Movement inputs repeatedly arrive without their normal between-tick timing.
-- **Doubletap** — The same weapon fires twice sooner than the game normally allows.
-- **Invalid CVar** — Protected or safety-critical settings use values a normal client should never have.
-- **Invalid Input** — Pressed and released buttons disagree with the input history sent by the client.
-- **Namechanger** — The player changes their visible name five times within one minute.
-- **Subtick Spam** — One game tick is flooded with repeated movement and angle changes.
+- **Antiaim** — Detects cheats that send fake or impossible view angles to confuse other players and systems.<br>**What CS2AC sees:** invalid pitch or roll, sustained spinning, repeated jitter, conflicting aim records, or an angle that snaps away for a shot and immediately returns.
+- **DLL Injection** — Detects injected cheats that listen to hidden game events to run their features.<br>**What CS2AC sees:** the player's client subscribes to a blacklisted event that normal play does not need; it is checked after joining and again during the match.
+- **Desubticking** — Detects cheats that strip normal between-tick timing from movement inputs.<br>**What CS2AC sees:** almost every timed input arrives at the same zero point across a sustained sample, rather than one unusual command.
+- **Doubletap** — Detects the tick-shifting exploit that makes one weapon fire twice before it is ready.<br>**What CS2AC sees:** two ballistic shots from the same active weapon arrive closer together than that weapon's real firing cycle allows.
+- **Invalid CVar** — Detects protected or safety-critical client settings changed to values normal play should never use.<br>**What CS2AC sees:** live checks of settings such as `m_yaw`, `fps_max`, sensitivity, view limits, and cheat-protected options return an invalid value.
+- **Invalid Input** — Detects cheats that change movement buttons without sending the input history CS2 normally creates.<br>**What CS2AC sees:** repeated commands say a button changed, but their own press-and-release records do not contain that change.
+- **Namechanger** — Detects rapid name spam used to distract players or show off a cheat feature.<br>**What CS2AC sees:** the same player changes their visible name five times within one rolling minute.
+- **Subtick Spam** — Detects aliases that pack repeated movement and angle changes into the same moment.<br>**What CS2AC sees:** many commands contain matching same-time presses and releases carrying aim changes within a very short window.
 
 ## One detection. Everywhere.
 
