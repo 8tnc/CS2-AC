@@ -25,7 +25,7 @@ CS2AC helps community servers keep it that way.
 <td width="50%" align="center">
 <img src="docs/showcase/aimbot.gif" width="100%" alt="CS2AC detecting a blatant snap-hit aimbot">
 <br><strong>AIMBOT</strong><br>
-<sub>A blatant snap lands on target. CS2AC keeps the evidence.</sub>
+<sub>A blatant snap lands on target.</sub>
 </td>
 <td width="50%" align="center">
 <img src="docs/showcase/aimlock.gif" width="100%" alt="CS2AC detecting inhumanly precise target tracking">
