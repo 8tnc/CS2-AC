@@ -10,26 +10,32 @@
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-5c7cfa?style=for-the-badge)](#quickstart)
 [![License](https://img.shields.io/badge/license-AGPL--3.0-2ea44f?style=for-the-badge)](LICENSE)
 
-**You know the feeling: a great match, ruined by one cheater.**
+**Counter-Strike is at its best when every shot, clutch, and win is earned.**
 
-CS2AC helps community servers protect the part of Counter-Strike we all came for: a fair game where the better player wins.
+CS2AC helps community servers keep it that way.
 
-No client. No kernel driver. Nothing to download. Just join and play.
+Server-side only. Nothing for players to install. Just join and play.
 
 [Download](https://github.com/karola3vax/CS2AC/releases) · [Install](#quickstart) · [See every detection](#17-detections-one-plugin) · [Pair it with CS2FOW](#want-wallhack-protection-too)
 
 </div>
 
-Some cheats are obvious. Others are made to look human. They still leave behavior behind on the server.
+Some cheats rage. Others try to look human. CS2AC watches the aim, shots, movement, and inputs that reach the server, turns suspicious behavior into evidence, and acts when a detector reaches its threshold.
 
-**CS2AC watches that behavior and builds evidence before it acts.** When a detector reaches its threshold, everyone sees what happened, Discord gets the details, and the server deals with the cheater.
-
-- **17 purpose-built detections**, all enabled by default.
-- **Public chat and center-screen alerts** that leave no one guessing.
-- **Discord reports with evidence**, SteamID64, server, map, and player avatar.
-- **Your punishment system:** use any ban or kick command your admin plugin understands.
-- **A safe whitelist:** trusted players are still detected and announced, but never punished.
-- **Windows and Linux:** one Metamod:Source plugin, no CounterStrikeSharp required.
+<table>
+<tr>
+<td width="50%"><strong>17 focused detections</strong><br>Aim cheats, movement assists, exploits, and tampered clients.</td>
+<td width="50%"><strong>Visible when it matters</strong><br>Detections appear in public chat and on screen.</td>
+</tr>
+<tr>
+<td width="50%"><strong>Evidence in Discord</strong><br>See the player, SteamID64, reason, server, map, and punishment.</td>
+<td width="50%"><strong>Works with your admin plugin</strong><br>Run any ban or kick command your server already understands.</td>
+</tr>
+<tr>
+<td width="50%"><strong>Whitelist without silence</strong><br>Trusted players are still detected and announced, but never punished.</td>
+<td width="50%"><strong>Built for Metamod</strong><br>Runs on Windows and Linux with no CounterStrikeSharp dependency.</td>
+</tr>
+</table>
 
 ## See it catch
 
