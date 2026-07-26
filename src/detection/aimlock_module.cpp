@@ -40,6 +40,7 @@ namespace
 
 	static_assert(MeetsCoverage(9, 10));
 	static_assert(!MeetsCoverage(8, 10));
+	static_assert(std::tuple_size<decltype(detection::AimlockTrack::hypotheses)>::value == lagSearchRadius * 2 + 1);
 
 	struct Candidate
 	{
@@ -104,12 +105,34 @@ namespace
 			interpolationTicks = 1.0f;
 		}
 
+		// The target snapshot travelled to the client before this aim command travelled back to the server, so use the full RTT.
 		estimate.ticks =
-			(std::max)(0, static_cast<int>(std::lround(roundTripSeconds * 0.5f * ENGINE_FIXED_TICK_RATE + interpolationTicks)));
+			(std::max)(0, static_cast<int>(std::lround(roundTripSeconds * ENGINE_FIXED_TICK_RATE + interpolationTicks)));
 		estimate.roundTripMilliseconds = roundTripSeconds * 1000.0f;
 		estimate.interpolationTicks = interpolationTicks;
 		estimate.valid = true;
 		return estimate;
+	}
+
+	const detection::AimlockLagHypothesis *BestHypothesis(const detection::AimlockTrack &track, bool requireEvidence)
+	{
+		const detection::AimlockLagHypothesis *best = nullptr;
+		for (int index = 0; index < track.hypothesisCount; ++index)
+		{
+			const auto &hypothesis = track.hypotheses[index];
+			if (!hypothesis.valid
+				|| (requireEvidence
+					&& (!MeetsCoverage(hypothesis.onTargetSamples, track.samples)
+						|| hypothesis.maximumTargetDisplacement < minimumTargetDisplacement)))
+			{
+				continue;
+			}
+			if (!best || hypothesis.onTargetSamples > best->onTargetSamples)
+			{
+				best = &hypothesis;
+			}
+		}
+		return best;
 	}
 
 	bool EvaluateTarget(const detection::ShotCorrelator *shots, const detection::AimlockSample &sample,
@@ -305,11 +328,25 @@ namespace detection
 
 		if (data.latched)
 		{
-			QAngle bearing;
-			float error = 180.0f;
-			const bool stillLocked = EvaluateTarget(shots, sample, *currentFrame, player->index, data.latchedTarget, data.latchedBodyPoint,
-													data.latchedLagTicks, bearing, error)
-				&& error <= maximumError;
+			bool stillLocked = false;
+			const LagEstimate estimate = EstimateVisualLag(player);
+			if (estimate.valid)
+			{
+				const int firstLag = (std::max)(0, estimate.ticks - lagSearchRadius);
+				const int lastLag = estimate.ticks + lagSearchRadius;
+				for (int lagTicks = firstLag; lagTicks <= lastLag; ++lagTicks)
+				{
+					QAngle bearing;
+					float error = 180.0f;
+					if (EvaluateTarget(shots, sample, *currentFrame, player->index, data.latchedTarget, data.latchedBodyPoint, lagTicks,
+									   bearing, error)
+						&& error <= maximumError)
+					{
+						stillLocked = true;
+						break;
+					}
+				}
+			}
 			if (stillLocked)
 			{
 				data.breakStartTick = -1;
@@ -326,7 +363,6 @@ namespace detection
 			data.latched = false;
 			data.latchedTarget = -1;
 			data.latchedBodyPoint = -1;
-			data.latchedLagTicks = 0;
 			data.breakStartTick = -1;
 			AIMLOCK_DEBUG("%s rearmed after a half-second break.\n", player->GetName());
 		}
@@ -341,18 +377,37 @@ namespace detection
 			}
 
 			data.track = {};
-			data.track.startBearing = candidate.bearing;
 			data.track.targetIndex = candidate.targetIndex;
 			data.track.bodyPoint = candidate.bodyPoint;
-			data.track.lagTicks = candidate.lagTicks;
 			data.track.startServerTick = sample.serverTick;
 			data.track.lastServerTick = sample.serverTick;
 			data.track.samples = 1;
-			data.track.onTargetSamples = 1;
-			AIMLOCK_DEBUG("%s started tracking target %d body point %d with a %d-tick visual delay at %.3f degrees "
+			const int firstLag = (std::max)(0, estimate.ticks - lagSearchRadius);
+			const int lastLag = estimate.ticks + lagSearchRadius;
+			for (int lagTicks = firstLag;
+				 lagTicks <= lastLag && data.track.hypothesisCount < static_cast<int>(data.track.hypotheses.size()); ++lagTicks)
+			{
+				QAngle bearing;
+				float error = 180.0f;
+				if (!EvaluateTarget(shots, sample, *currentFrame, player->index, candidate.targetIndex, candidate.bodyPoint, lagTicks, bearing,
+									error))
+				{
+					continue;
+				}
+				data.track.hypotheses[data.track.hypothesisCount++] = {bearing, 0.0f, lagTicks, error <= maximumError, true};
+			}
+			if (data.track.hypothesisCount == 0)
+			{
+				ClearTrack(data);
+				return;
+			}
+			AIMLOCK_DEBUG("%s started tracking target %d body point %d across %d fixed visual-delay candidates (%d-%d ticks) "
+						  "at %.3f degrees "
 						  "(RTT %.1f ms, interpolation %.1f ticks).\n",
-						  player->GetName(), candidate.targetIndex, candidate.bodyPoint, candidate.lagTicks, candidate.error,
-						  estimate.roundTripMilliseconds, estimate.interpolationTicks);
+						  player->GetName(), candidate.targetIndex, candidate.bodyPoint, data.track.hypothesisCount,
+						  data.track.hypotheses.front().lagTicks,
+						  data.track.hypotheses[data.track.hypothesisCount - 1].lagTicks, candidate.error, estimate.roundTripMilliseconds,
+						  estimate.interpolationTicks);
 		};
 
 		if (data.track.targetIndex < 0)
@@ -371,10 +426,36 @@ namespace detection
 			return;
 		}
 
-		QAngle bearing;
-		float error = 180.0f;
-		if (!EvaluateTarget(shots, sample, *currentFrame, player->index, data.track.targetIndex, data.track.bodyPoint, data.track.lagTicks,
-							bearing, error))
+		++data.track.samples;
+		int validHypotheses = 0;
+		for (int index = 0; index < data.track.hypothesisCount; ++index)
+		{
+			auto &hypothesis = data.track.hypotheses[index];
+			if (!hypothesis.valid)
+			{
+				continue;
+			}
+
+			QAngle bearing;
+			float error = 180.0f;
+			if (!EvaluateTarget(shots, sample, *currentFrame, player->index, data.track.targetIndex, data.track.bodyPoint,
+								hypothesis.lagTicks, bearing, error))
+			{
+				hypothesis.valid = false;
+				continue;
+			}
+			const float displacement = AngularDistance(hypothesis.startBearing, bearing);
+			if (!std::isfinite(displacement))
+			{
+				hypothesis.valid = false;
+				continue;
+			}
+
+			++validHypotheses;
+			hypothesis.onTargetSamples += error <= maximumError;
+			hypothesis.maximumTargetDisplacement = (std::max)(hypothesis.maximumTargetDisplacement, displacement);
+		}
+		if (validHypotheses == 0)
 		{
 			AIMLOCK_DEBUG("%s tracking reset because the fixed target history was no longer trustworthy.\n", player->GetName());
 			ClearTrack(data);
@@ -382,42 +463,43 @@ namespace detection
 			return;
 		}
 
-		++data.track.samples;
-		data.track.onTargetSamples += error <= maximumError;
-		const float displacement = AngularDistance(data.track.startBearing, bearing);
-		if (!std::isfinite(displacement))
-		{
-			ClearTrack(data);
-			return;
-		}
-		data.track.maximumTargetDisplacement = (std::max)(data.track.maximumTargetDisplacement, displacement);
 		data.track.lastServerTick = sample.serverTick;
 
 		const int elapsedTicks = sample.serverTick - data.track.startServerTick;
 		if (elapsedTicks > 0 && elapsedTicks < trackingTicks && elapsedTicks % rearmTicks == 0)
 		{
-			AIMLOCK_DEBUG("%s episode: %.1f/2.0 seconds, %d/%d samples within %.1f degrees, target moved %.1f degrees.\n",
-						  player->GetName(), static_cast<float>(elapsedTicks) / ENGINE_FIXED_TICK_RATE, data.track.onTargetSamples,
-						  data.track.samples, maximumError, data.track.maximumTargetDisplacement);
+			const AimlockLagHypothesis *best = BestHypothesis(data.track, false);
+			if (best)
+			{
+				AIMLOCK_DEBUG("%s episode: %.1f/2.0 seconds, best fixed delay %d ticks kept %d/%d samples within %.1f degrees; "
+							  "target moved %.1f degrees.\n",
+							  player->GetName(), static_cast<float>(elapsedTicks) / ENGINE_FIXED_TICK_RATE, best->lagTicks,
+							  best->onTargetSamples, data.track.samples, maximumError, best->maximumTargetDisplacement);
+			}
 		}
 		if (elapsedTicks < trackingTicks)
 		{
 			return;
 		}
 
-		if (!MeetsCoverage(data.track.onTargetSamples, data.track.samples)
-			|| data.track.maximumTargetDisplacement < minimumTargetDisplacement)
+		const AimlockLagHypothesis *passing = BestHypothesis(data.track, true);
+		if (!passing)
 		{
-			AIMLOCK_DEBUG("%s episode ended without evidence: %d/%d samples within %.1f degrees, target moved %.1f degrees.\n",
-						  player->GetName(), data.track.onTargetSamples, data.track.samples, maximumError,
-						  data.track.maximumTargetDisplacement);
+			const AimlockLagHypothesis *best = BestHypothesis(data.track, false);
+			if (best)
+			{
+				AIMLOCK_DEBUG("%s episode ended without evidence: best fixed delay %d ticks kept %d/%d samples within %.1f degrees; "
+							  "target moved %.1f degrees.\n",
+							  player->GetName(), best->lagTicks, best->onTargetSamples, data.track.samples, maximumError,
+							  best->maximumTargetDisplacement);
+			}
 			ClearTrack(data);
 			return;
 		}
-		AddIncident(player, data);
+		AddIncident(player, data, *passing);
 	}
 
-	void AimlockModule::AddIncident(MovementPlayer *player, AimlockPlayerData &data)
+	void AimlockModule::AddIncident(MovementPlayer *player, AimlockPlayerData &data, const AimlockLagHypothesis &hypothesis)
 	{
 		const auto now = Clock::now();
 		auto &incidents = evidence[player->index];
@@ -426,27 +508,27 @@ namespace detection
 			incidents.pop_front();
 		}
 		incidents.push_back(now);
-		AIMLOCK_DEBUG("%s added evidence %d/%d after %d/%d precise samples and %.1f degrees of target movement.\n", player->GetName(),
-					  static_cast<int>(incidents.size()), detectionThreshold, data.track.onTargetSamples, data.track.samples,
-					  data.track.maximumTargetDisplacement);
-		if (incidents.size() >= detectionThreshold)
+		AIMLOCK_DEBUG("%s added evidence %d/%d after fixed delay %d ticks kept %d/%d precise samples and %.1f degrees of target movement.\n",
+					  player->GetName(), static_cast<int>(incidents.size()), detectionThreshold, hypothesis.lagTicks,
+					  hypothesis.onTargetSamples, data.track.samples, hypothesis.maximumTargetDisplacement);
+		const bool detected = incidents.size() >= detectionThreshold;
+		if (detected)
 		{
 			if (announce)
 			{
 				announce("AIMLOCK", player,
 						 tfm::format("%zu precise tracking episodes reached the threshold; the latest stayed on target for %d/%d samples "
 									 "while the target moved %.1f degrees.",
-									 incidents.size(), data.track.onTargetSamples, data.track.samples,
-									 data.track.maximumTargetDisplacement));
+									 incidents.size(), hypothesis.onTargetSamples, data.track.samples,
+									 hypothesis.maximumTargetDisplacement));
 			}
 			incidents.clear();
+			data.latched = true;
+			data.latchedTarget = data.track.targetIndex;
+			data.latchedBodyPoint = data.track.bodyPoint;
+			data.breakStartTick = -1;
 		}
 
-		data.latched = true;
-		data.latchedTarget = data.track.targetIndex;
-		data.latchedBodyPoint = data.track.bodyPoint;
-		data.latchedLagTicks = data.track.lagTicks;
-		data.breakStartTick = -1;
 		ClearTrack(data);
 	}
 

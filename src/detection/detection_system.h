@@ -222,17 +222,24 @@ namespace detection
 		bool valid {};
 	};
 
-	struct AimlockTrack
+	struct AimlockLagHypothesis
 	{
 		QAngle startBearing;
 		float maximumTargetDisplacement {};
+		int lagTicks {};
+		int onTargetSamples {};
+		bool valid {};
+	};
+
+	struct AimlockTrack
+	{
+		std::array<AimlockLagHypothesis, 5> hypotheses;
 		int targetIndex {-1};
 		int bodyPoint {-1};
-		int lagTicks {};
 		int startServerTick {-1};
 		int lastServerTick {-1};
+		int hypothesisCount {};
 		int samples {};
-		int onTargetSamples {};
 	};
 
 	struct AimlockPlayerData
@@ -241,7 +248,6 @@ namespace detection
 		AimlockTrack track;
 		int latchedTarget {-1};
 		int latchedBodyPoint {-1};
-		int latchedLagTicks {};
 		int breakStartTick {-1};
 		int lastProcessedTick {-1};
 		bool latched {};
@@ -260,7 +266,7 @@ namespace detection
 
 	private:
 		void Evaluate(MovementPlayer *player, AimlockPlayerData &data, const AimlockSample &sample);
-		void AddIncident(MovementPlayer *player, AimlockPlayerData &data);
+		void AddIncident(MovementPlayer *player, AimlockPlayerData &data, const AimlockLagHypothesis &hypothesis);
 
 		AnnounceCallback announce {};
 		ShotCorrelator *shots {};
