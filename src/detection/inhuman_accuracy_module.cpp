@@ -22,7 +22,7 @@ namespace
 	constexpr int minimumAttempts = 24;
 	constexpr int requiredHitsPerTwentyFour = 20;
 	constexpr float minimumDistance = 100.0f;
-	constexpr float targetHalfWidth = 16.0f;
+	constexpr float attemptHalfWidth = 32.0f;
 	static_assert(requiredHitsPerTwentyFour <= 24);
 
 	bool IsAccuracyWeapon(std::string_view weapon)
@@ -148,7 +148,7 @@ namespace detection
 			{
 				continue;
 			}
-			const float aimTolerance = static_cast<float>(std::atan2(targetHalfWidth, distance) * (180.0 / M_PI));
+			const float aimTolerance = static_cast<float>(std::atan2(attemptHalfWidth, distance) * (180.0 / M_PI));
 			if (error > aimTolerance)
 			{
 				continue;
