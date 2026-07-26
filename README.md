@@ -18,16 +18,9 @@ CS2AC helps community servers keep it that way.
 
 </div>
 
-<table>
-<tr>
-<td width="50%"><strong>Catches more than spinbots</strong><br>Snap aim, smooth aimlock, silent aim, anti-aim, bhop scripts, rapid fire, and more.</td>
-<td width="50%"><strong>Nothing to install</strong><br>No client or kernel driver. Join the server and play like normal.</td>
-</tr>
-<tr>
-<td width="50%"><strong>The whole server sees it</strong><br>When someone is caught, the detection appears in chat and at the center of the screen.</td>
-<td width="50%"><strong>Evidence before punishment</strong><br>Every detection comes from a specific cheating pattern, not a guess based on K/D.</td>
-</tr>
-</table>
+> ### No guesses. No K/D bans.
+>
+> CS2AC waits for a cheating pattern it knows how to prove. When it acts, it says so.
 
 ## See it catch
 
