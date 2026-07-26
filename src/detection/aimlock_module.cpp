@@ -29,7 +29,7 @@ namespace
 	constexpr float minimumDistance = 200.0f;
 	constexpr float minimumTargetDisplacement = 10.0f;
 	constexpr float maximumInterpolationTicks = 19.0f;
-	constexpr int detectionThreshold = 2;
+	constexpr int detectionThreshold = 3;
 	constexpr auto evidenceWindow = std::chrono::minutes(10);
 	constexpr float bodyHeights[] = {8.0f, 46.0f, 64.0f};
 
