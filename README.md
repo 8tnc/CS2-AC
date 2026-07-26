@@ -20,20 +20,16 @@ Server-side only. Nothing for players to install. Just join and play.
 
 </div>
 
-Some cheats rage. Others try to look human. CS2AC watches the aim, shots, movement, and inputs that reach the server, turns suspicious behavior into evidence, and acts when a detector reaches its threshold.
+Some cheaters rage. Others smooth the aim and try to look legit. CS2AC looks for both in the aim, shots, movement, and inputs sent to the server.
 
 <table>
 <tr>
-<td width="50%"><strong>17 focused detections</strong><br>Aim cheats, movement assists, exploits, and tampered clients.</td>
-<td width="50%"><strong>Visible when it matters</strong><br>Detections appear in public chat and on screen.</td>
+<td width="50%"><strong>Catches more than spinbots</strong><br>Snap aim, smooth aimlock, silent aim, anti-aim, bhop scripts, rapid fire, and more.</td>
+<td width="50%"><strong>Nothing to install</strong><br>No client or kernel driver. Join the server and play like normal.</td>
 </tr>
 <tr>
-<td width="50%"><strong>Evidence in Discord</strong><br>See the player, SteamID64, reason, server, map, and punishment.</td>
-<td width="50%"><strong>Works with your admin plugin</strong><br>Run any ban or kick command your server already understands.</td>
-</tr>
-<tr>
-<td width="50%"><strong>Whitelist without silence</strong><br>Trusted players are still detected and announced, but never punished.</td>
-<td width="50%"><strong>Built for Metamod</strong><br>Runs on Windows and Linux with no CounterStrikeSharp dependency.</td>
+<td width="50%"><strong>The whole server sees it</strong><br>When someone is caught, the detection appears in chat and at the center of the screen.</td>
+<td width="50%"><strong>Evidence before punishment</strong><br>Every detection comes from a specific cheating pattern, not a guess based on K/D.</td>
 </tr>
 </table>
 
