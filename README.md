@@ -10,19 +10,19 @@
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-5c7cfa?style=for-the-badge)](#quickstart)
 [![License](https://img.shields.io/badge/license-AGPL--3.0-2ea44f?style=for-the-badge)](LICENSE)
 
-**One cheater is enough to kill a server.**
+**You know the feeling: a great match, ruined by one cheater.**
 
-CS2AC gives community servers their own anti-cheat: catch the behavior, show the evidence, and remove the player.
+CS2AC helps community servers protect the part of Counter-Strike we all came for: a fair game where the better player wins.
 
-No client. No kernel driver. Nothing for players to install.
+No client. No kernel driver. Nothing to download. Just join and play.
 
 [Download](https://github.com/karola3vax/CS2AC/releases) · [Install](#quickstart) · [See every detection](#17-detections-one-plugin) · [Pair it with CS2FOW](#want-wallhack-protection-too)
 
 </div>
 
-Some cheaters rage. Others try to look legit. Both still send their commands, shots, view angles, and movement to the server.
+Some cheats are obvious. Others are made to look human. They still leave behavior behind on the server.
 
-**CS2AC watches that behavior and builds evidence before it acts.** When a detector reaches its threshold, everyone sees the detection, Discord gets the details, and your server runs the punishment command you configured.
+**CS2AC watches that behavior and builds evidence before it acts.** When a detector reaches its threshold, everyone sees what happened, Discord gets the details, and the server deals with the cheater.
 
 - **17 purpose-built detections**, all enabled by default.
 - **Public chat and center-screen alerts** that leave no one guessing.
