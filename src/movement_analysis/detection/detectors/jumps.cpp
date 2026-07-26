@@ -2,6 +2,7 @@
 
 #include "movement_analysis/detection/movement_detection.h"
 #include "movement_analysis/jump_analysis/jump_analysis.h"
+#include "settings.h"
 
 #define MIN_JUMP_DURATION_FOR_DETECTION 0.6f // Only consider jumps longer than this duration
 #define MIN_SYNC_FOR_DETECTION          0.7f // Minimum sync ratio to consider for detection
@@ -24,9 +25,6 @@
 #define STRAFE_PER_SECOND_THRESHOLD_FOR_GAINEFF 6.0f
 #define JUMP_DISTANCE_THRESHOLD_FOR_GAINEFF     240.0f
 
-// A player will not have this many AA calls in a single tick without using some sort of auto-strafe hack.
-#define NUM_AA_CALLS_PER_TICK_FOR_SUSPICION 10
-
 void MovementDetectionService::OnJumpFinish(Jump *jump)
 {
 	if (this->player->IsFakeClient() || this->player->IsCSTV())
@@ -38,12 +36,19 @@ void MovementDetectionService::OnJumpFinish(Jump *jump)
 		this->recentJumpStatuses.clear();
 		return;
 	}
+	if (!settings::IsDetectionEnabled(DetectionType::Autostrafe))
+	{
+		this->recentJumpStatuses.clear();
+		return;
+	}
 	if (jump->invalidateReason[0] != '\0' || !jump->IsValid())
 	{
+		this->recentJumpStatuses.clear();
 		return;
 	}
 	if (jump->airtime < MIN_JUMP_DURATION_FOR_DETECTION)
 	{
+		this->recentJumpStatuses.clear();
 		return;
 	}
 
@@ -106,8 +111,10 @@ void MovementDetectionService::OnJumpFinish(Jump *jump)
 	if (suspiciousJumpCount >= BASE_SUSPICIOUS_JUMPS_THRESHOLD
 		|| (suspiciousJumpCount >= MIN_SUSPICIOUS_JUMPS_THRESHOLD && numVeryHighStrafeJumps > 0))
 	{
-		std::string details = tfm::format("Strafe hack detected: %d suspicious jumps out of last %d (%.2f%%).", suspiciousJumpCount,
-										  NUM_JUMPS_WINDOW_SIZE, (f32)suspiciousJumpCount / (f32)NUM_JUMPS_WINDOW_SIZE * 100.0f);
+		const size_t evaluatedJumpCount = this->recentJumpStatuses.size();
+		std::string details =
+			tfm::format("%d of %zu evaluated jumps matched automated strafe patterns (%.2f%%).", suspiciousJumpCount, evaluatedJumpCount,
+						(f32)suspiciousJumpCount / (f32)evaluatedJumpCount * 100.0f);
 		this->MarkInfraction(Infraction::Type::StrafeHack, details);
 		this->recentJumpStatuses.clear();
 	}

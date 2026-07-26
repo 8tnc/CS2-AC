@@ -44,6 +44,12 @@ float MovementDetectionService::CalculateYawAccel(size_t index)
 
 void MovementDetectionService::DetectOptimization(PlayerCommand *pc)
 {
+	if (!pc->has_base() || !pc->base().has_viewangles())
+	{
+		angleFrameHistory.clear();
+		yawAccelPercent = 0.0f;
+		return;
+	}
 	const CBaseUserCmdPB &baseCmd = pc->base();
 	const float frameTime = g_pCS2ACUtils->GetGlobals()->frametime;
 	if (!std::isfinite(frameTime) || frameTime <= 0.0f)
@@ -89,6 +95,7 @@ void MovementDetectionService::DetectOptimization(PlayerCommand *pc)
 		// check if there are enough angle frames to calculate yaw accel
 		if (historySize >= MAX_ANGLE_FRAME_HISTORY && switchedStrafeDirection)
 		{
+			evaluated = true;
 			float yawAccel2TicksAgo = std::abs(CalculateYawAccel(historySize - 3));
 			float lastYawAccel = std::abs(CalculateYawAccel(historySize - 2));
 			float currentYawAccel = std::abs(CalculateYawAccel(historySize - 1));
@@ -96,7 +103,6 @@ void MovementDetectionService::DetectOptimization(PlayerCommand *pc)
 
 			if (lastNextDiff < 1.0f)
 			{
-				evaluated = true;
 				float avgAccel = (currentYawAccel + yawAccel2TicksAgo) * 0.5f;
 				if (avgAccel < 2.0f && (lastYawAccel - avgAccel) > 2.0f)
 				{

@@ -127,7 +127,6 @@ public:
 		HighStrafeCount,
 		VeryHighStrafeCount,
 		HighEfficiency,
-		HighSync,
 	};
 	std::deque<JumpStatus> recentJumpStatuses;
 	void OnJumpFinish(Jump *jump);

@@ -102,7 +102,10 @@ void MovementDetectionService::OnSetupMove(PlayerCommand *command)
 		CreateInputEvents(command);
 	}
 	ParseCommandForJump(command);
-	DetectOptimization(command);
+	if (settings::IsDetectionEnabled(DetectionType::Autostrafe))
+	{
+		DetectOptimization(command);
+	}
 }
 
 void MovementDetectionService::OnPhysicsSimulatePost()
