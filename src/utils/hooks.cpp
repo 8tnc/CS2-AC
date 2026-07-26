@@ -152,13 +152,13 @@ namespace
 		RETURN_META(MRES_IGNORED);
 	}
 
-	void HookGameFrameAfter(bool, bool, bool)
+	void HookGameFrameAfter(bool simulating, bool, bool)
 	{
 		if (auto *globals = g_pCS2ACUtils->GetGlobals())
 		{
 			g_CS2AC.serverGlobals = *globals;
 		}
-		g_CS2AC.OnGameFrame();
+		g_CS2AC.OnGameFrame(simulating);
 		ProcessTimers();
 		MovementEventService::ActiveCheck();
 		RETURN_META(MRES_IGNORED);

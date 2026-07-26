@@ -548,10 +548,6 @@ namespace detection
 		{
 			aimbot.OnProcessUsercmds(player, commands, numCommands);
 		}
-		if (settings::IsDetectionEnabled(DetectionType::Aimlock))
-		{
-			aimlock.OnProcessUsercmds(player, commands, numCommands);
-		}
 		if (settings::IsDetectionEnabled(DetectionType::AntiAim))
 		{
 			antiAim.OnProcessUsercmds(player, commands, numCommands);

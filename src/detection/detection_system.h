@@ -214,56 +214,36 @@ namespace detection
 		std::array<std::deque<Clock::time_point>, MAXPLAYERS + 1> evidence;
 	};
 
-	struct AimlockCommand
-	{
-		int commandNumber {};
-		int clientTick {};
-		QAngle angles;
-	};
-
 	struct AimlockSample
 	{
-		int commandNumber {};
-		int clientTick {};
 		int serverTick {-1};
 		QAngle angles;
 		Vector eyePosition;
 		bool valid {};
 	};
 
-	struct AimlockMotion
-	{
-		int serverTick {};
-		float targetTravel {};
-		float followedTravel {};
-		bool followed {};
-		bool moving {};
-	};
-
 	struct AimlockTrack
 	{
-		std::deque<AimlockMotion> motions;
-		QAngle lastView;
-		QAngle lastBearing;
-		float targetTravel {};
-		float followedTravel {};
+		QAngle startBearing;
+		float maximumTargetDisplacement {};
 		int targetIndex {-1};
 		int bodyPoint {-1};
+		int lagTicks {};
 		int startServerTick {-1};
 		int lastServerTick {-1};
-		int lastClientTick {};
-		int lastCommandNumber {};
-		int movingSamples {};
-		int followedSamples {};
+		int samples {};
+		int onTargetSamples {};
 	};
 
 	struct AimlockPlayerData
 	{
-		std::deque<AimlockCommand> commands;
 		AimlockSample pending;
 		AimlockTrack track;
 		int latchedTarget {-1};
+		int latchedBodyPoint {-1};
+		int latchedLagTicks {};
 		int breakStartTick {-1};
+		int lastProcessedTick {-1};
 		bool latched {};
 	};
 
@@ -274,7 +254,6 @@ namespace detection
 		void Load(AnnounceCallback announce, ShotCorrelator *shots);
 		void Unload();
 		void Reset();
-		void OnProcessUsercmds(MovementPlayer *player, PlayerCommand *commands, int numCommands);
 		void OnSetupMove(MovementPlayer *player, PlayerCommand *command, int currentTick);
 		void OnGameFrame(int currentTick);
 		void OnClientDisconnect(MovementPlayer *player);

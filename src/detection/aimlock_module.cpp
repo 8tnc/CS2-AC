@@ -1,11 +1,15 @@
 #include "detection/detection_system.h"
 
+#include "inetchannelinfo.h"
 #include "movement_analysis/player_context.h"
 #include "movement/movement.h"
 #include "sdk/usercmd.h"
+#include "utils/interfaces.h"
+#include "utils/utils.h"
 
 #include <algorithm>
 #include <cmath>
+#include <cstdlib>
 
 CConVar<bool> cs2ac_aimlock_debug("cs2ac_aimlock_debug", FCVAR_NONE, "Show Aimlock tracking episodes and evidence", false);
 
@@ -18,30 +22,24 @@ CConVar<bool> cs2ac_aimlock_debug("cs2ac_aimlock_debug", FCVAR_NONE, "Show Aimlo
 
 namespace
 {
-	constexpr size_t commandHistorySize = 96;
 	constexpr int trackingTicks = static_cast<int>(ENGINE_FIXED_TICK_RATE * 2.0f);
 	constexpr int rearmTicks = static_cast<int>(ENGINE_FIXED_TICK_RATE * 0.5f);
+	constexpr int lagSearchRadius = 2;
 	constexpr float maximumError = 0.5f;
 	constexpr float minimumDistance = 300.0f;
-	constexpr float minimumTargetTravel = 20.0f;
-	constexpr float minimumTargetRate = 10.0f;
-	constexpr float minimumFollowFraction = 0.9f;
-	constexpr float meaningfulMovement = 0.01f;
+	constexpr float minimumTargetDisplacement = 20.0f;
+	constexpr float maximumInterpolationTicks = 19.0f;
 	constexpr int detectionThreshold = 2;
 	constexpr auto evidenceWindow = std::chrono::minutes(10);
 	constexpr float bodyHeights[] = {8.0f, 46.0f, 64.0f};
 
-	constexpr bool IsContinuousSequence(std::int64_t commandDelta, std::int64_t clientTickDelta, std::int64_t serverTickDelta)
+	constexpr bool MeetsCoverage(int onTarget, int samples)
 	{
-		return commandDelta >= 0 && clientTickDelta >= 0 && serverTickDelta >= 1 && serverTickDelta <= 2;
+		return samples > 0 && onTarget * 10 >= samples * 9;
 	}
 
-	static_assert(IsContinuousSequence(0, 0, 1));
-	static_assert(IsContinuousSequence(2, 2, 1));
-	static_assert(IsContinuousSequence(2, 2, 2));
-	static_assert(!IsContinuousSequence(-1, 1, 1));
-	static_assert(!IsContinuousSequence(1, -1, 1));
-	static_assert(!IsContinuousSequence(1, 1, 3));
+	static_assert(MeetsCoverage(9, 10));
+	static_assert(!MeetsCoverage(8, 10));
 
 	struct Candidate
 	{
@@ -49,6 +47,15 @@ namespace
 		float error {180.0f};
 		int targetIndex {-1};
 		int bodyPoint {-1};
+		int lagTicks {};
+		bool valid {};
+	};
+
+	struct LagEstimate
+	{
+		int ticks {};
+		float roundTripMilliseconds {};
+		float interpolationTicks {};
 		bool valid {};
 	};
 
@@ -67,76 +74,132 @@ namespace
 
 	void ClearRuntime(detection::AimlockPlayerData &data)
 	{
-		data.commands.clear();
-		data.pending = {};
-		data.track = {};
-		data.latchedTarget = -1;
-		data.breakStartTick = -1;
-		data.latched = false;
+		data = {};
 	}
 
-	Candidate FindCandidate(const detection::PositionFrame &frame, int observerIndex, const Vector &eye, const QAngle &view)
+	LagEstimate EstimateVisualLag(MovementPlayer *player)
+	{
+		LagEstimate estimate;
+		if (!player || !interfaces::pEngine)
+		{
+			return estimate;
+		}
+
+		INetChannelInfo *netChannel = interfaces::pEngine->GetPlayerNetInfo(player->GetPlayerSlot());
+		const char *interpolationValue = interfaces::pEngine->GetClientConVarValue(player->GetPlayerSlot(), "cl_interp_ratio");
+		if (!netChannel || !utils::IsNumeric(interpolationValue))
+		{
+			return estimate;
+		}
+
+		const float roundTripSeconds = netChannel->GetEngineLatency();
+		float interpolationTicks = static_cast<float>(std::strtod(interpolationValue, nullptr));
+		if (!std::isfinite(roundTripSeconds) || roundTripSeconds < 0.0f || roundTripSeconds > 2.0f || !std::isfinite(interpolationTicks)
+			|| interpolationTicks < 0.0f || interpolationTicks > maximumInterpolationTicks)
+		{
+			return estimate;
+		}
+		if (interpolationTicks == 0.0f)
+		{
+			interpolationTicks = 1.0f;
+		}
+
+		estimate.ticks =
+			(std::max)(0, static_cast<int>(std::lround(roundTripSeconds * 0.5f * ENGINE_FIXED_TICK_RATE + interpolationTicks)));
+		estimate.roundTripMilliseconds = roundTripSeconds * 1000.0f;
+		estimate.interpolationTicks = interpolationTicks;
+		estimate.valid = true;
+		return estimate;
+	}
+
+	bool EvaluateTarget(const detection::ShotCorrelator *shots, const detection::AimlockSample &sample,
+						const detection::PositionFrame &currentFrame, int observerIndex, int targetIndex, int bodyPoint, int lagTicks,
+						QAngle &bearing, float &error)
+	{
+		if (!shots || observerIndex < 1 || observerIndex > MAXPLAYERS || targetIndex < 1 || targetIndex > MAXPLAYERS || bodyPoint < 0
+			|| bodyPoint >= static_cast<int>(std::size(bodyHeights)) || lagTicks < 0 || !detection::IsFinite(sample.eyePosition)
+			|| !detection::IsFinite(sample.angles))
+		{
+			return false;
+		}
+
+		const auto &observer = currentFrame.players[observerIndex];
+		const auto &currentTarget = currentFrame.players[targetIndex];
+		const detection::PositionFrame *historicalFrame = shots->FindFrame(sample.serverTick - lagTicks);
+		if (!observer.valid || !observer.alive || observer.teleported || !currentTarget.valid || !currentTarget.alive || currentTarget.teleported
+			|| currentTarget.team == observer.team || !historicalFrame)
+		{
+			return false;
+		}
+
+		const auto &target = historicalFrame->players[targetIndex];
+		if (!target.valid || !target.alive || target.teleported || target.team == observer.team
+			|| (target.origin - sample.eyePosition).Length() < minimumDistance)
+		{
+			return false;
+		}
+
+		const Vector targetPoint = target.origin + Vector(0.0f, 0.0f, bodyHeights[bodyPoint]);
+		Vector direction = targetPoint - sample.eyePosition;
+		if (!detection::IsFinite(targetPoint) || !detection::IsFinite(direction) || direction.LengthSqr() < EPSILON)
+		{
+			return false;
+		}
+		direction.NormalizeInPlace();
+		const float dot = std::clamp(DotProduct(detection::AimForward(sample.angles), direction), -1.0f, 1.0f);
+		error = static_cast<float>(std::acos(dot) * (180.0 / M_PI));
+		bearing = Bearing(sample.eyePosition, targetPoint);
+		return std::isfinite(error) && detection::IsFinite(bearing);
+	}
+
+	Candidate FindCandidate(const detection::ShotCorrelator *shots, const detection::AimlockSample &sample,
+							const detection::PositionFrame &currentFrame, int observerIndex, const LagEstimate &estimate)
 	{
 		Candidate best;
-		if (observerIndex < 1 || observerIndex > MAXPLAYERS || !frame.players[observerIndex].valid || !frame.players[observerIndex].alive
-			|| frame.players[observerIndex].teleported)
+		if (!estimate.valid)
 		{
 			return best;
 		}
-		const int observerTeam = frame.players[observerIndex].team;
-		const Vector forward = detection::AimForward(view);
-		const float minimumDot = std::cos(maximumError * static_cast<float>(M_PI / 180.0));
-		int matches = 0;
 
-		// The direct player scan is bounded by the server's 64-player limit.
-		for (int targetIndex = 1; targetIndex <= MAXPLAYERS; ++targetIndex)
+		int matchedTarget = -1;
+		bool ambiguous = false;
+		const int firstLag = (std::max)(0, estimate.ticks - lagSearchRadius);
+		const int lastLag = estimate.ticks + lagSearchRadius;
+		for (int lagTicks = firstLag; lagTicks <= lastLag; ++lagTicks)
 		{
-			const auto &target = frame.players[targetIndex];
-			if (targetIndex == observerIndex || !target.valid || !target.alive || target.teleported || target.team == observerTeam)
+			for (int targetIndex = 1; targetIndex <= MAXPLAYERS; ++targetIndex)
 			{
-				continue;
-			}
-			if ((target.origin - eye).Length() < minimumDistance)
-			{
-				continue;
-			}
-
-			float targetBestDot = -1.0f;
-			int targetBestBodyPoint = -1;
-			Vector targetBestPoint;
-			for (int bodyPoint = 0; bodyPoint < static_cast<int>(std::size(bodyHeights)); ++bodyPoint)
-			{
-				const Vector targetPoint = target.origin + Vector(0.0f, 0.0f, bodyHeights[bodyPoint]);
-				Vector direction = targetPoint - eye;
-				if (!detection::IsFinite(direction) || direction.LengthSqr() < EPSILON)
+				if (targetIndex == observerIndex)
 				{
 					continue;
 				}
-				direction.NormalizeInPlace();
-				const float dot = std::clamp(DotProduct(forward, direction), -1.0f, 1.0f);
-				if (dot > targetBestDot)
+				for (int bodyPoint = 0; bodyPoint < static_cast<int>(std::size(bodyHeights)); ++bodyPoint)
 				{
-					targetBestDot = dot;
-					targetBestBodyPoint = bodyPoint;
-					targetBestPoint = targetPoint;
-				}
-			}
-			if (targetBestDot < minimumDot)
-			{
-				continue;
-			}
+					QAngle bearing;
+					float error = 180.0f;
+					if (!EvaluateTarget(shots, sample, currentFrame, observerIndex, targetIndex, bodyPoint, lagTicks, bearing, error)
+						|| error > maximumError)
+					{
+						continue;
+					}
 
-			++matches;
-			Candidate candidate {
-				Bearing(eye, targetBestPoint), static_cast<float>(std::acos(targetBestDot) * (180.0 / M_PI)), targetIndex, targetBestBodyPoint, true,
-			};
-			if (candidate.error < best.error)
-			{
-				best = candidate;
+					if (matchedTarget < 0)
+					{
+						matchedTarget = targetIndex;
+					}
+					else if (matchedTarget != targetIndex)
+					{
+						ambiguous = true;
+					}
+					if (error < best.error)
+					{
+						best = {bearing, error, targetIndex, bodyPoint, lagTicks, true};
+					}
+				}
 			}
 		}
 
-		best.valid = matches == 1 && detection::IsFinite(best.bearing) && std::isfinite(best.error);
+		best.valid = best.valid && !ambiguous;
 		return best;
 	}
 } // namespace
@@ -162,64 +225,38 @@ namespace detection
 		evidence = {};
 	}
 
-	void AimlockModule::OnProcessUsercmds(MovementPlayer *player, PlayerCommand *commands, int numCommands)
-	{
-		if (!IsEligibleHuman(player) || !commands || numCommands <= 0)
-		{
-			return;
-		}
-
-		auto &data = playerData[player->index];
-		for (int i = 0; i < numCommands; ++i)
-		{
-			PlayerCommand &command = commands[i];
-			if (!command.has_base() || !command.base().has_viewangles())
-			{
-				continue;
-			}
-			if (std::any_of(data.commands.rbegin(), data.commands.rend(),
-							[&](const AimlockCommand &stored) { return stored.commandNumber == command.cmdNum; }))
-			{
-				continue;
-			}
-			const auto &base = command.base();
-			const QAngle angles(base.viewangles().x(), base.viewangles().y(), base.viewangles().z());
-			if (!IsFinite(angles))
-			{
-				continue;
-			}
-			data.commands.push_back({command.cmdNum, base.client_tick(), angles});
-			while (data.commands.size() > commandHistorySize)
-			{
-				data.commands.pop_front();
-			}
-		}
-	}
-
 	void AimlockModule::OnSetupMove(MovementPlayer *player, PlayerCommand *command, int currentTick)
 	{
 		if (!IsEligibleHuman(player) || !command)
 		{
 			return;
 		}
+
 		auto &data = playerData[player->index];
-		auto found = std::find_if(data.commands.rbegin(), data.commands.rend(),
-								  [&](const AimlockCommand &stored) { return stored.commandNumber == command->cmdNum; });
-		if (found == data.commands.rend())
+		if (currentTick == data.lastProcessedTick)
+		{
+			return;
+		}
+		if (!command->has_base() || !command->base().has_viewangles())
 		{
 			ClearTrack(data);
 			data.pending = {};
 			return;
 		}
+
+		const auto &view = command->base().viewangles();
+		const QAngle angles(view.x(), view.y(), view.z());
 		Vector eye;
 		player->GetEyeOrigin(&eye);
-		if (!IsFinite(eye))
+		if (!IsFinite(angles) || !IsFinite(eye))
 		{
 			ClearTrack(data);
 			data.pending = {};
 			return;
 		}
-		data.pending = {found->commandNumber, found->clientTick, currentTick, found->angles, eye, true};
+
+		// SetupMove is the authoritative gate: this is the last command the server will actually simulate for this tick.
+		data.pending = {currentTick, angles, eye, true};
 	}
 
 	void AimlockModule::OnGameFrame(int currentTick)
@@ -228,6 +265,7 @@ namespace detection
 		{
 			return;
 		}
+
 		for (int index = 1; index <= MAXPLAYERS; ++index)
 		{
 			auto &data = playerData[index];
@@ -244,35 +282,35 @@ namespace detection
 
 			const AimlockSample sample = data.pending;
 			data.pending = {};
-			if (sample.serverTick != currentTick || !shots->FindFrame(sample.serverTick))
+			if (sample.serverTick != currentTick || sample.serverTick == data.lastProcessedTick || !shots->FindFrame(sample.serverTick))
 			{
-				AIMLOCK_DEBUG("%s tracking reset because the command and world snapshot did not share a tick.\n", player->GetName());
+				AIMLOCK_DEBUG("%s tracking reset because the simulated command and world snapshot did not share one new tick.\n",
+							  player->GetName());
 				ClearTrack(data);
 				continue;
 			}
+			data.lastProcessedTick = sample.serverTick;
 			Evaluate(player, data, sample);
 		}
 	}
 
 	void AimlockModule::Evaluate(MovementPlayer *player, AimlockPlayerData &data, const AimlockSample &sample)
 	{
-		const PositionFrame *frame = shots ? shots->FindFrame(sample.serverTick) : nullptr;
-		if (!frame || !IsFinite(sample.angles))
+		const PositionFrame *currentFrame = shots ? shots->FindFrame(sample.serverTick) : nullptr;
+		if (!currentFrame || !IsFinite(sample.angles) || !IsFinite(sample.eyePosition))
 		{
 			ClearTrack(data);
 			return;
 		}
-		const auto &observer = frame->players[player->index];
-		if (!observer.valid || !IsFinite(observer.eyePosition))
-		{
-			ClearTrack(data);
-			return;
-		}
-		const Candidate candidate = FindCandidate(*frame, player->index, observer.eyePosition, sample.angles);
 
 		if (data.latched)
 		{
-			if (candidate.valid && candidate.targetIndex == data.latchedTarget)
+			QAngle bearing;
+			float error = 180.0f;
+			const bool stillLocked = EvaluateTarget(shots, sample, *currentFrame, player->index, data.latchedTarget, data.latchedBodyPoint,
+													data.latchedLagTicks, bearing, error)
+				&& error <= maximumError;
+			if (stillLocked)
 			{
 				data.breakStartTick = -1;
 				return;
@@ -287,27 +325,34 @@ namespace detection
 			}
 			data.latched = false;
 			data.latchedTarget = -1;
+			data.latchedBodyPoint = -1;
+			data.latchedLagTicks = 0;
 			data.breakStartTick = -1;
 			AIMLOCK_DEBUG("%s rearmed after a half-second break.\n", player->GetName());
 		}
 
 		auto startTrack = [&]()
 		{
+			const LagEstimate estimate = EstimateVisualLag(player);
+			const Candidate candidate = FindCandidate(shots, sample, *currentFrame, player->index, estimate);
 			if (!candidate.valid)
 			{
 				return;
 			}
+
 			data.track = {};
+			data.track.startBearing = candidate.bearing;
 			data.track.targetIndex = candidate.targetIndex;
 			data.track.bodyPoint = candidate.bodyPoint;
+			data.track.lagTicks = candidate.lagTicks;
 			data.track.startServerTick = sample.serverTick;
 			data.track.lastServerTick = sample.serverTick;
-			data.track.lastClientTick = sample.clientTick;
-			data.track.lastCommandNumber = sample.commandNumber;
-			data.track.lastView = sample.angles;
-			data.track.lastBearing = candidate.bearing;
-			AIMLOCK_DEBUG("%s locked target %d body point %d at %.3f degrees.\n", player->GetName(), candidate.targetIndex, candidate.bodyPoint,
-						  candidate.error);
+			data.track.samples = 1;
+			data.track.onTargetSamples = 1;
+			AIMLOCK_DEBUG("%s started tracking target %d body point %d with a %d-tick visual delay at %.3f degrees "
+						  "(RTT %.1f ms, interpolation %.1f ticks).\n",
+						  player->GetName(), candidate.targetIndex, candidate.bodyPoint, candidate.lagTicks, candidate.error,
+						  estimate.roundTripMilliseconds, estimate.interpolationTicks);
 		};
 
 		if (data.track.targetIndex < 0)
@@ -315,78 +360,58 @@ namespace detection
 			startTrack();
 			return;
 		}
-		const std::int64_t commandDelta = static_cast<std::int64_t>(sample.commandNumber) - data.track.lastCommandNumber;
-		const std::int64_t clientTickDelta = static_cast<std::int64_t>(sample.clientTick) - data.track.lastClientTick;
+
 		const std::int64_t serverTickDelta = static_cast<std::int64_t>(sample.serverTick) - data.track.lastServerTick;
-		if (serverTickDelta == 0 && commandDelta >= 0 && clientTickDelta >= 0)
+		if (serverTickDelta != 1)
 		{
-			return;
-		}
-		if (!candidate.valid && serverTickDelta == 1 && commandDelta >= 0 && clientTickDelta >= 0)
-		{
-			AIMLOCK_DEBUG("%s kept target %d through one missing target sample.\n", player->GetName(), data.track.targetIndex);
-			return;
-		}
-		if (!candidate.valid || candidate.targetIndex != data.track.targetIndex
-			|| !IsContinuousSequence(commandDelta, clientTickDelta, serverTickDelta))
-		{
-			AIMLOCK_DEBUG("%s tracking reset: target %d->%d, command delta %lld, client tick delta %lld, server tick delta %lld.\n",
-						  player->GetName(), data.track.targetIndex, candidate.valid ? candidate.targetIndex : -1,
-						  static_cast<long long>(commandDelta), static_cast<long long>(clientTickDelta), static_cast<long long>(serverTickDelta));
+			AIMLOCK_DEBUG("%s tracking reset because the simulated server ticks were not consecutive (%lld).\n", player->GetName(),
+						  static_cast<long long>(serverTickDelta));
 			ClearTrack(data);
 			startTrack();
 			return;
 		}
 
-		const bool bodyPointChanged = candidate.bodyPoint != data.track.bodyPoint;
-		const Vector lastTarget = AimForward(data.track.lastBearing);
-		const Vector target = AimForward(candidate.bearing);
-		const Vector lastView = AimForward(data.track.lastView);
-		const Vector view = AimForward(sample.angles);
-		Vector targetDelta = target - lastTarget;
-		Vector viewDelta = view - lastView;
-		const float targetTravel = bodyPointChanged ? 0.0f : AngularDistance(data.track.lastBearing, candidate.bearing);
-		const float viewTravel = bodyPointChanged ? 0.0f : AngularDistance(data.track.lastView, sample.angles);
-		const bool moving = std::isfinite(targetTravel) && targetTravel >= meaningfulMovement;
-		const bool viewMoving = std::isfinite(viewTravel) && viewTravel >= meaningfulMovement;
-		float alignment = 0.0f;
-		if (moving && viewMoving && targetDelta.LengthSqr() >= EPSILON && viewDelta.LengthSqr() >= EPSILON)
+		QAngle bearing;
+		float error = 180.0f;
+		if (!EvaluateTarget(shots, sample, *currentFrame, player->index, data.track.targetIndex, data.track.bodyPoint, data.track.lagTicks,
+							bearing, error))
 		{
-			targetDelta.NormalizeInPlace();
-			viewDelta.NormalizeInPlace();
-			alignment = std::clamp(DotProduct(targetDelta, viewDelta), -1.0f, 1.0f);
-		}
-		const bool followed = moving && viewMoving && alignment > 0.0f;
-		const float followedTravel = followed ? (std::min)(targetTravel, viewTravel) * std::clamp(alignment, 0.0f, 1.0f) : 0.0f;
-
-		data.track.motions.push_back({sample.serverTick, targetTravel, followedTravel, followed, moving});
-		data.track.targetTravel += targetTravel;
-		data.track.followedTravel += followedTravel;
-		data.track.movingSamples += moving;
-		data.track.followedSamples += followed;
-		while (!data.track.motions.empty()
-			   && static_cast<std::int64_t>(data.track.motions.front().serverTick) <= static_cast<std::int64_t>(sample.serverTick) - trackingTicks)
-		{
-			const AimlockMotion expired = data.track.motions.front();
-			data.track.motions.pop_front();
-			data.track.targetTravel -= expired.targetTravel;
-			data.track.followedTravel -= expired.followedTravel;
-			data.track.movingSamples -= expired.moving;
-			data.track.followedSamples -= expired.followed;
+			AIMLOCK_DEBUG("%s tracking reset because the fixed target history was no longer trustworthy.\n", player->GetName());
+			ClearTrack(data);
+			startTrack();
+			return;
 		}
 
+		++data.track.samples;
+		data.track.onTargetSamples += error <= maximumError;
+		const float displacement = AngularDistance(data.track.startBearing, bearing);
+		if (!std::isfinite(displacement))
+		{
+			ClearTrack(data);
+			return;
+		}
+		data.track.maximumTargetDisplacement = (std::max)(data.track.maximumTargetDisplacement, displacement);
 		data.track.lastServerTick = sample.serverTick;
-		data.track.lastClientTick = sample.clientTick;
-		data.track.lastCommandNumber = sample.commandNumber;
-		data.track.lastView = sample.angles;
-		data.track.lastBearing = candidate.bearing;
-		data.track.bodyPoint = candidate.bodyPoint;
 
-		if (static_cast<std::int64_t>(sample.serverTick) - data.track.startServerTick < trackingTicks || data.track.targetTravel < minimumTargetTravel
-			|| data.track.targetTravel / 2.0f < minimumTargetRate || data.track.movingSamples == 0
-			|| static_cast<float>(data.track.followedSamples) / data.track.movingSamples < minimumFollowFraction
-			|| data.track.followedTravel / data.track.targetTravel < minimumFollowFraction)
+		const int elapsedTicks = sample.serverTick - data.track.startServerTick;
+		if (elapsedTicks > 0 && elapsedTicks < trackingTicks && elapsedTicks % rearmTicks == 0)
 		{
+			AIMLOCK_DEBUG("%s episode: %.1f/2.0 seconds, %d/%d samples within %.1f degrees, target moved %.1f degrees.\n",
+						  player->GetName(), static_cast<float>(elapsedTicks) / ENGINE_FIXED_TICK_RATE, data.track.onTargetSamples,
+						  data.track.samples, maximumError, data.track.maximumTargetDisplacement);
+		}
+		if (elapsedTicks < trackingTicks)
+		{
+			return;
+		}
+
+		if (!MeetsCoverage(data.track.onTargetSamples, data.track.samples)
+			|| data.track.maximumTargetDisplacement < minimumTargetDisplacement)
+		{
+			AIMLOCK_DEBUG("%s episode ended without evidence: %d/%d samples within %.1f degrees, target moved %.1f degrees.\n",
+						  player->GetName(), data.track.onTargetSamples, data.track.samples, maximumError,
+						  data.track.maximumTargetDisplacement);
+			ClearTrack(data);
 			return;
 		}
 		AddIncident(player, data);
@@ -401,22 +426,26 @@ namespace detection
 			incidents.pop_front();
 		}
 		incidents.push_back(now);
-		AIMLOCK_DEBUG("%s added evidence %d/%d.\n", player->GetName(), static_cast<int>(incidents.size()), detectionThreshold);
+		AIMLOCK_DEBUG("%s added evidence %d/%d after %d/%d precise samples and %.1f degrees of target movement.\n", player->GetName(),
+					  static_cast<int>(incidents.size()), detectionThreshold, data.track.onTargetSamples, data.track.samples,
+					  data.track.maximumTargetDisplacement);
 		if (incidents.size() >= detectionThreshold)
 		{
 			if (announce)
 			{
 				announce("AIMLOCK", player,
-						 tfm::format("%zu precise tracking episodes reached the threshold; latest episode followed %.1f%% of target travel.",
-									 incidents.size(), data.track.targetTravel > 0.0f
-														   ? data.track.followedTravel * 100.0f / data.track.targetTravel
-														   : 0.0f));
+						 tfm::format("%zu precise tracking episodes reached the threshold; the latest stayed on target for %d/%d samples "
+									 "while the target moved %.1f degrees.",
+									 incidents.size(), data.track.onTargetSamples, data.track.samples,
+									 data.track.maximumTargetDisplacement));
 			}
 			incidents.clear();
 		}
 
 		data.latched = true;
 		data.latchedTarget = data.track.targetIndex;
+		data.latchedBodyPoint = data.track.bodyPoint;
+		data.latchedLagTicks = data.track.lagTicks;
 		data.breakStartTick = -1;
 		ClearTrack(data);
 	}

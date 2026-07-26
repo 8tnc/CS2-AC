@@ -565,10 +565,13 @@ void CS2ACPlugin::OnSetupMove(MovementPlayer *player, PlayerCommand *command)
 	detectionSystem.OnSetupMove(player, command, globals ? globals->tickcount : 0);
 }
 
-void CS2ACPlugin::OnGameFrame()
+void CS2ACPlugin::OnGameFrame(bool simulating)
 {
 	auto *globals = g_pCS2ACUtils->GetServerGlobals();
-	detectionSystem.OnGameFrame(globals ? globals->tickcount : 0);
+	if (simulating)
+	{
+		detectionSystem.OnGameFrame(globals ? globals->tickcount : 0);
+	}
 	if (webhook)
 	{
 		webhook->OnGameFrame();

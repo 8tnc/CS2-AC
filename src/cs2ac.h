@@ -60,7 +60,7 @@ public:
 	void OnLevelShutdown() override;
 	void OnProcessUsercmds(MovementPlayer *player, PlayerCommand *commands, int numCommands);
 	void OnSetupMove(MovementPlayer *player, PlayerCommand *command);
-	void OnGameFrame();
+	void OnGameFrame(bool simulating);
 	void OnGameEvent(IGameEvent *event, MovementPlayer *player);
 	void HandleDetection(const char *detection, MovementPlayer *player, std::string_view evidence = {});
 	void OnClientFullyConnect(CPlayerSlot slot);
