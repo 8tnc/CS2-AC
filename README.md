@@ -10,19 +10,19 @@
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-5c7cfa?style=for-the-badge)](#quickstart)
 [![License](https://img.shields.io/badge/license-AGPL--3.0-2ea44f?style=for-the-badge)](LICENSE)
 
-**17 detections. One server-side plugin. Zero player installs.**
+**One cheater is enough to kill a server.**
 
-No client. No kernel driver. No player downloads.
+CS2AC gives community servers their own anti-cheat: catch the behavior, show the evidence, and remove the player.
 
-Install it on the server. Players just join.
+No client. No kernel driver. Nothing for players to install.
 
 [Download](https://github.com/karola3vax/CS2AC/releases) · [Install](#quickstart) · [See every detection](#17-detections-one-plugin) · [Pair it with CS2FOW](#want-wallhack-protection-too)
 
 </div>
 
-Cheats can hide their menus. They cannot hide every command, shot, view angle, and movement they send to your server.
+Some cheaters rage. Others try to look legit. Both still send their commands, shots, view angles, and movement to the server.
 
-**CS2AC turns that behavior into evidence.** When a detector reaches its threshold, CS2AC can show the whole server, send the details to Discord, and run the punishment command you chose.
+**CS2AC watches that behavior and builds evidence before it acts.** When a detector reaches its threshold, everyone sees the detection, Discord gets the details, and your server runs the punishment command you configured.
 
 - **17 purpose-built detections**, all enabled by default.
 - **Public chat and center-screen alerts** that leave no one guessing.
