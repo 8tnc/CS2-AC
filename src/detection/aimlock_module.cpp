@@ -25,8 +25,8 @@ namespace
 	constexpr int trackingTicks = static_cast<int>(ENGINE_FIXED_TICK_RATE * 2.0f);
 	constexpr int rearmTicks = static_cast<int>(ENGINE_FIXED_TICK_RATE * 0.5f);
 	constexpr int lagSearchRadius = 2;
-	constexpr float maximumError = 0.5f;
-	constexpr float minimumDistance = 300.0f;
+	constexpr float maximumError = 1.0f;
+	constexpr float minimumDistance = 200.0f;
 	constexpr float minimumTargetDisplacement = 10.0f;
 	constexpr float maximumInterpolationTicks = 19.0f;
 	constexpr int detectionThreshold = 2;
