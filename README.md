@@ -107,11 +107,15 @@ When CS2AC acts, it can do all of this at once:
 
 <table>
 <tr>
-<td width="50%" align="center">
+<td width="33%" align="center">
 <img src="docs/showcase/announcement-center.png" width="100%" alt="CS2AC center-screen test announcement">
 <br><strong>Five-second center alert</strong>
 </td>
-<td width="50%" align="center">
+<td width="33%" align="center">
+<img src="docs/showcase/detection.png" width="100%" alt="CS2AC center-screen Aimbot detection">
+<br><strong>Detection sent</strong>
+</td>
+<td width="33%" align="center">
 <img src="docs/showcase/whitelist.png" width="100%" alt="CS2AC announcing a detection on a whitelisted player">
 <br><strong>Whitelist stays visible</strong>
 </td>
@@ -175,6 +179,10 @@ cs2ac_whitelist "76561198000000001,76561198000000002"
 4. Run `cs2ac_webhook_test`.
 
 Keep the webhook URL private. CS2AC never prints it back to the console.
+
+<div align="center">
+<img src="docs/showcase/webhook.png" width="432" alt="CS2AC Discord detection report with player, evidence, punishment, map, and server details">
+</div>
 
 <details>
 <summary><strong>Server commands</strong></summary>
