@@ -64,7 +64,7 @@ CS2AC helps community servers keep it that way.
 ### CS2AC + CS2FOW
 
 <a href="https://github.com/karola3vax/CS2FOW">
-<img src="docs/showcase/cs2fow-wallhack.gif" width="100%" alt="CS2FOW hiding enemies behind solid map geometry on Ancient">
+<img src="docs/showcase/cs2fow-wallhack.gif" width="100%" alt="CS2FOW operating across Dust II long sightlines">
 </a>
 
 **Catch the cheat. Starve the wallhack.**
