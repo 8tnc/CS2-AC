@@ -164,6 +164,16 @@ const char *CGameConfig::GetSymbol(const char *name)
 
 void *CGameConfig::ResolveSignature(const char *name)
 {
+	return ResolveSignature(name, false);
+}
+
+void *CGameConfig::ResolveFunctionSignature(const char *name)
+{
+	return ResolveSignature(name, true);
+}
+
+void *CGameConfig::ResolveSignature(const char *name, bool useOriginalImage)
+{
 	CModule **module = this->GetModule(name);
 	if (!module || !(*module) || !(*module)->m_hModule || !(*module)->m_base || !(*module)->m_size)
 	{
@@ -195,6 +205,11 @@ void *CGameConfig::ResolveSignature(const char *name)
 			return nullptr;
 		}
 		address = (*module)->FindSignature(pSignature.get(), iLength, error);
+		// Another plugin may already have replaced the function entry. The platform resolver verifies the exact mapped image before recovering it.
+		if (!address && error == SIG_NOT_FOUND && useOriginalImage)
+		{
+			address = (*module)->FindOriginalSignature(pSignature.get(), iLength, error);
+		}
 		if (error == SIG_FOUND_MULTIPLE && !m_umAllowMultiMatch[name])
 		{
 			return nullptr;

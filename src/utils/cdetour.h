@@ -78,7 +78,7 @@ bool CDetour<T>::CreateDetour(CGameConfig *gameConfig)
 	{
 		return true;
 	}
-	m_pfnFunc = (T *)gameConfig->ResolveSignature(m_pszName);
+	m_pfnFunc = (T *)gameConfig->ResolveFunctionSignature(m_pszName);
 	if (!m_pfnFunc)
 	{
 		return false;

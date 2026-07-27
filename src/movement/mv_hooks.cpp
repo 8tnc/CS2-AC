@@ -24,7 +24,7 @@ void movement::ValidateDetours(std::vector<std::string> &missing)
 	}
 	for (auto *detour : movementDetours)
 	{
-		if (!g_pGameConfig->ResolveSignature(detour->GetName()))
+		if (!g_pGameConfig->ResolveFunctionSignature(detour->GetName()))
 		{
 			missing.emplace_back(std::string("The ") + detour->GetName() + " movement hook could not be found.");
 		}

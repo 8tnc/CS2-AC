@@ -157,6 +157,8 @@ public:
 		return return_addr;
 	}
 
+	void *FindOriginalSignature(const byte *pData, size_t iSigLength, int &error);
+
 	void *FindInterface(const char *name)
 	{
 		CreateInterfaceFn fn = (CreateInterfaceFn)dlsym(m_hModule, "CreateInterface");

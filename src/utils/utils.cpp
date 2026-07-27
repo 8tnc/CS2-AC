@@ -35,7 +35,8 @@ void utils::Initialize(std::vector<std::string> &missing)
 		missing.emplace_back("The game event manager could not be found.");
 	}
 
-	s_GetLegacyGameEventListener = reinterpret_cast<GetLegacyGameEventListener_t *>(g_pGameConfig->ResolveSignature("GetLegacyGameEventListener"));
+	s_GetLegacyGameEventListener =
+		reinterpret_cast<GetLegacyGameEventListener_t *>(g_pGameConfig->ResolveFunctionSignature("GetLegacyGameEventListener"));
 	if (!s_GetLegacyGameEventListener)
 	{
 		missing.emplace_back("The client event listener used by DLL Injection could not be found.");

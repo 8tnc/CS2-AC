@@ -97,7 +97,13 @@ bool ClientCvarValue::Validate(IVEngineServer2 *pEngineServer, INetworkMessages 
 		}
 		else if (responseHandlerOffset >= 0 && responseHandlerOffset <= 512)
 		{
-			const void *handler = reinterpret_cast<void *const *>(serverClientVTable.GetPtr())[responseHandlerOffset];
+			void **handlerEntry = reinterpret_cast<void **>(serverClientVTable.GetPtr()) + responseHandlerOffset;
+			// SourceHook replaces this entry with its dispatcher and keeps the original address for every plugin sharing the hook.
+			const void *handler = g_SHPtr ? g_SHPtr->GetOrigVfnPtrEntry(handlerEntry) : nullptr;
+			if (!handler)
+			{
+				handler = *handlerEntry;
+			}
 			const auto executable = serverModule.GetSectionByName(".text");
 			const uintptr_t handlerAddress = reinterpret_cast<uintptr_t>(handler);
 			const uintptr_t executableStart = executable.m_pSectionBase.GetPtr();

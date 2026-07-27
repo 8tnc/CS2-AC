@@ -13,6 +13,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <sys/sysmacros.h>
 
 #include "tier0/memdbgon.h"
 
@@ -85,6 +86,121 @@ int GetModuleInformation(HINSTANCE hModule, void **base, size_t *length, std::ve
 	close(fd);
 
 	return 0;
+}
+
+static bool ModuleFileMatchesMapping(const void *address, const struct stat &fileInfo)
+{
+	FILE *maps = fopen("/proc/self/maps", "r");
+	if (!maps)
+	{
+		return false;
+	}
+
+	const uintptr_t target = reinterpret_cast<uintptr_t>(address);
+	char line[1024];
+	while (fgets(line, sizeof(line), maps))
+	{
+		unsigned long start = 0;
+		unsigned long end = 0;
+		unsigned long offset = 0;
+		unsigned int deviceMajor = 0;
+		unsigned int deviceMinor = 0;
+		unsigned long inode = 0;
+		char permissions[5] {};
+		if (sscanf(line, "%lx-%lx %4s %lx %x:%x %lu", &start, &end, permissions, &offset, &deviceMajor, &deviceMinor, &inode) != 7)
+		{
+			continue;
+		}
+		if (target >= start && target < end)
+		{
+			fclose(maps);
+			return permissions[2] == 'x' && inode == static_cast<unsigned long>(fileInfo.st_ino)
+				   && deviceMajor == static_cast<unsigned int>(major(fileInfo.st_dev))
+				   && deviceMinor == static_cast<unsigned int>(minor(fileInfo.st_dev));
+		}
+	}
+
+	fclose(maps);
+	return false;
+}
+
+void *CModule::FindOriginalSignature(const byte *pData, size_t iSigLength, int &error)
+{
+	error = SIG_NOT_FOUND;
+	if (!m_hModule || !m_base || !pData || iSigLength == 0)
+	{
+		return nullptr;
+	}
+
+	link_map *lmap = nullptr;
+	if (dlinfo(m_hModule, RTLD_DI_LINKMAP, &lmap) != 0 || !lmap || !lmap->l_name || !*lmap->l_name)
+	{
+		return nullptr;
+	}
+
+	const int fd = open(lmap->l_name, O_RDONLY | O_CLOEXEC);
+	if (fd == -1)
+	{
+		return nullptr;
+	}
+
+	struct stat fileInfo {};
+	if (fstat(fd, &fileInfo) != 0 || fileInfo.st_size <= 0 || !ModuleFileMatchesMapping(m_base, fileInfo))
+	{
+		close(fd);
+		return nullptr;
+	}
+
+	const size_t fileSize = static_cast<size_t>(fileInfo.st_size);
+	void *mapping = mmap(nullptr, fileSize, PROT_READ, MAP_PRIVATE, fd, 0);
+	if (mapping == MAP_FAILED)
+	{
+		close(fd);
+		return nullptr;
+	}
+
+	void *matchAddress = nullptr;
+	if (fileSize >= sizeof(ElfW(Ehdr)))
+	{
+		auto *header = static_cast<ElfW(Ehdr) *>(mapping);
+		if (memcmp(header->e_ident, ELFMAG, SELFMAG) == 0 && header->e_ident[EI_CLASS] == ELFCLASS64 && header->e_ident[EI_DATA] == ELFDATA2LSB
+			&& header->e_phentsize == sizeof(ElfW(Phdr)) && header->e_phoff <= fileSize
+			&& header->e_phnum <= (fileSize - header->e_phoff) / sizeof(ElfW(Phdr)))
+		{
+			auto *programHeaders = reinterpret_cast<ElfW(Phdr) *>(static_cast<byte *>(mapping) + header->e_phoff);
+			for (size_t i = 0; i < header->e_phnum && error != SIG_FOUND_MULTIPLE; ++i)
+			{
+				const auto &segment = programHeaders[i];
+				if (segment.p_type != PT_LOAD || !(segment.p_flags & PF_X) || segment.p_filesz < iSigLength || segment.p_offset > fileSize
+					|| segment.p_filesz > fileSize - segment.p_offset)
+				{
+					continue;
+				}
+
+				byte *segmentData = static_cast<byte *>(mapping) + segment.p_offset;
+				SignatureIterator signatures(segmentData, segment.p_filesz, pData, iSigLength);
+				while (void *match = signatures.FindNext(true))
+				{
+					const uintptr_t segmentOffset = static_cast<byte *>(match) - segmentData;
+					void *loadedAddress = reinterpret_cast<void *>(lmap->l_addr + segment.p_vaddr + segmentOffset);
+					if (matchAddress)
+					{
+						error = SIG_FOUND_MULTIPLE;
+						break;
+					}
+					matchAddress = loadedAddress;
+				}
+			}
+		}
+	}
+
+	munmap(mapping, fileSize);
+	close(fd);
+	if (matchAddress && error != SIG_FOUND_MULTIPLE)
+	{
+		error = SIG_OK;
+	}
+	return matchAddress;
 }
 
 static int parse_prot(const char *s)
