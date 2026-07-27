@@ -37,8 +37,8 @@ namespace
 	constexpr float commandYawMismatchAngle = 90.0f;
 	constexpr float minimumAttackReturnAngle = 30.0f;
 	constexpr int commandMismatchSpacing = 4;
-	constexpr float detectionThreshold = 20.0f;
-	constexpr float scoreDecayPerSecond = 1.0f;
+	constexpr float detectionThreshold = 50.0f;
+	constexpr float scoreDecayPerSecond = 2.0f;
 
 	enum CommandProblem : std::uint32_t
 	{
@@ -394,7 +394,7 @@ namespace detection
 		{
 			data.lastJitterEvidenceTick = command.serverTick;
 			ANTIAIM_DEBUG("%s repeated an exact %d-way yaw pattern.\n", player->GetName(), jitterPeriod);
-			AddEvidence(player, data, 2.0f, "repeating jitter", true);
+			AddEvidence(player, data, 1.0f, "repeating jitter", true);
 		}
 	}
 
@@ -513,7 +513,7 @@ namespace detection
 		if (found->problems != 0 && !data.suppressContinuous)
 		{
 			ANTIAIM_DEBUG("%s command %d is inconsistent: %s.\n", player->GetName(), found->commandNumber, ProblemName(found->problems));
-			AddEvidence(player, data, 2.0f, "an inconsistent angle command", true);
+			AddEvidence(player, data, 1.0f, "an inconsistent angle command", true);
 		}
 		else if (historyMismatch && !data.suppressContinuous
 				 && (data.lastMismatchEvidenceCommand < 0
@@ -522,7 +522,7 @@ namespace detection
 			data.lastMismatchEvidenceCommand = found->commandNumber;
 			ANTIAIM_DEBUG("%s command %d base/input-history yaw mismatch is %.2f degrees.\n", player->GetName(), found->commandNumber,
 						  found->historyYawDifference);
-			AddEvidence(player, data, 2.0f, "a repeated base and input-history mismatch", true);
+			AddEvidence(player, data, 1.0f, "a repeated base and input-history mismatch", true);
 		}
 		else if (!data.inconsistencyActive && wasInconsistent)
 		{
@@ -536,7 +536,7 @@ namespace detection
 		{
 			ANTIAIM_DEBUG("%s command %d has invalid pitch/roll %.2f/%.2f.\n", player->GetName(), found->commandNumber, found->baseAngles.x,
 						  found->baseAngles.z);
-			AddEvidence(player, data, 3.0f, "invalid pitch or roll", true);
+			AddEvidence(player, data, 2.0f, "invalid pitch or roll", true);
 		}
 
 		EvaluateMotion(player, data, *found);

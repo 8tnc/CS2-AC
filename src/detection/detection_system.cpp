@@ -644,7 +644,7 @@ namespace detection
 		{
 			if (settings::IsDetectionEnabled(DetectionType::Doubletap))
 			{
-				doubletap.OnWeaponFire(event, player, currentTick);
+				doubletap.OnWeaponFire(player, currentTick);
 			}
 			if (ShotRecord *shot = shots.OnWeaponFire(event, player, currentTick))
 			{

@@ -126,17 +126,17 @@ namespace detection
 	struct DoubletapState
 	{
 		int serverTick {-1};
-		std::string weapon;
+		int incidents {};
 	};
 
-	// Detects a weapon firing twice sooner than its live cycle time permits.
+	// Detects two weapon-fire events arriving in the same or next server tick.
 	class DoubletapModule
 	{
 	public:
 		void Load(AnnounceCallback announce);
 		void Unload();
 		void Reset();
-		void OnWeaponFire(IGameEvent *event, MovementPlayer *player, int currentTick);
+		void OnWeaponFire(MovementPlayer *player, int currentTick);
 		void OnClientDisconnect(MovementPlayer *player);
 
 	private:
