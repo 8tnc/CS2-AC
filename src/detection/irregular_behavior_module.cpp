@@ -21,9 +21,9 @@ namespace
 	constexpr int evidenceWindowSeconds = 10 * 60;
 	constexpr float minimumDistance = 10.0f;
 	constexpr float longDistance = 20.0f;
-	constexpr int detectionScore = 20;
-	constexpr int minimumSuccesses = 4;
-	constexpr int minimumAttempts = 6;
+	constexpr int detectionScore = 16;
+	constexpr int minimumSuccesses = 3;
+	constexpr int minimumAttempts = 5;
 	constexpr size_t pendingLimit = 8;
 
 	bool IsSniperWeapon(std::string_view weapon)

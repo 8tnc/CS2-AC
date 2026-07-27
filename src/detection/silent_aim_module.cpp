@@ -17,7 +17,7 @@ CConVar<bool> cs2ac_silentaim_debug("cs2ac_silentaim_debug", FCVAR_NONE, "Show w
 
 namespace
 {
-	constexpr int detectionScore = 10;
+	constexpr int detectionScore = 8;
 	constexpr auto evidenceWindow = std::chrono::minutes(10);
 	constexpr float minimumImpactDistance = 100.0f;
 	constexpr float maximumImpactDistance = 10000.0f;

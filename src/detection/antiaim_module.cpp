@@ -29,15 +29,16 @@ namespace
 	constexpr float fastSpinRate = 2200.0f;
 	constexpr float slowSpinSeconds = 15.0f;
 	constexpr float mediumSpinSeconds = 10.0f;
-	constexpr float fastSpinSeconds = 5.0f;
+	constexpr float fastSpinSeconds = 10.0f;
 	constexpr float spinBreakAllowance = 1.0f;
 	constexpr float spinConsistency = 0.85f;
 	constexpr float jitterTolerance = 0.25f;
 	constexpr float minimumJitterSpan = 10.0f;
+	constexpr float requiredJitterSeconds = 10.0f;
 	constexpr float commandYawMismatchAngle = 90.0f;
 	constexpr float minimumAttackReturnAngle = 30.0f;
 	constexpr int commandMismatchSpacing = 4;
-	constexpr float detectionThreshold = 50.0f;
+	constexpr float detectionThreshold = 100.0f;
 	constexpr float scoreDecayPerSecond = 2.0f;
 
 	enum CommandProblem : std::uint32_t
@@ -93,9 +94,11 @@ namespace detection
 	{
 		data.spinSeconds = {};
 		data.spinBreakSeconds = {};
+		data.jitterSeconds = 0.0f;
+		data.jitterBreakSeconds = 0.0f;
 		data.spinDebugBucket = -1;
+		data.jitterDebugBucket = -1;
 		data.lastMotionServerTick = -1;
-		data.lastJitterEvidenceTick = -1;
 		data.spinActive = false;
 		data.jitterActive = false;
 	}
@@ -388,13 +391,51 @@ namespace detection
 				break;
 			}
 		}
-		data.jitterActive = jitterPeriod != 0;
-		if (data.jitterActive
-			&& (data.lastJitterEvidenceTick < 0 || static_cast<std::int64_t>(command.serverTick) - data.lastJitterEvidenceTick >= jitterPeriod))
+		bool jitterEpisodeActive = false;
+		// Require sustained jitter instead of scoring every repeated step; legitimate 180-degree binds can briefly form the same pattern.
+		if (jitterPeriod != 0 && serverGap == 1)
 		{
-			data.lastJitterEvidenceTick = command.serverTick;
-			ANTIAIM_DEBUG("%s repeated an exact %d-way yaw pattern.\n", player->GetName(), jitterPeriod);
-			AddEvidence(player, data, 1.0f, "repeating jitter", true);
+			data.jitterBreakSeconds = 0.0f;
+			if (!data.suppressContinuous)
+			{
+				data.jitterSeconds += 1.0f / ENGINE_FIXED_TICK_RATE;
+			}
+			jitterEpisodeActive = true;
+		}
+		else if (data.jitterSeconds > 0.0f || data.jitterBreakSeconds > 0.0f)
+		{
+			data.jitterBreakSeconds += commandSeconds;
+			if (data.jitterBreakSeconds > spinBreakAllowance)
+			{
+				data.jitterSeconds = 0.0f;
+				data.jitterBreakSeconds = 0.0f;
+			}
+			else
+			{
+				jitterEpisodeActive = true;
+			}
+		}
+
+		data.jitterActive = jitterEpisodeActive;
+		const int jitterDebugBucket = static_cast<int>(data.jitterSeconds / requiredJitterSeconds * 10.0f);
+		if (jitterPeriod != 0 && jitterDebugBucket > data.jitterDebugBucket)
+		{
+			data.jitterDebugBucket = jitterDebugBucket;
+			ANTIAIM_DEBUG("%s sustained an exact %d-way yaw pattern; progress %d%%.\n", player->GetName(), jitterPeriod,
+						  (std::min)(jitterDebugBucket * 10, 100));
+		}
+		if (data.jitterSeconds >= requiredJitterSeconds && !data.suppressContinuous)
+		{
+			AddEvidence(player, data, detectionThreshold, "continuous repeating jitter", true);
+			data.jitterActive = true;
+		}
+		else if (!jitterEpisodeActive)
+		{
+			if (data.jitterDebugBucket >= 0)
+			{
+				ANTIAIM_DEBUG("%s repeating jitter stopped; progress was reset.\n", player->GetName());
+			}
+			data.jitterDebugBucket = -1;
 		}
 	}
 

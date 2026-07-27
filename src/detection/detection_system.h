@@ -314,11 +314,13 @@ namespace detection
 		float score {};
 		std::array<float, 3> spinSeconds;
 		std::array<float, 3> spinBreakSeconds;
+		float jitterSeconds {};
+		float jitterBreakSeconds {};
 		int pendingShot {-1};
 		int pendingShotTick {-1};
 		int spinDebugBucket {-1};
+		int jitterDebugBucket {-1};
 		int lastMotionServerTick {-1};
-		int lastJitterEvidenceTick {-1};
 		int lastMismatchEvidenceCommand {-1};
 		bool invalidActive {};
 		bool inconsistencyActive {};
