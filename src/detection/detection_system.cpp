@@ -110,7 +110,6 @@ namespace detection
 		}
 		positionFrames.clear();
 		nextShotId = 1;
-		nextEventOrder = 1;
 	}
 
 	void ShotCorrelator::OnClientDisconnect(MovementPlayer *player)
@@ -305,7 +304,6 @@ namespace detection
 		shot.clientTick = match->clientTick;
 		shot.serverTick = match->serverTick;
 		shot.fireTick = currentTick;
-		shot.eventOrder = nextEventOrder++;
 		shot.angles = match->angles;
 		if (auto *pawn = player->GetPlayerPawn())
 		{
@@ -363,7 +361,6 @@ namespace detection
 		}
 		shot->impactPosition = impact;
 		shot->impactSeen = true;
-		++nextEventOrder;
 		return shot;
 	}
 
@@ -389,7 +386,6 @@ namespace detection
 		}
 		shot->hurtSeen = true;
 		shot->victimIndex = victim->index;
-		++nextEventOrder;
 		return shot;
 	}
 
@@ -415,7 +411,6 @@ namespace detection
 		}
 		shot->deathSeen = true;
 		shot->victimIndex = victim->index;
-		++nextEventOrder;
 		return shot;
 	}
 

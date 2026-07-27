@@ -66,7 +66,6 @@ namespace detection
 		int clientTick {};
 		int serverTick {-1};
 		int fireTick {-1};
-		std::uint64_t eventOrder {};
 		QAngle angles;
 		QAngle visibleAngles;
 		Vector eyePosition;
@@ -122,7 +121,6 @@ namespace detection
 		std::array<ShotPlayerData, MAXPLAYERS + 1> playerData;
 		std::deque<PositionFrame> positionFrames;
 		std::uint64_t nextShotId {1};
-		std::uint64_t nextEventOrder {1};
 	};
 
 	struct DoubletapState

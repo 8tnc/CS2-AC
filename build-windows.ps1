@@ -32,11 +32,28 @@ foreach ($line in $environment) {
 }
 
 $python = (Get-Command python.exe).Source
-$env:PYTHONPATH = Join-Path $PSScriptRoot '.tools\ambuild'
-$configuredBuild = Join-Path $PSScriptRoot "$BuildDirectory\.ambuild2\graph"
+$subst = (Get-Command subst.exe).Source
+# AMBuild puts absolute paths in object filenames, so a drive alias keeps them below Windows' limit.
+$shortDrive = @('Z:', 'Y:', 'X:', 'W:', 'V:', 'U:', 'T:') |
+	Where-Object { -not (Test-Path "$_\") } |
+	Select-Object -First 1
+if (-not $shortDrive) {
+	throw 'A free drive letter could not be found for the Windows build.'
+}
 
-Push-Location $PSScriptRoot
+& $subst $shortDrive $PSScriptRoot
+if ($LASTEXITCODE -ne 0) {
+	throw 'A short path could not be created for the Windows build.'
+}
+
+$shortRoot = "$shortDrive\"
+$env:PYTHONPATH = Join-Path $shortRoot '.tools\ambuild'
+$configuredBuild = Join-Path $shortRoot "$BuildDirectory\.ambuild2\graph"
+$locationPushed = $false
+
 try {
+	Push-Location $shortRoot
+	$locationPushed = $true
 	if (-not (Test-Path $configuredBuild)) {
 		& $python configure.py --enable-optimize --out $BuildDirectory
 		if ($LASTEXITCODE -ne 0) {
@@ -49,7 +66,13 @@ try {
 	}
 }
 finally {
-	Pop-Location
+	if ($locationPushed) {
+		Pop-Location
+	}
+	& $subst $shortDrive /d
+	if ($LASTEXITCODE -ne 0) {
+		Write-Warning "The temporary $shortDrive build path could not be removed."
+	}
 }
 
 $plugin = Join-Path $PSScriptRoot "$BuildDirectory\package\game\csgo\addons\cs2ac\bin\win64\cs2ac.dll"

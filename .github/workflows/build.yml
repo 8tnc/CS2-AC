@@ -29,20 +29,24 @@ jobs:
           clang-format --dry-run --Werror --style=file -- "${files[@]}"
 
   windows:
+    needs: source
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
         with:
-          submodules: recursive
+          name: CS2AC-1.0.0-source
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.12"
-      - name: Build Windows x64
+      - name: Build Windows x64 from the source package
         shell: pwsh
-        run: ./build-windows.ps1 -BuildDirectory build-windows-ci
+        run: |
+          Expand-Archive -LiteralPath CS2AC-1.0.0-source.zip -DestinationPath source-check
+          Set-Location source-check/CS2AC-1.0.0-source
+          ./build-windows.ps1 -BuildDirectory build-windows-ci
       - name: Package Windows x64
         shell: pwsh
-        run: Compress-Archive -Path build-windows-ci/package/game -DestinationPath CS2AC-1.0.0-windows-x64.zip
+        run: Compress-Archive -Path source-check/CS2AC-1.0.0-source/build-windows-ci/package/game -DestinationPath CS2AC-1.0.0-windows-x64.zip
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: CS2AC-1.0.0-windows-x64
@@ -50,18 +54,22 @@ jobs:
           if-no-files-found: error
 
   linux:
+    needs: source
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
         with:
-          submodules: recursive
+          name: CS2AC-1.0.0-source
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.12"
-      - name: Build Linux SteamRT3 x64
-        run: ./build-linux.sh build-linux-ci
+      - name: Build Linux SteamRT3 x64 from the source package
+        run: |
+          unzip -q CS2AC-1.0.0-source.zip -d source-check
+          cd source-check/CS2AC-1.0.0-source
+          ./build-linux.sh build-linux-ci
       - name: Package Linux x64
-        run: cd build-linux-ci/package && zip -qr ../../CS2AC-1.0.0-linux-x64.zip game
+        run: cd source-check/CS2AC-1.0.0-source/build-linux-ci/package && zip -qr ../../../../CS2AC-1.0.0-linux-x64.zip game
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: CS2AC-1.0.0-linux-x64
