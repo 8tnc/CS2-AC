@@ -224,6 +224,7 @@ namespace detection
 	{
 		QAngle startBearing;
 		float maximumTargetDisplacement {};
+		float requiredTargetDisplacement {};
 		int lagTicks {};
 		int onTargetSamples {};
 		bool valid {};

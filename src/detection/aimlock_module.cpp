@@ -27,7 +27,7 @@ namespace
 	constexpr int lagSearchRadius = 2;
 	constexpr float playerHalfWidth = 16.0f; // The CS2 player hull is 32 units wide; aim is measured from its center.
 	constexpr float minimumDistance = 200.0f;
-	constexpr float minimumTargetDisplacement = 5.0f;
+	constexpr float minimumTargetTravel = 48.0f; // One and a half player widths, converted to degrees at the episode's starting distance.
 	constexpr float maximumInterpolationTicks = 19.0f;
 	constexpr int detectionThreshold = 3;
 	constexpr auto evidenceWindow = std::chrono::minutes(10);
@@ -122,7 +122,7 @@ namespace
 			if (!hypothesis.valid
 				|| (requireEvidence
 					&& (!MeetsCoverage(hypothesis.onTargetSamples, track.samples)
-						|| hypothesis.maximumTargetDisplacement < minimumTargetDisplacement)))
+						|| hypothesis.maximumTargetDisplacement < hypothesis.requiredTargetDisplacement)))
 			{
 				continue;
 			}
@@ -135,7 +135,8 @@ namespace
 	}
 
 	bool EvaluateTarget(const detection::ShotCorrelator *shots, const detection::AimlockSample &sample, const detection::PositionFrame &currentFrame,
-						int observerIndex, int targetIndex, int bodyPoint, int lagTicks, QAngle &bearing, float &error, float &maximumError)
+						int observerIndex, int targetIndex, int bodyPoint, int lagTicks, QAngle &bearing, float &error, float &maximumError,
+						float *requiredTargetDisplacement)
 	{
 		if (!shots || observerIndex < 1 || observerIndex > MAXPLAYERS || targetIndex < 1 || targetIndex > MAXPLAYERS || bodyPoint < 0
 			|| bodyPoint >= static_cast<int>(std::size(bodyHeights)) || lagTicks < 0 || !detection::IsFinite(sample.eyePosition)
@@ -171,8 +172,13 @@ namespace
 		const float dot = std::clamp(DotProduct(detection::AimForward(sample.angles), direction), -1.0f, 1.0f);
 		error = static_cast<float>(std::acos(dot) * (180.0 / M_PI));
 		maximumError = static_cast<float>(std::atan2(playerHalfWidth, targetDistance) * (180.0 / M_PI));
+		if (requiredTargetDisplacement)
+		{
+			*requiredTargetDisplacement = static_cast<float>(std::atan2(minimumTargetTravel, targetDistance) * (180.0 / M_PI));
+		}
 		bearing = Bearing(sample.eyePosition, targetPoint);
-		return std::isfinite(error) && std::isfinite(maximumError) && detection::IsFinite(bearing);
+		return std::isfinite(error) && std::isfinite(maximumError) && (!requiredTargetDisplacement || std::isfinite(*requiredTargetDisplacement))
+			   && detection::IsFinite(bearing);
 	}
 
 	Candidate FindCandidate(const detection::ShotCorrelator *shots, const detection::AimlockSample &sample,
@@ -201,7 +207,8 @@ namespace
 					QAngle bearing;
 					float error = 180.0f;
 					float maximumError = 0.0f;
-					if (!EvaluateTarget(shots, sample, currentFrame, observerIndex, targetIndex, bodyPoint, lagTicks, bearing, error, maximumError)
+					if (!EvaluateTarget(shots, sample, currentFrame, observerIndex, targetIndex, bodyPoint, lagTicks, bearing, error, maximumError,
+										nullptr)
 						|| error > maximumError)
 					{
 						continue;
@@ -340,7 +347,7 @@ namespace detection
 					float error = 180.0f;
 					float maximumError = 0.0f;
 					if (EvaluateTarget(shots, sample, *currentFrame, player->index, data.latchedTarget, data.latchedBodyPoint, lagTicks, bearing,
-									   error, maximumError)
+									   error, maximumError, nullptr)
 						&& error <= maximumError)
 					{
 						stillLocked = true;
@@ -391,12 +398,14 @@ namespace detection
 				QAngle bearing;
 				float error = 180.0f;
 				float maximumError = 0.0f;
+				float requiredTargetDisplacement = 0.0f;
 				if (!EvaluateTarget(shots, sample, *currentFrame, player->index, candidate.targetIndex, candidate.bodyPoint, lagTicks, bearing, error,
-									maximumError))
+									maximumError, &requiredTargetDisplacement))
 				{
 					continue;
 				}
-				data.track.hypotheses[data.track.hypothesisCount++] = {bearing, 0.0f, lagTicks, error <= maximumError, true};
+				data.track.hypotheses[data.track.hypothesisCount++] = {bearing, 0.0f, requiredTargetDisplacement, lagTicks, error <= maximumError,
+																	   true};
 			}
 			if (data.track.hypothesisCount == 0)
 			{
@@ -441,7 +450,7 @@ namespace detection
 			float error = 180.0f;
 			float maximumError = 0.0f;
 			if (!EvaluateTarget(shots, sample, *currentFrame, player->index, data.track.targetIndex, data.track.bodyPoint, hypothesis.lagTicks,
-								bearing, error, maximumError))
+								bearing, error, maximumError, nullptr))
 			{
 				hypothesis.valid = false;
 				continue;
@@ -474,9 +483,9 @@ namespace detection
 			if (best)
 			{
 				AIMLOCK_DEBUG("%s episode: %.1f/2.0 seconds, best fixed delay %d ticks kept %d/%d samples within the target width; "
-							  "target moved %.1f degrees.\n",
+							  "target moved %.1f/%.1f required degrees.\n",
 							  player->GetName(), static_cast<float>(elapsedTicks) / ENGINE_FIXED_TICK_RATE, best->lagTicks, best->onTargetSamples,
-							  data.track.samples, best->maximumTargetDisplacement);
+							  data.track.samples, best->maximumTargetDisplacement, best->requiredTargetDisplacement);
 			}
 		}
 		if (elapsedTicks < trackingTicks)
@@ -491,8 +500,9 @@ namespace detection
 			if (best)
 			{
 				AIMLOCK_DEBUG("%s episode ended without evidence: best fixed delay %d ticks kept %d/%d samples within the target width; "
-							  "target moved %.1f degrees.\n",
-							  player->GetName(), best->lagTicks, best->onTargetSamples, data.track.samples, best->maximumTargetDisplacement);
+							  "target moved %.1f/%.1f required degrees.\n",
+							  player->GetName(), best->lagTicks, best->onTargetSamples, data.track.samples, best->maximumTargetDisplacement,
+							  best->requiredTargetDisplacement);
 			}
 			ClearTrack(data);
 			return;
@@ -509,9 +519,10 @@ namespace detection
 			incidents.pop_front();
 		}
 		incidents.push_back(now);
-		AIMLOCK_DEBUG("%s added evidence %d/%d after fixed delay %d ticks kept %d/%d precise samples and %.1f degrees of target movement.\n",
+		AIMLOCK_DEBUG("%s added evidence %d/%d after fixed delay %d ticks kept %d/%d precise samples and %.1f/%.1f required degrees of target "
+					  "movement.\n",
 					  player->GetName(), static_cast<int>(incidents.size()), detectionThreshold, hypothesis.lagTicks, hypothesis.onTargetSamples,
-					  data.track.samples, hypothesis.maximumTargetDisplacement);
+					  data.track.samples, hypothesis.maximumTargetDisplacement, hypothesis.requiredTargetDisplacement);
 		const bool detected = incidents.size() >= detectionThreshold;
 		if (detected)
 		{
@@ -519,8 +530,9 @@ namespace detection
 			{
 				announce("AIMLOCK", player,
 						 tfm::format("%zu precise tracking episodes reached the threshold; the latest stayed on target for %d/%d samples "
-									 "while the target moved %.1f degrees.",
-									 incidents.size(), hypothesis.onTargetSamples, data.track.samples, hypothesis.maximumTargetDisplacement));
+									 "while the target moved %.1f degrees against a %.1f-degree requirement.",
+									 incidents.size(), hypothesis.onTargetSamples, data.track.samples, hypothesis.maximumTargetDisplacement,
+									 hypothesis.requiredTargetDisplacement));
 			}
 			incidents.clear();
 			data.latched = true;
