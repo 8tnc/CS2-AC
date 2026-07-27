@@ -77,86 +77,43 @@ CS2AC helps community servers keep it that way.
 
 ### Aim and accuracy
 
-<table>
-<tr>
-<td width="22%"><strong>Aimbot</strong></td>
-<td><strong>What it catches:</strong> The crosshair suddenly snapping onto an enemy before a shot.<br><strong>How it knows:</strong> The same sharp snap keeps ending in real damage.</td>
-</tr>
-<tr>
-<td><strong>Aimlock</strong></td>
-<td><strong>What it catches:</strong> Aim that follows a moving enemy with almost no shake or error.<br><strong>How it knows:</strong> The crosshair stays glued to the target for far too long, even through walls.</td>
-</tr>
-<tr>
-<td><strong>Silentaim</strong></td>
-<td><strong>What it catches:</strong> Bullets landing somewhere the crosshair never appeared to point.<br><strong>How it knows:</strong> The player's aim, the bullet impact, and the damage do not line up.</td>
-</tr>
-<tr>
-<td><strong>Inhuman Accuracy</strong></td>
-<td><strong>What it catches:</strong> Long streaks of accuracy with almost none of the misses real players make.<br><strong>How it knows:</strong> The impossible hit rate continues across a full set of aimed shots.</td>
-</tr>
-<tr>
-<td><strong>Irregular Behavior</strong></td>
-<td><strong>What it catches:</strong> Airborne and no-scope kills happening far too reliably.<br><strong>How it knows:</strong> It counts the misses too, so one lucky shot means nothing.</td>
-</tr>
-</table>
+**Aimbot.** The player's aim moves sharply onto an enemy before a damaging shot. CS2AC checks whether this pattern occurs across separate shots.
+
+**Aimlock.** The player's aim closely follows a moving enemy for an extended period. CS2AC measures how closely the aim follows the target over time, including when the target is behind a wall.
+
+**Silentaim.** A damaging bullet lands away from the direction shown by the player's aim. CS2AC compares the aim at the moment of the shot with the bullet impact and resulting damage.
+
+**Inhuman Accuracy.** The player maintains an unusually high hit rate across a longer series of aimed shots. CS2AC tracks those shots and how many of them cause damage.
+
+**Irregular Behavior.** The player repeatedly lands difficult shots while airborne or without using a sniper scope. CS2AC counts both successful and missed attempts over time.
 
 ### Movement
 
-<table>
-<tr>
-<td width="22%"><strong>Autostrafe</strong></td>
-<td><strong>What it catches:</strong> Automatic air strafes that preserve speed and make every movement count.<br><strong>How it knows:</strong> Jump after jump is too fast, efficient, and perfectly timed.</td>
-</tr>
-<tr>
-<td><strong>Bhop</strong></td>
-<td><strong>What it catches:</strong> Jump scripts that fire at the exact moment the player lands.<br><strong>How it knows:</strong> Frame-perfect hops or the same landing pattern keep repeating.</td>
-</tr>
-<tr>
-<td><strong>Hyperscroll</strong></td>
-<td><strong>What it catches:</strong> Far more jump presses than normal mouse-wheel scrolling can explain.<br><strong>How it knows:</strong> The excessive scrolling also keeps producing perfect hops.</td>
-</tr>
-<tr>
-<td><strong>Nulls</strong></td>
-<td><strong>What it catches:</strong> Opposite movement keys switching perfectly while the player is airborne.<br><strong>How it knows:</strong> The direction changes stay too perfect for too long.</td>
-</tr>
-</table>
+**Autostrafe.** The player repeatedly gains or preserves speed through highly consistent movement while airborne. CS2AC compares the player's movement, speed, and timing across each jump.
+
+**Bhop.** The player repeatedly jumps again as soon as they touch the ground. CS2AC measures the time between landing and the next jump across consecutive hops.
+
+**Hyperscroll.** The player sends unusually rapid bursts of jump inputs while landing. CS2AC checks those inputs together with the timing of the resulting jumps.
+
+**Nulls.** The player switches between opposite movement directions with highly consistent timing while airborne. CS2AC compares the movement keys with the direction changes sent by the player.
 
 ### Exploits and client behavior
 
-<table>
-<tr>
-<td width="22%"><strong>Antiaim</strong></td>
-<td><strong>What it catches:</strong> Fake angles that make the player spin, jitter, or look in impossible directions.<br><strong>How it knows:</strong> The view becomes impossible or jumps away for a shot before snapping straight back.</td>
-</tr>
-<tr>
-<td><strong>DLL Injection</strong></td>
-<td><strong>What it catches:</strong> Injected cheats listening to hidden game events.<br><strong>How it knows:</strong> The player's game starts listening to events linked to cheat features.</td>
-</tr>
-<tr>
-<td><strong>Desubticking</strong></td>
-<td><strong>What it catches:</strong> Automated movement with its normal timing stripped away.<br><strong>How it knows:</strong> Movement keeps arriving at the exact same instant instead of naturally between ticks.</td>
-</tr>
-<tr>
-<td><strong>Doubletap</strong></td>
-<td><strong>What it catches:</strong> The same weapon firing twice before it should be ready.<br><strong>How it knows:</strong> The two shots are faster than that weapon can normally fire.</td>
-</tr>
-<tr>
-<td><strong>Invalid CVar</strong></td>
-<td><strong>What it catches:</strong> Protected game settings changed to values normal players should never have.<br><strong>How it knows:</strong> The player's game reports a setting that is unsafe or impossible.</td>
-</tr>
-<tr>
-<td><strong>Invalid Input</strong></td>
-<td><strong>What it catches:</strong> Movement buttons changing without the normal record of those presses.<br><strong>How it knows:</strong> The button presses and the player's movement tell two different stories.</td>
-</tr>
-<tr>
-<td><strong>Namechanger</strong></td>
-<td><strong>What it catches:</strong> Rapid name changes used to distract people or show off.<br><strong>How it knows:</strong> The same player changes name five times within one minute.</td>
-</tr>
-<tr>
-<td><strong>Subtick Spam</strong></td>
-<td><strong>What it catches:</strong> Too many movement and aim changes packed into the same instant.<br><strong>How it knows:</strong> Those unnatural bursts keep repeating within a very short time.</td>
-</tr>
-</table>
+**Antiaim.** The player's view spins, jitters, returns after an attack, or reaches angles outside normal play. CS2AC checks the view angles and their order across consecutive commands.
+
+**DLL Injection.** The player's game subscribes to a group of events associated with injected client code. CS2AC checks those event subscriptions after the player joins and again while they remain connected.
+
+**Desubticking.** The player's movement inputs repeatedly arrive without their normal timing between ticks. CS2AC checks the timing attached to each movement change.
+
+**Doubletap.** The same weapon fires twice before its normal delay has passed. CS2AC compares the weapon and server tick of each consecutive shot.
+
+**Invalid CVar.** The player's game reports a protected or monitored setting outside its accepted value. CS2AC requests these settings from the client and checks each reply.
+
+**Invalid Input.** The player's button state does not match the recorded order of button presses and releases. CS2AC compares both parts of the command sent by the client.
+
+**Namechanger.** The player changes their visible name repeatedly within a short period. CS2AC counts name changes for each connected player.
+
+**Subtick Spam.** The player repeatedly sends many movement or aim changes at the same point within a tick. CS2AC checks how often these same-time input bursts occur.
 
 ## One detection. Everywhere.
 
