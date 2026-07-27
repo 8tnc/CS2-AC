@@ -56,17 +56,16 @@ void MovementDetectionService::OnJumpFinish(Jump *jump)
 	{
 		AUTOSTRAFE_DEBUG("%s jump rejected: %s.\n", this->player->GetName(),
 						 jump->invalidateReason[0] != '\0' ? jump->invalidateReason : "jump data is invalid");
-		this->recentJumpStatuses.clear();
 		return;
 	}
 	if (jump->airtime < MIN_JUMP_DURATION_FOR_DETECTION)
 	{
 		AUTOSTRAFE_DEBUG("%s jump rejected: %.3f seconds in air is below the %.3f-second minimum.\n", this->player->GetName(), jump->airtime,
 						 MIN_JUMP_DURATION_FOR_DETECTION);
-		this->recentJumpStatuses.clear();
 		return;
 	}
 
+	// Rejected jumps are skipped rather than treated as normal or used to erase earlier valid evidence.
 	if (jump->GetSync() <= MIN_SYNC_FOR_DETECTION)
 	{
 		this->recentJumpStatuses.push_back(JumpStatus::Normal);
