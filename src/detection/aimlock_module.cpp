@@ -25,7 +25,7 @@ namespace
 	constexpr int trackingTicks = static_cast<int>(ENGINE_FIXED_TICK_RATE * 2.0f);
 	constexpr int rearmTicks = static_cast<int>(ENGINE_FIXED_TICK_RATE * 0.5f);
 	constexpr int lagSearchRadius = 2;
-	constexpr float maximumError = 1.0f;
+	constexpr float playerHalfWidth = 16.0f; // The CS2 player hull is 32 units wide; aim is measured from its center.
 	constexpr float minimumDistance = 200.0f;
 	constexpr float minimumTargetDisplacement = 5.0f;
 	constexpr float maximumInterpolationTicks = 19.0f;
@@ -135,7 +135,7 @@ namespace
 	}
 
 	bool EvaluateTarget(const detection::ShotCorrelator *shots, const detection::AimlockSample &sample, const detection::PositionFrame &currentFrame,
-						int observerIndex, int targetIndex, int bodyPoint, int lagTicks, QAngle &bearing, float &error)
+						int observerIndex, int targetIndex, int bodyPoint, int lagTicks, QAngle &bearing, float &error, float &maximumError)
 	{
 		if (!shots || observerIndex < 1 || observerIndex > MAXPLAYERS || targetIndex < 1 || targetIndex > MAXPLAYERS || bodyPoint < 0
 			|| bodyPoint >= static_cast<int>(std::size(bodyHeights)) || lagTicks < 0 || !detection::IsFinite(sample.eyePosition)
@@ -162,15 +162,17 @@ namespace
 
 		const Vector targetPoint = target.origin + Vector(0.0f, 0.0f, bodyHeights[bodyPoint]);
 		Vector direction = targetPoint - sample.eyePosition;
-		if (!detection::IsFinite(targetPoint) || !detection::IsFinite(direction) || direction.LengthSqr() < EPSILON)
+		const float targetDistance = direction.Length();
+		if (!detection::IsFinite(targetPoint) || !detection::IsFinite(direction) || !std::isfinite(targetDistance) || targetDistance < EPSILON)
 		{
 			return false;
 		}
 		direction.NormalizeInPlace();
 		const float dot = std::clamp(DotProduct(detection::AimForward(sample.angles), direction), -1.0f, 1.0f);
 		error = static_cast<float>(std::acos(dot) * (180.0 / M_PI));
+		maximumError = static_cast<float>(std::atan2(playerHalfWidth, targetDistance) * (180.0 / M_PI));
 		bearing = Bearing(sample.eyePosition, targetPoint);
-		return std::isfinite(error) && detection::IsFinite(bearing);
+		return std::isfinite(error) && std::isfinite(maximumError) && detection::IsFinite(bearing);
 	}
 
 	Candidate FindCandidate(const detection::ShotCorrelator *shots, const detection::AimlockSample &sample,
@@ -198,7 +200,8 @@ namespace
 				{
 					QAngle bearing;
 					float error = 180.0f;
-					if (!EvaluateTarget(shots, sample, currentFrame, observerIndex, targetIndex, bodyPoint, lagTicks, bearing, error)
+					float maximumError = 0.0f;
+					if (!EvaluateTarget(shots, sample, currentFrame, observerIndex, targetIndex, bodyPoint, lagTicks, bearing, error, maximumError)
 						|| error > maximumError)
 					{
 						continue;
@@ -335,8 +338,9 @@ namespace detection
 				{
 					QAngle bearing;
 					float error = 180.0f;
+					float maximumError = 0.0f;
 					if (EvaluateTarget(shots, sample, *currentFrame, player->index, data.latchedTarget, data.latchedBodyPoint, lagTicks, bearing,
-									   error)
+									   error, maximumError)
 						&& error <= maximumError)
 					{
 						stillLocked = true;
@@ -386,8 +390,9 @@ namespace detection
 			{
 				QAngle bearing;
 				float error = 180.0f;
-				if (!EvaluateTarget(shots, sample, *currentFrame, player->index, candidate.targetIndex, candidate.bodyPoint, lagTicks, bearing,
-									error))
+				float maximumError = 0.0f;
+				if (!EvaluateTarget(shots, sample, *currentFrame, player->index, candidate.targetIndex, candidate.bodyPoint, lagTicks, bearing, error,
+									maximumError))
 				{
 					continue;
 				}
@@ -434,8 +439,9 @@ namespace detection
 
 			QAngle bearing;
 			float error = 180.0f;
+			float maximumError = 0.0f;
 			if (!EvaluateTarget(shots, sample, *currentFrame, player->index, data.track.targetIndex, data.track.bodyPoint, hypothesis.lagTicks,
-								bearing, error))
+								bearing, error, maximumError))
 			{
 				hypothesis.valid = false;
 				continue;
@@ -467,10 +473,10 @@ namespace detection
 			const AimlockLagHypothesis *best = BestHypothesis(data.track, false);
 			if (best)
 			{
-				AIMLOCK_DEBUG("%s episode: %.1f/2.0 seconds, best fixed delay %d ticks kept %d/%d samples within %.1f degrees; "
+				AIMLOCK_DEBUG("%s episode: %.1f/2.0 seconds, best fixed delay %d ticks kept %d/%d samples within the target width; "
 							  "target moved %.1f degrees.\n",
 							  player->GetName(), static_cast<float>(elapsedTicks) / ENGINE_FIXED_TICK_RATE, best->lagTicks, best->onTargetSamples,
-							  data.track.samples, maximumError, best->maximumTargetDisplacement);
+							  data.track.samples, best->maximumTargetDisplacement);
 			}
 		}
 		if (elapsedTicks < trackingTicks)
@@ -484,10 +490,9 @@ namespace detection
 			const AimlockLagHypothesis *best = BestHypothesis(data.track, false);
 			if (best)
 			{
-				AIMLOCK_DEBUG("%s episode ended without evidence: best fixed delay %d ticks kept %d/%d samples within %.1f degrees; "
+				AIMLOCK_DEBUG("%s episode ended without evidence: best fixed delay %d ticks kept %d/%d samples within the target width; "
 							  "target moved %.1f degrees.\n",
-							  player->GetName(), best->lagTicks, best->onTargetSamples, data.track.samples, maximumError,
-							  best->maximumTargetDisplacement);
+							  player->GetName(), best->lagTicks, best->onTargetSamples, data.track.samples, best->maximumTargetDisplacement);
 			}
 			ClearTrack(data);
 			return;
