@@ -168,7 +168,7 @@ That is it. Players install nothing.
 
 The default punishment commands are made for [CS2-SimpleAdmin](https://github.com/daffyyyy/CS2-SimpleAdmin). Using another admin plugin? Replace the two commands in `cs2ac.cfg` with commands that plugin understands.
 
-## Configuration that makes sense
+## Configuration
 
 The included [`cs2ac.cfg`](cfg/cs2ac.cfg) explains every option in plain language.
 
