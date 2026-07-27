@@ -1,5 +1,6 @@
 #include "detection/detection_system.h"
 
+#include "igameevents.h"
 #include "movement/movement.h"
 
 CConVar<bool> cs2ac_doubletap_debug("cs2ac_doubletap_debug", FCVAR_NONE, "Show Doubletap weapon-fire tick spacing", false);
@@ -34,26 +35,37 @@ namespace detection
 		playerData = {};
 	}
 
-	void DoubletapModule::OnWeaponFire(MovementPlayer *player, int currentTick)
+	void DoubletapModule::OnWeaponFire(IGameEvent *event, MovementPlayer *player, int currentTick)
 	{
-		if (!IsEligibleHuman(player))
+		if (!event || !IsEligibleHuman(player))
 		{
 			return;
 		}
 
 		auto &previous = playerData[player->index];
+		const std::string_view weapon = NormalizeWeapon(event->GetString("weapon", ""));
+		if (!IsBallisticWeapon(weapon))
+		{
+			previous.serverTick = -1;
+			previous.weapon.clear();
+			return;
+		}
 		if (previous.serverTick < 0)
 		{
-			DOUBLETAP_DEBUG("%s stored the first fire at server tick %d.\n", player->GetName(), currentTick);
+			DOUBLETAP_DEBUG("%s stored the first %.*s fire at server tick %d.\n", player->GetName(), static_cast<int>(weapon.size()), weapon.data(),
+							currentTick);
 			previous.serverTick = currentTick;
+			previous.weapon.assign(weapon);
 			return;
 		}
 
 		const std::int64_t delta = static_cast<std::int64_t>(currentTick) - previous.serverTick;
-		if (delta > 1)
+		if (delta < 0 || delta > 1 || previous.weapon != weapon)
 		{
-			DOUBLETAP_DEBUG("%s fired %lld server ticks after the previous fire. Rejected.\n", player->GetName(), static_cast<long long>(delta));
+			DOUBLETAP_DEBUG("%s fired %.*s %lld server ticks after %s. Rejected.\n", player->GetName(), static_cast<int>(weapon.size()),
+							weapon.data(), static_cast<long long>(delta), previous.weapon.c_str());
 			previous.serverTick = currentTick;
+			previous.weapon.assign(weapon);
 			return;
 		}
 

@@ -22,7 +22,7 @@ namespace
 	constexpr auto scanInterval = std::chrono::minutes(2);
 
 	// Keep normal client and game-instructor subscriptions out of this list.
-	constexpr std::array<const char *, 118> blacklistedEvents = {
+	constexpr std::array<const char *, 117> blacklistedEvents = {
 		"gameui_hidden",
 		"player_chat",
 		"player_score",
@@ -65,7 +65,6 @@ namespace
 		"round_poststart",
 		"tagrenade_detonate",
 		"inferno_extinguish",
-		"player_jump",
 		"mb_input_lock_success",
 		"mb_input_lock_cancel",
 		"nav_generate",
@@ -143,7 +142,7 @@ namespace
 		"dynamic_shadow_light_changed",
 	};
 
-	static_assert(blacklistedEvents.size() == 118, "The DLL Injection event list must contain 118 entries.");
+	static_assert(blacklistedEvents.size() == 117, "The DLL Injection event list must contain 117 entries.");
 } // namespace
 
 namespace detection

@@ -127,6 +127,7 @@ namespace detection
 	{
 		int serverTick {-1};
 		int incidents {};
+		std::string weapon;
 	};
 
 	// Detects two weapon-fire events arriving in the same or next server tick.
@@ -136,7 +137,7 @@ namespace detection
 		void Load(AnnounceCallback announce);
 		void Unload();
 		void Reset();
-		void OnWeaponFire(MovementPlayer *player, int currentTick);
+		void OnWeaponFire(IGameEvent *event, MovementPlayer *player, int currentTick);
 		void OnClientDisconnect(MovementPlayer *player);
 
 	private:
