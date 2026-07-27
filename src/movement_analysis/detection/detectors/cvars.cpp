@@ -11,6 +11,15 @@
 CConVarRef<bool> sv_cheats("sv_cheats");
 CConVar<bool> cs2ac_allow_sv_cheats_testing("cs2ac_allow_sv_cheats_testing", FCVAR_NONE, "Keep CS2AC detections enabled while sv_cheats is enabled",
 											false);
+CConVar<bool> cs2ac_invalid_cvar_debug("cs2ac_invalid_cvar_debug", FCVAR_NONE, "Show Invalid CVar replies, latch transitions, and unavailable checks",
+									   false);
+
+#define INVALID_CVAR_DEBUG(...) \
+	do \
+	{ \
+		if (cs2ac_invalid_cvar_debug.GetBool()) \
+			Msg("[CS2AC Invalid CVar] " __VA_ARGS__); \
+	} while (0)
 
 // Give replicated cheat-protected settings time to return to normal after sv_cheats is disabled.
 
@@ -137,6 +146,8 @@ static_function void ValidateQueriedCvar(CPlayerSlot nSlot, ECvarValueStatus eSt
 {
 	if (eStatus != ECvarValueStatus::ValueIntact)
 	{
+		INVALID_CVAR_DEBUG("Player slot %d returned status %d for %s; the reply was ignored.\n", nSlot.Get(), static_cast<int>(eStatus),
+						   pszCvarName ? pszCvarName : "an unknown CVar");
 		return;
 	}
 	CS2ACPlayer *player = g_pCS2ACPlayerManager->ToPlayer(nSlot);

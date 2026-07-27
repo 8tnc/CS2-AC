@@ -4,6 +4,15 @@
 #include "sdk/usercmd.h"
 #include "settings.h"
 
+extern CConVar<bool> cs2ac_invalid_cvar_debug;
+
+#define INVALID_CVAR_DEBUG(...) \
+	do \
+	{ \
+		if (cs2ac_invalid_cvar_debug.GetBool()) \
+			Msg("[CS2AC Invalid CVar] " __VA_ARGS__); \
+	} while (0)
+
 namespace
 {
 	DetectionType DetectionForInfraction(MovementDetectionService::Infraction::Type type)
@@ -147,17 +156,26 @@ void MovementDetectionService::ClearDetectionBuffers()
 void MovementDetectionService::MarkInvalidCvar(const char *cvarName, const std::string &reason, bool kickOnly)
 {
 	RefreshSettings();
-	if (cvarName && invalidCvarLatches.emplace(cvarName).second)
+	if (!cvarName)
 	{
+		return;
+	}
+	if (invalidCvarLatches.emplace(cvarName).second)
+	{
+		INVALID_CVAR_DEBUG("%s marked %s invalid and armed its latch: %s\n", player->GetName(), cvarName, reason.c_str());
 		MarkInfraction(Infraction::Type::InvalidCvar, reason, kickOnly);
+	}
+	else
+	{
+		INVALID_CVAR_DEBUG("%s still has invalid %s; its existing latch prevented a duplicate detection.\n", player->GetName(), cvarName);
 	}
 }
 
 void MovementDetectionService::MarkValidCvar(const char *cvarName)
 {
-	if (cvarName)
+	if (cvarName && invalidCvarLatches.erase(cvarName) > 0)
 	{
-		invalidCvarLatches.erase(cvarName);
+		INVALID_CVAR_DEBUG("%s returned %s to a valid value; its latch is armed for a future change.\n", player->GetName(), cvarName);
 	}
 }
 

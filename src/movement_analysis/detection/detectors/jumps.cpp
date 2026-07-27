@@ -4,6 +4,16 @@
 #include "movement_analysis/jump_analysis/jump_analysis.h"
 #include "settings.h"
 
+CConVar<bool> cs2ac_autostrafe_debug("cs2ac_autostrafe_debug", FCVAR_NONE, "Show Autostrafe jump statistics, optimizer matches, and evidence counts",
+									 false);
+
+#define AUTOSTRAFE_DEBUG(...) \
+	do \
+	{ \
+		if (cs2ac_autostrafe_debug.GetBool()) \
+			Msg("[CS2AC Autostrafe] " __VA_ARGS__); \
+	} while (0)
+
 #define MIN_JUMP_DURATION_FOR_DETECTION 0.6f // Only consider jumps longer than this duration
 #define MIN_SYNC_FOR_DETECTION          0.7f // Minimum sync ratio to consider for detection
 
@@ -33,6 +43,7 @@ void MovementDetectionService::OnJumpFinish(Jump *jump)
 	}
 	if (!this->ShouldRunDetections())
 	{
+		AUTOSTRAFE_DEBUG("%s jump ignored: inherited movement detections are currently unavailable.\n", this->player->GetName());
 		this->recentJumpStatuses.clear();
 		return;
 	}
@@ -43,11 +54,15 @@ void MovementDetectionService::OnJumpFinish(Jump *jump)
 	}
 	if (jump->invalidateReason[0] != '\0' || !jump->IsValid())
 	{
+		AUTOSTRAFE_DEBUG("%s jump rejected: %s.\n", this->player->GetName(),
+						 jump->invalidateReason[0] != '\0' ? jump->invalidateReason : "jump data is invalid");
 		this->recentJumpStatuses.clear();
 		return;
 	}
 	if (jump->airtime < MIN_JUMP_DURATION_FOR_DETECTION)
 	{
+		AUTOSTRAFE_DEBUG("%s jump rejected: %.3f seconds in air is below the %.3f-second minimum.\n", this->player->GetName(), jump->airtime,
+						 MIN_JUMP_DURATION_FOR_DETECTION);
 		this->recentJumpStatuses.clear();
 		return;
 	}
@@ -108,6 +123,25 @@ void MovementDetectionService::OnJumpFinish(Jump *jump)
 			numVeryHighStrafeJumps++;
 		}
 	}
+	const char *statusName = "normal";
+	switch (this->recentJumpStatuses.back())
+	{
+		case JumpStatus::HighStrafeCount:
+			statusName = "high strafe count";
+			break;
+		case JumpStatus::VeryHighStrafeCount:
+			statusName = "very high strafe count";
+			break;
+		case JumpStatus::HighEfficiency:
+			statusName = "high efficiency";
+			break;
+		case JumpStatus::Normal:
+			break;
+	}
+	AUTOSTRAFE_DEBUG("%s jump evaluated as %s: %.1f%% sync, %.2f strafes/s, %.1f%% gain efficiency, %.2f units; "
+					 "%d of %zu recent jumps are suspicious.\n",
+					 this->player->GetName(), statusName, jump->GetSync() * 100.0f, jump->strafes.Count() / jump->airtime,
+					 jump->GetGainEfficiency() * 100.0f, jump->GetDistance(), suspiciousJumpCount, this->recentJumpStatuses.size());
 	if (suspiciousJumpCount >= BASE_SUSPICIOUS_JUMPS_THRESHOLD
 		|| (suspiciousJumpCount >= MIN_SUSPICIOUS_JUMPS_THRESHOLD && numVeryHighStrafeJumps > 0))
 	{

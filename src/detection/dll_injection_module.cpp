@@ -7,6 +7,15 @@
 
 #include <bitset>
 
+CConVar<bool> cs2ac_dll_injection_debug("cs2ac_dll_injection_debug", FCVAR_NONE, "Show DLL Injection scan timing, availability, and matches", false);
+
+#define DLL_INJECTION_DEBUG(...) \
+	do \
+	{ \
+		if (cs2ac_dll_injection_debug.GetBool()) \
+			Msg("[CS2AC DLL Injection] " __VA_ARGS__); \
+	} while (0)
+
 namespace
 {
 	constexpr auto initialScanDelay = std::chrono::seconds(10);
@@ -182,6 +191,7 @@ namespace detection
 			if (nextScan == Clock::time_point {})
 			{
 				nextScan = now + initialScanDelay;
+				DLL_INJECTION_DEBUG("%s will receive the first subscription scan in 10 seconds.\n", player->GetName());
 				continue;
 			}
 			if (now < nextScan)
@@ -193,6 +203,7 @@ namespace detection
 			if (!listener)
 			{
 				nextScan = now + initialScanDelay;
+				DLL_INJECTION_DEBUG("%s has no legacy event listener yet; retrying in 10 seconds.\n", player->GetName());
 				continue;
 			}
 			nextScan = now + scanInterval;
@@ -208,6 +219,8 @@ namespace detection
 				current.set(eventIndex);
 			}
 			const bool detected = current.any();
+			DLL_INJECTION_DEBUG("%s scan completed: %zu of %zu blacklisted subscriptions found; next scan in 2 minutes.\n", player->GetName(),
+								current.count(), blacklistedEvents.size());
 
 			if (!detected)
 			{

@@ -3,6 +3,16 @@
 #include "movement/movement.h"
 #include "movement_analysis/player_context.h"
 
+CConVar<bool> cs2ac_namechanger_debug("cs2ac_namechanger_debug", FCVAR_NONE, "Show Namechanger baselines, rolling counts, and evidence expiry",
+									  false);
+
+#define NAMECHANGER_DEBUG(...) \
+	do \
+	{ \
+		if (cs2ac_namechanger_debug.GetBool()) \
+			Msg("[CS2AC Namechanger] " __VA_ARGS__); \
+	} while (0)
+
 namespace
 {
 	constexpr size_t detectionThreshold = 5;
@@ -49,6 +59,7 @@ namespace detection
 		{
 			data.lastName = name;
 			data.initialized = true;
+			NAMECHANGER_DEBUG("%s baseline stored for player slot %d.\n", name, player->index);
 		}
 	}
 
@@ -78,11 +89,15 @@ namespace detection
 		data.lastName = currentName;
 
 		const auto now = Clock::now();
+		size_t expired = 0;
 		while (!data.changes.empty() && now - data.changes.front() >= evidenceWindow)
 		{
 			data.changes.pop_front();
+			++expired;
 		}
 		data.changes.push_back(now);
+		NAMECHANGER_DEBUG("%s changed names: %zu of %zu changes remain in the rolling minute%s.\n", currentName, data.changes.size(),
+						  detectionThreshold, expired ? tfm::format("; %zu expired", expired).c_str() : "");
 		if (data.changes.size() >= detectionThreshold)
 		{
 			if (announce)

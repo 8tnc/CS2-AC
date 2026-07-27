@@ -2,6 +2,15 @@
 #include "sdk/usercmd.h"
 #include <cmath>
 
+extern CConVar<bool> cs2ac_autostrafe_debug;
+
+#define AUTOSTRAFE_DEBUG(...) \
+	do \
+	{ \
+		if (cs2ac_autostrafe_debug.GetBool()) \
+			Msg("[CS2AC Autostrafe] " __VA_ARGS__); \
+	} while (0)
+
 #define MAX_ANGLE_FRAME_HISTORY 5
 
 float MovementDetectionService::CalculateYawSpeed(size_t index)
@@ -46,6 +55,7 @@ void MovementDetectionService::DetectOptimization(PlayerCommand *pc)
 {
 	if (!pc->has_base() || !pc->base().has_viewangles())
 	{
+		AUTOSTRAFE_DEBUG("Optimizer evidence reset: command %d has no usable view angles.\n", pc->cmdNum);
 		angleFrameHistory.clear();
 		yawAccelPercent = 0.0f;
 		return;
@@ -54,12 +64,14 @@ void MovementDetectionService::DetectOptimization(PlayerCommand *pc)
 	const float frameTime = g_pCS2ACUtils->GetGlobals()->frametime;
 	if (!std::isfinite(frameTime) || frameTime <= 0.0f)
 	{
+		AUTOSTRAFE_DEBUG("Optimizer evidence reset: command %d has invalid frame time %.6f.\n", pc->cmdNum, frameTime);
 		angleFrameHistory.clear();
 		yawAccelPercent = 0.0f;
 		return;
 	}
 	if (!angleFrameHistory.empty() && pc->cmdNum != angleFrameHistory.back().cmdNum + 1)
 	{
+		AUTOSTRAFE_DEBUG("Optimizer evidence reset: command %d did not follow command %d.\n", pc->cmdNum, angleFrameHistory.back().cmdNum);
 		angleFrameHistory.clear();
 		yawAccelPercent = 0.0f;
 	}
@@ -70,6 +82,7 @@ void MovementDetectionService::DetectOptimization(PlayerCommand *pc)
 	angles.z = baseCmd.viewangles().z();
 	if (!std::isfinite(angles.x) || !std::isfinite(angles.y) || !std::isfinite(angles.z))
 	{
+		AUTOSTRAFE_DEBUG("Optimizer evidence reset: command %d has non-finite view angles.\n", pc->cmdNum);
 		angleFrameHistory.clear();
 		yawAccelPercent = 0.0f;
 		return;
@@ -114,6 +127,8 @@ void MovementDetectionService::DetectOptimization(PlayerCommand *pc)
 	if (evaluated)
 	{
 		yawAccelPercent = yawAccelPercent * 0.95f + (matched ? 0.05f : 0.0f);
+		AUTOSTRAFE_DEBUG("Optimizer command %d direction switch %s; rolling evidence is %.2f%%.\n", pc->cmdNum, matched ? "matched" : "did not match",
+						 yawAccelPercent * 100.0f);
 	}
 
 	// finally check for suspicious yaw accel patterns
