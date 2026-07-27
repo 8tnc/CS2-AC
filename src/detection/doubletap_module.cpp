@@ -57,15 +57,15 @@ namespace detection
 			return;
 		}
 
-		const int incidents = previous.incidents + 1;
-		previous = {};
+		previous.serverTick = currentTick;
+		const int incidents = ++previous.incidents;
 		DOUBLETAP_DEBUG("%s matched pair %d/%d at %lld server tick%s apart.\n", player->GetName(), incidents, detectionThreshold,
 						static_cast<long long>(delta), delta == 1 ? "" : "s");
 		if (incidents < detectionThreshold)
 		{
-			previous.incidents = incidents;
 			return;
 		}
+		previous.incidents = 0;
 
 		if (announce)
 		{
