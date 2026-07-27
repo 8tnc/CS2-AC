@@ -71,7 +71,7 @@ namespace detection
 		{
 			announce("DOUBLETAP", player,
 					 tfm::format("Three rapid-fire pairs reached the threshold; the latest pair was %d server tick%s apart.", static_cast<int>(delta),
-							 delta == 1 ? "" : "s"));
+								 delta == 1 ? "" : "s"));
 		}
 	}
 
