@@ -51,8 +51,8 @@ void MovementDetectionService::CreateInputEvents(PlayerCommand *cmd)
 	// Usually the only way this can be false is if the client is not legitimate.
 	if (cmd->base().subtick_moves_size() == 0)
 	{
-		// Technically the player can abuse this to hide their nulls but this will be caught by the subtick abuse detection.
-		resetInput();
+		// No movement transition happened in this command. Preserve earlier transitions:
+		// clearing them here lets ordinary idle commands—or inserted empty commands—erase all Nulls evidence.
 		return;
 	}
 	INetChannelInfo *netchan = interfaces::pEngine->GetPlayerNetInfo(this->player->GetPlayerSlot());
