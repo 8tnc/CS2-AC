@@ -1,5 +1,6 @@
 #include "detection/detection_system.h"
 
+#include "gametrace.h"
 #include "igameevents.h"
 #include "movement_analysis/player_context.h"
 #include "movement/movement.h"
@@ -386,6 +387,7 @@ namespace detection
 		}
 		shot->hurtSeen = true;
 		shot->victimIndex = victim->index;
+		shot->headshot = event->GetInt("hitgroup", HITGROUP_GENERIC) == HITGROUP_HEAD;
 		return shot;
 	}
 
@@ -411,6 +413,7 @@ namespace detection
 		}
 		shot->deathSeen = true;
 		shot->victimIndex = victim->index;
+		shot->wallbang = event->GetInt("penetrated", 0) > 0;
 		return shot;
 	}
 
