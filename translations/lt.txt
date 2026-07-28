@@ -9,7 +9,6 @@
 	"announcement.outcome.command_too_long"	", bet bausmės komanda per ilga."
 	"announcement.outcome.command_service_unavailable"	", bet serverio komandų paslauga nepasiekiama."
 	"announcement.test"	"Tai yra testas. Joks žaidėjas nebuvo aptiktas ar nubaustas."
-	"announcement.watermark"	"Šį serverį saugo {author} anti-cheat."
 
 	"evidence.aimbot.snap_return"	"Slenkstis pasiektas po {incidents} staigių taikymų su pataikymu; paskutinis buvo {snap}° grįžimas."
 	"evidence.aimbot.convergence"	"Slenkstis pasiektas po {incidents} staigių taikymų su pataikymu; paskutinis judesys {snap}°, taikinio paklaida {before}° -> {after}°."

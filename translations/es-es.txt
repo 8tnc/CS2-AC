@@ -9,7 +9,6 @@
 	"announcement.outcome.command_too_long"	", pero el comando de castigo es demasiado largo."
 	"announcement.outcome.command_service_unavailable"	", pero el servicio de comandos del servidor no está disponible."
 	"announcement.test"	"Esto es una prueba. No se ha detectado ni castigado a ningún jugador."
-	"announcement.watermark"	"Este servidor está protegido por el antitrampas de {author}."
 
 	"evidence.aimbot.snap_return"	"El umbral se alcanzó tras {incidents} apuntados bruscos con impacto; el último fue un retorno de {snap}°."
 	"evidence.aimbot.convergence"	"El umbral se alcanzó tras {incidents} apuntados bruscos con impacto; último movimiento: {snap}°, error al objetivo: {before}° -> {after}°."

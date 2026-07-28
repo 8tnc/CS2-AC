@@ -9,7 +9,6 @@
 	"announcement.outcome.command_too_long"	"が、処罰コマンドが長すぎます。"
 	"announcement.outcome.command_service_unavailable"	"が、サーバーのコマンドサービスを利用できません。"
 	"announcement.test"	"これはテストです。プレイヤーの検出や処罰は行われていません。"
-	"announcement.watermark"	"このサーバーは {author} のアンチチートで保護されています。"
 
 	"evidence.aimbot.snap_return"	"急な照準移動と命中が {incidents} 件に達しました。直近は {snap}° のスナップ復帰でした。"
 	"evidence.aimbot.convergence"	"急な照準移動と命中が {incidents} 件に達しました。直近の移動は {snap}°、目標誤差は {before}° -> {after}° でした。"

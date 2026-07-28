@@ -9,7 +9,6 @@
 	"announcement.outcome.command_too_long"	", nhưng lệnh phạt quá dài."
 	"announcement.outcome.command_service_unavailable"	", nhưng dịch vụ lệnh máy chủ không khả dụng."
 	"announcement.test"	"Đây là tin nhắn thử nghiệm. Không có người chơi nào bị phát hiện hoặc xử phạt."
-	"announcement.watermark"	"Máy chủ này được bảo vệ bởi hệ thống chống gian lận của {author}."
 
 	"evidence.aimbot.snap_return"	"Đạt ngưỡng sau {incidents} lần kéo tâm đột ngột kèm trúng đạn; lần gần nhất là kéo rồi trả lại {snap}°."
 	"evidence.aimbot.convergence"	"Đạt ngưỡng sau {incidents} lần kéo tâm đột ngột kèm trúng đạn; lần gần nhất {snap}°, sai số tới mục tiêu {before}° -> {after}°."

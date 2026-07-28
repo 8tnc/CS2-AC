@@ -9,7 +9,6 @@
 	"announcement.outcome.command_too_long"	", dar comanda de pedeapsă este prea lungă."
 	"announcement.outcome.command_service_unavailable"	", dar serviciul de comenzi al serverului nu este disponibil."
 	"announcement.test"	"Acesta este un test. Niciun jucător nu a fost detectat sau pedepsit."
-	"announcement.watermark"	"Acest server este protejat de sistemul anti-cheat al lui {author}."
 
 	"evidence.aimbot.snap_return"	"Pragul a fost atins după {incidents} mișcări bruște urmate de lovitură; ultima a fost o revenire de {snap}°."
 	"evidence.aimbot.convergence"	"Pragul a fost atins după {incidents} mișcări bruște urmate de lovitură; ultima mișcare {snap}°, eroarea față de țintă {before}° -> {after}°."

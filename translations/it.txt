@@ -9,7 +9,6 @@
 	"announcement.outcome.command_too_long"	", ma il comando di punizione è troppo lungo."
 	"announcement.outcome.command_service_unavailable"	", ma il servizio comandi del server non è disponibile."
 	"announcement.test"	"Questo è un test. Nessun giocatore è stato rilevato o punito."
-	"announcement.watermark"	"Questo server è protetto dall'anti-cheat di {author}."
 
 	"evidence.aimbot.snap_return"	"La soglia è stata raggiunta dopo {incidents} movimenti bruschi con colpo a segno; l'ultimo è stato un ritorno di {snap}°."
 	"evidence.aimbot.convergence"	"La soglia è stata raggiunta dopo {incidents} movimenti bruschi con colpo a segno; ultimo movimento {snap}°, errore sul bersaglio {before}° -> {after}°."

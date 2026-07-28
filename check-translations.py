@@ -43,6 +43,13 @@ if source_keys != english.keys():
         f"unused={english.keys() - source_keys}"
     )
 
+watermark_languages = set(re.findall(r'^\s*\{"([^"]+)", "[^"]*\{author\}[^"]*"\},$', source, re.MULTILINE))
+if watermark_languages != languages:
+    raise ValueError(
+        f"hardcoded watermark languages differ: missing={languages - watermark_languages}, "
+        f"extra={watermark_languages - languages}"
+    )
+
 for path in sorted(root.glob("*.txt")):
     phrases = load(path)
     if phrases.keys() != english.keys():

@@ -9,7 +9,6 @@
 	"announcement.outcome.command_too_long"	", kuid karistuskäsk on liiga pikk."
 	"announcement.outcome.command_service_unavailable"	", kuid serveri käsuteenus pole saadaval."
 	"announcement.test"	"See on test. Ühtegi mängijat ei tuvastatud ega karistatud."
-	"announcement.watermark"	"Seda serverit kaitseb {author} anti-cheat."
 
 	"evidence.aimbot.snap_return"	"Lävi saavutati pärast {incidents} järsku tabamusega sihtimisliigutust; viimane oli {snap}° tagasiliikumine."
 	"evidence.aimbot.convergence"	"Lävi saavutati pärast {incidents} järsku tabamusega sihtimisliigutust; viimane liikumine {snap}°, sihtmärgi viga {before}° -> {after}°."

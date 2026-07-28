@@ -23,4 +23,5 @@ namespace localization
 	const char *CurrentLanguage();
 	std::string Get(const char *key, const char *english);
 	Text Format(const char *key, const char *english, Arguments arguments = {});
+	Text Watermark(Arguments arguments = {});
 } // namespace localization

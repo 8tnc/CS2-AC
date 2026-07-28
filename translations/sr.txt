@@ -9,7 +9,6 @@
 	"announcement.outcome.command_too_long"	", ali je komanda za kaznu preduga."
 	"announcement.outcome.command_service_unavailable"	", ali servis serverskih komandi nije dostupan."
 	"announcement.test"	"Ovo je test. Nijedan igrač nije otkriven niti kažnjen."
-	"announcement.watermark"	"Ovaj server štiti anti-cheat autora {author}."
 
 	"evidence.aimbot.snap_return"	"Prag je dostignut nakon {incidents} naglih nišanjenja sa pogotkom; poslednje je bilo vraćanje od {snap}°."
 	"evidence.aimbot.convergence"	"Prag je dostignut nakon {incidents} naglih nišanjenja sa pogotkom; poslednji pokret {snap}°, greška prema meti {before}° -> {after}°."

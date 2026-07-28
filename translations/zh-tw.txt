@@ -9,7 +9,6 @@
 	"announcement.outcome.command_too_long"	"，但處罰指令過長。"
 	"announcement.outcome.command_service_unavailable"	"，但伺服器指令服務無法使用。"
 	"announcement.test"	"這是一則測試訊息。沒有玩家被偵測或處罰。"
-	"announcement.watermark"	"本伺服器受 {author} 的反作弊系統保護。"
 
 	"evidence.aimbot.snap_return"	"{incidents} 次急轉命中達到門檻；最近一次為 {snap}° 的急轉回正。"
 	"evidence.aimbot.convergence"	"{incidents} 次急轉命中達到門檻；最近一次急轉 {snap}°，目標誤差從 {before}° 降至 {after}°。"

@@ -9,7 +9,6 @@
 	"announcement.outcome.command_too_long"	", but the punishment command is too long."
 	"announcement.outcome.command_service_unavailable"	", but the server command service is unavailable."
 	"announcement.test"	"This is a test. No player was detected or punished."
-	"announcement.watermark"	"This server is protected by {author}'s anti-cheat."
 
 	"evidence.aimbot.snap_return"	"{incidents} snap-hit incidents reached the threshold; the latest was a {snap}-degree snap-return."
 	"evidence.aimbot.convergence"	"{incidents} snap-hit incidents reached the threshold; latest snap {snap} degrees, target error {before} -> {after} degrees."

@@ -9,7 +9,6 @@
 	"announcement.outcome.command_too_long"	" แต่คำสั่งลงโทษยาวเกินไป"
 	"announcement.outcome.command_service_unavailable"	" แต่บริการคำสั่งของเซิร์ฟเวอร์ไม่พร้อมใช้งาน"
 	"announcement.test"	"นี่คือข้อความทดสอบ ไม่มีผู้เล่นถูกตรวจพบหรือลงโทษ"
-	"announcement.watermark"	"เซิร์ฟเวอร์นี้ได้รับการปกป้องโดยระบบป้องกันโกงของ {author}"
 
 	"evidence.aimbot.snap_return"	"ถึงเกณฑ์หลังพบการสะบัดเป้าและยิงโดน {incidents} ครั้ง โดยครั้งล่าสุดสะบัดกลับ {snap}°"
 	"evidence.aimbot.convergence"	"ถึงเกณฑ์หลังพบการสะบัดเป้าและยิงโดน {incidents} ครั้ง การสะบัดล่าสุด {snap}° และความคลาดเคลื่อนจากเป้าลดจาก {before}° เป็น {after}°"

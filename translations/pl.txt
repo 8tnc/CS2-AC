@@ -9,7 +9,6 @@
 	"announcement.outcome.command_too_long"	", ale polecenie kary jest za długie."
 	"announcement.outcome.command_service_unavailable"	", ale usługa poleceń serwera jest niedostępna."
 	"announcement.test"	"To jest test. Żaden gracz nie został wykryty ani ukarany."
-	"announcement.watermark"	"Ten serwer jest chroniony przez antycheat {author}."
 
 	"evidence.aimbot.snap_return"	"Próg osiągnięto po {incidents} gwałtownych namierzeniach zakończonych trafieniem; ostatnie było powrotem o {snap}°."
 	"evidence.aimbot.convergence"	"Próg osiągnięto po {incidents} gwałtownych namierzeniach zakończonych trafieniem; ostatni ruch miał {snap}°, a błąd celu spadł z {before}° do {after}°."

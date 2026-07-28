@@ -9,7 +9,6 @@
 	"announcement.outcome.command_too_long"	", bet soda komanda ir pārāk gara."
 	"announcement.outcome.command_service_unavailable"	", bet servera komandu pakalpojums nav pieejams."
 	"announcement.test"	"Šis ir tests. Neviens spēlētājs netika konstatēts vai sodīts."
-	"announcement.watermark"	"Šo serveri aizsargā {author} anti-cheat."
 
 	"evidence.aimbot.snap_return"	"Slieksnis sasniegts pēc {incidents} straujām tēmēšanas kustībām ar trāpījumu; pēdējā bija {snap}° atgriešanās."
 	"evidence.aimbot.convergence"	"Slieksnis sasniegts pēc {incidents} straujām tēmēšanas kustībām ar trāpījumu; pēdējā kustība {snap}°, kļūda līdz mērķim {before}° -> {after}°."

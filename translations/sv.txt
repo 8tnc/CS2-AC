@@ -9,7 +9,6 @@
 	"announcement.outcome.command_too_long"	", men straffkommandot är för långt."
 	"announcement.outcome.command_service_unavailable"	", men serverns kommandotjänst är inte tillgänglig."
 	"announcement.test"	"Detta är ett test. Ingen spelare upptäcktes eller straffades."
-	"announcement.watermark"	"Den här servern skyddas av {author}s anti-cheat."
 
 	"evidence.aimbot.snap_return"	"Tröskeln nåddes efter {incidents} snabba siktförflyttningar med träff; den senaste var en återgång på {snap}°."
 	"evidence.aimbot.convergence"	"Tröskeln nåddes efter {incidents} snabba siktförflyttningar med träff; senaste rörelse {snap}°, målfel {before}° -> {after}°."

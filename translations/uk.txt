@@ -9,7 +9,6 @@
 	"announcement.outcome.command_too_long"	", але команда покарання задовга."
 	"announcement.outcome.command_service_unavailable"	", але служба серверних команд недоступна."
 	"announcement.test"	"Це тест. Жодного гравця не було виявлено чи покарано."
-	"announcement.watermark"	"Цей сервер захищено античитом {author}."
 
 	"evidence.aimbot.snap_return"	"Поріг досягнуто після {incidents} різких доведень із влучанням; останнє було поверненням на {snap}°."
 	"evidence.aimbot.convergence"	"Поріг досягнуто після {incidents} різких доведень із влучанням; останнє доведення — {snap}°, похибка до цілі зменшилася з {before}° до {after}°."

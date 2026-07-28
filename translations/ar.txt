@@ -9,7 +9,6 @@
 	"announcement.outcome.command_too_long"	"، لكن أمر العقوبة طويل جدًا."
 	"announcement.outcome.command_service_unavailable"	"، لكن خدمة أوامر الخادم غير متاحة."
 	"announcement.test"	"هذا اختبار. لم يتم اكتشاف أي لاعب أو معاقبته."
-	"announcement.watermark"	"هذا الخادم محمي بنظام مكافحة الغش الخاص بـ {author}."
 
 	"evidence.aimbot.snap_return"	"تم بلوغ الحد بعد {incidents} حركات تصويب مفاجئة مع إصابة؛ وكانت الأخيرة عودة بمقدار {snap}°."
 	"evidence.aimbot.convergence"	"تم بلوغ الحد بعد {incidents} حركات تصويب مفاجئة مع إصابة؛ الحركة الأخيرة {snap}°، وخطأ الهدف {before}° -> {after}°."

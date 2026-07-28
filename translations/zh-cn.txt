@@ -9,7 +9,6 @@
 	"announcement.outcome.command_too_long"	"，但处罚命令过长。"
 	"announcement.outcome.command_service_unavailable"	"，但服务器命令服务不可用。"
 	"announcement.test"	"这是一条测试消息。没有玩家被检测或处罚。"
-	"announcement.watermark"	"本服务器受 {author} 的反作弊系统保护。"
 
 	"evidence.aimbot.snap_return"	"{incidents} 次急转命中达到阈值；最近一次为 {snap}° 的急转回正。"
 	"evidence.aimbot.convergence"	"{incidents} 次急转命中达到阈值；最近一次急转 {snap}°，目标误差从 {before}° 降至 {after}°。"

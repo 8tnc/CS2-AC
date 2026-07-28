@@ -9,7 +9,6 @@
 	"announcement.outcome.command_too_long"	", ancak ceza komutu çok uzun."
 	"announcement.outcome.command_service_unavailable"	", ancak sunucu komut hizmeti kullanılamıyor."
 	"announcement.test"	"Bu bir testtir. Hiçbir oyuncu tespit edilmedi veya cezalandırılmadı."
-	"announcement.watermark"	"Bu sunucu {author} anti-hilesi tarafından korunuyor."
 
 	"evidence.aimbot.snap_return"	"{incidents} ani nişan-isabet olayı eşiğe ulaştı; son olay {snap} derecelik ani dönüşlü nişandı."
 	"evidence.aimbot.convergence"	"{incidents} ani nişan-isabet olayı eşiğe ulaştı; son nişan hareketi {snap} dereceydi, hedef hatası {before} -> {after} dereceye indi."

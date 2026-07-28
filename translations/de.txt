@@ -9,7 +9,6 @@
 	"announcement.outcome.command_too_long"	", aber der Strafbefehl ist zu lang."
 	"announcement.outcome.command_service_unavailable"	", aber der Server-Befehlsdienst ist nicht verfügbar."
 	"announcement.test"	"Dies ist ein Test. Kein Spieler wurde erkannt oder bestraft."
-	"announcement.watermark"	"Dieser Server wird durch den Anti-Cheat von {author} geschützt."
 
 	"evidence.aimbot.snap_return"	"Der Schwellenwert wurde nach {incidents} abrupten Zielbewegungen mit Treffer erreicht; zuletzt erfolgte eine Rückkehr um {snap}°."
 	"evidence.aimbot.convergence"	"Der Schwellenwert wurde nach {incidents} abrupten Zielbewegungen mit Treffer erreicht; letzte Bewegung {snap}°, Zielfehler {before}° -> {after}°."

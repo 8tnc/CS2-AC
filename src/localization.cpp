@@ -10,6 +10,45 @@ namespace
 	std::unordered_map<std::string, std::string> phrases;
 	std::string currentLanguage {"en"};
 	bool fallbackWarningPrinted;
+	constexpr std::pair<std::string_view, std::string_view> watermarkPhrases[] = {
+		{"ar", "هذا الخادم محمي بنظام مكافحة الغش الخاص بـ {author}."},
+		{"bg", "Този сървър е защитен от анти-чита на {author}."},
+		{"cs", "Tento server chrání anti-cheat od {author}."},
+		{"da", "Denne server beskyttes af {author}s anti-cheat."},
+		{"de", "Dieser Server wird durch den Anti-Cheat von {author} geschützt."},
+		{"el", "Αυτός ο διακομιστής προστατεύεται από το anti-cheat του {author}."},
+		{"en", "This server is protected by {author}'s anti-cheat."},
+		{"es-419", "Este servidor está protegido por el anticheat de {author}."},
+		{"es-es", "Este servidor está protegido por el antitrampas de {author}."},
+		{"et", "Seda serverit kaitseb {author} anti-cheat."},
+		{"fi", "Tätä palvelinta suojaa käyttäjän {author} anti-cheat."},
+		{"fr", "Ce serveur est protégé par l'anti-triche de {author}."},
+		{"he", "שרת זה מוגן על ידי האנטי-צ'יט של {author}."},
+		{"hr", "Ovaj poslužitelj štiti anti-cheat autora {author}."},
+		{"hu", "Ezt a szervert {author} anti-cheat rendszere védi."},
+		{"id", "Server ini dilindungi oleh anti-cheat milik {author}."},
+		{"it", "Questo server è protetto dall'anti-cheat di {author}."},
+		{"ja", "このサーバーは {author} のアンチチートで保護されています。"},
+		{"ko", "이 서버는 {author}의 안티치트로 보호됩니다."},
+		{"lt", "Šį serverį saugo {author} anti-cheat."},
+		{"lv", "Šo serveri aizsargā {author} anti-cheat."},
+		{"nl", "Deze server wordt beschermd door de anti-cheat van {author}."},
+		{"no", "Denne serveren beskyttes av anti-cheaten til {author}."},
+		{"pl", "Ten serwer jest chroniony przez antycheat {author}."},
+		{"pt-br", "Este servidor é protegido pelo anticheat de {author}."},
+		{"pt-pt", "Este servidor está protegido pelo anticheat de {author}."},
+		{"ro", "Acest server este protejat de sistemul anti-cheat al lui {author}."},
+		{"ru", "Этот сервер защищён античитом {author}."},
+		{"sk", "Tento server chráni anti-cheat od {author}."},
+		{"sr", "Ovaj server štiti anti-cheat autora {author}."},
+		{"sv", "Den här servern skyddas av {author}s anti-cheat."},
+		{"th", "เซิร์ฟเวอร์นี้ได้รับการปกป้องโดยระบบป้องกันโกงของ {author}"},
+		{"tr", "Bu sunucu {author} anti-hilesi tarafından korunuyor."},
+		{"uk", "Цей сервер захищено античитом {author}."},
+		{"vi", "Máy chủ này được bảo vệ bởi hệ thống chống gian lận của {author}."},
+		{"zh-cn", "本服务器受 {author} 的反作弊系统保护。"},
+		{"zh-tw", "本伺服器受 {author} 的反作弊系統保護。"},
+	};
 
 	void WarnFallback()
 	{
@@ -164,4 +203,13 @@ std::string localization::Get(const char *key, const char *english)
 localization::Text localization::Format(const char *key, const char *english, Arguments arguments)
 {
 	return {Apply(english ? english : "", arguments), Apply(Get(key, english), arguments)};
+}
+
+localization::Text localization::Watermark(Arguments arguments)
+{
+	constexpr std::string_view english = "This server is protected by {author}'s anti-cheat.";
+	const auto found =
+		std::find_if(std::begin(watermarkPhrases), std::end(watermarkPhrases), [](const auto &phrase) { return phrase.first == currentLanguage; });
+	const std::string_view localized = found == std::end(watermarkPhrases) ? english : found->second;
+	return {Apply(english, arguments), Apply(localized, arguments)};
 }

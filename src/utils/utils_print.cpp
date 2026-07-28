@@ -429,9 +429,7 @@ void utils::AnnounceTest()
 
 void utils::AnnounceWatermark()
 {
-	const std::string chatBody =
-		localization::Format("announcement.watermark", "This server is protected by {author}'s anti-cheat.", {{"author", "{grey}%s1{default}"}})
-			.localized;
+	const std::string chatBody = localization::Watermark({{"author", "{grey}%s1{default}"}}).localized;
 	const std::string chatTemplate = "{red}[CS2AC]{default} " + chatBody;
 	char coloredChat[256];
 	if (CFormat(coloredChat, sizeof(coloredChat), chatTemplate.c_str()))
@@ -440,7 +438,7 @@ void utils::AnnounceWatermark()
 		ClientPrintFilter(&filter, HUD_PRINTTALK, coloredChat, "karola3vax", "", "", "");
 	}
 
-	std::string centerBody = EscapeHtml(localization::Get("announcement.watermark", "This server is protected by {author}'s anti-cheat.").c_str());
+	std::string centerBody = EscapeHtml(localization::Watermark().localized.c_str());
 	ReplaceAll(centerBody, "{author}", "<span color='#B0B0B0'>karola3vax</span>");
 	ShowCenterMessage("<span class='fontSize-l'><span color='#FF0000'>[CS2AC]</span> <span color='#FFFFFF'>" + centerBody + "</span></span>", false,
 					  true);

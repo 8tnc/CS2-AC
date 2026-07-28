@@ -9,7 +9,6 @@
 	"announcement.outcome.command_too_long"	", mutta rangaistuskomento on liian pitkä."
 	"announcement.outcome.command_service_unavailable"	", mutta palvelimen komentopalvelu ei ole käytettävissä."
 	"announcement.test"	"Tämä on testi. Ketään pelaajaa ei havaittu tai rangaistu."
-	"announcement.watermark"	"Tätä palvelinta suojaa käyttäjän {author} anti-cheat."
 
 	"evidence.aimbot.snap_return"	"Raja saavutettiin {incidents} nopean, osumaan johtaneen tähtäysliikkeen jälkeen; viimeisin oli {snap}°:n palautus."
 	"evidence.aimbot.convergence"	"Raja saavutettiin {incidents} nopean, osumaan johtaneen tähtäysliikkeen jälkeen; viimeisin liike {snap}°, kohdevirhe {before}° -> {after}°."

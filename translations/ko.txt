@@ -9,7 +9,6 @@
 	"announcement.outcome.command_too_long"	", 하지만 처벌 명령이 너무 깁니다."
 	"announcement.outcome.command_service_unavailable"	", 하지만 서버 명령 서비스를 사용할 수 없습니다."
 	"announcement.test"	"테스트 메시지입니다. 감지되거나 처벌된 플레이어는 없습니다."
-	"announcement.watermark"	"이 서버는 {author}의 안티치트로 보호됩니다."
 
 	"evidence.aimbot.snap_return"	"급격한 조준 후 명중이 {incidents}회로 기준에 도달했습니다. 최근 기록은 {snap}° 스냅 복귀였습니다."
 	"evidence.aimbot.convergence"	"급격한 조준 후 명중이 {incidents}회로 기준에 도달했습니다. 최근 이동 {snap}°, 목표 오차 {before}° -> {after}°."

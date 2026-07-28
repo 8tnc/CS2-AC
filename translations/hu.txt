@@ -9,7 +9,6 @@
 	"announcement.outcome.command_too_long"	", de a büntetési parancs túl hosszú."
 	"announcement.outcome.command_service_unavailable"	", de a szerver parancsszolgáltatása nem érhető el."
 	"announcement.test"	"Ez egy teszt. Egyetlen játékos sem lett észlelve vagy megbüntetve."
-	"announcement.watermark"	"Ezt a szervert {author} anti-cheat rendszere védi."
 
 	"evidence.aimbot.snap_return"	"A küszöböt {incidents} hirtelen, találattal végződő célzás érte el; a legutóbbi {snap}°-os visszatérés volt."
 	"evidence.aimbot.convergence"	"A küszöböt {incidents} hirtelen, találattal végződő célzás érte el; legutóbbi mozgás {snap}°, célhiba {before}° -> {after}°."

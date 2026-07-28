@@ -9,7 +9,6 @@
 	"announcement.outcome.command_too_long"	", ale příkaz trestu je příliš dlouhý."
 	"announcement.outcome.command_service_unavailable"	", ale služba serverových příkazů není dostupná."
 	"announcement.test"	"Toto je test. Žádný hráč nebyl odhalen ani potrestán."
-	"announcement.watermark"	"Tento server chrání anti-cheat od {author}."
 
 	"evidence.aimbot.snap_return"	"Prahu bylo dosaženo po {incidents} prudkých zamířeních se zásahem; poslední byl návrat o {snap}°."
 	"evidence.aimbot.convergence"	"Prahu bylo dosaženo po {incidents} prudkých zamířeních se zásahem; poslední pohyb {snap}°, chyba vůči cíli {before}° -> {after}°."

@@ -9,7 +9,6 @@
 	"announcement.outcome.command_too_long"	", mais la commande de sanction est trop longue."
 	"announcement.outcome.command_service_unavailable"	", mais le service de commandes du serveur est indisponible."
 	"announcement.test"	"Ceci est un test. Aucun joueur n'a été détecté ni sanctionné."
-	"announcement.watermark"	"Ce serveur est protégé par l'anti-triche de {author}."
 
 	"evidence.aimbot.snap_return"	"Le seuil a été atteint après {incidents} visées brusques suivies d'un tir réussi ; la dernière était un retour de {snap}°."
 	"evidence.aimbot.convergence"	"Le seuil a été atteint après {incidents} visées brusques suivies d'un tir réussi ; dernier mouvement : {snap}°, erreur de cible : {before}° -> {after}°."

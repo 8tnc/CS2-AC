@@ -9,7 +9,6 @@
 	"announcement.outcome.command_too_long"	", ali je naredba za kaznu preduga."
 	"announcement.outcome.command_service_unavailable"	", ali servis poslužiteljskih naredbi nije dostupan."
 	"announcement.test"	"Ovo je test. Nijedan igrač nije otkriven niti kažnjen."
-	"announcement.watermark"	"Ovaj poslužitelj štiti anti-cheat autora {author}."
 
 	"evidence.aimbot.snap_return"	"Prag je dostignut nakon {incidents} naglih nišanjenja s pogotkom; posljednje je bilo vraćanje od {snap}°."
 	"evidence.aimbot.convergence"	"Prag je dostignut nakon {incidents} naglih nišanjenja s pogotkom; posljednji pokret {snap}°, pogreška prema meti {before}° -> {after}°."

@@ -9,7 +9,6 @@
 	"announcement.outcome.command_too_long"	", אבל פקודת הענישה ארוכה מדי."
 	"announcement.outcome.command_service_unavailable"	", אבל שירות פקודות השרת אינו זמין."
 	"announcement.test"	"זוהי בדיקה. אף שחקן לא זוהה או נענש."
-	"announcement.watermark"	"שרת זה מוגן על ידי האנטי-צ'יט של {author}."
 
 	"evidence.aimbot.snap_return"	"הסף הושג לאחר {incidents} תנועות כוונת חדות עם פגיעה; האחרונה הייתה חזרה של {snap}°."
 	"evidence.aimbot.convergence"	"הסף הושג לאחר {incidents} תנועות כוונת חדות עם פגיעה; תנועה אחרונה {snap}°, שגיאת מטרה {before}° -> {after}°."

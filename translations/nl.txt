@@ -9,7 +9,6 @@
 	"announcement.outcome.command_too_long"	", maar het strafcommando is te lang."
 	"announcement.outcome.command_service_unavailable"	", maar de servercommandodienst is niet beschikbaar."
 	"announcement.test"	"Dit is een test. Er is geen speler gedetecteerd of gestraft."
-	"announcement.watermark"	"Deze server wordt beschermd door de anti-cheat van {author}."
 
 	"evidence.aimbot.snap_return"	"De drempel werd bereikt na {incidents} abrupte richtbewegingen met een treffer; de laatste was een terugkeer van {snap}°."
 	"evidence.aimbot.convergence"	"De drempel werd bereikt na {incidents} abrupte richtbewegingen met een treffer; laatste beweging {snap}°, doelfout {before}° -> {after}°."

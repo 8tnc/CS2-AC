@@ -9,7 +9,6 @@
 	"announcement.outcome.command_too_long"	", но командата за наказание е твърде дълга."
 	"announcement.outcome.command_service_unavailable"	", но услугата за сървърни команди не е налична."
 	"announcement.test"	"Това е тест. Няма засечен или наказан играч."
-	"announcement.watermark"	"Този сървър е защитен от анти-чита на {author}."
 
 	"evidence.aimbot.snap_return"	"Прагът беше достигнат след {incidents} резки насочвания с попадение; последното беше връщане с {snap}°."
 	"evidence.aimbot.convergence"	"Прагът беше достигнат след {incidents} резки насочвания с попадение; последно движение {snap}°, грешка към целта {before}° -> {after}°."

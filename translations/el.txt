@@ -9,7 +9,6 @@
 	"announcement.outcome.command_too_long"	", αλλά η εντολή ποινής είναι πολύ μεγάλη."
 	"announcement.outcome.command_service_unavailable"	", αλλά η υπηρεσία εντολών του διακομιστή δεν είναι διαθέσιμη."
 	"announcement.test"	"Αυτό είναι δοκιμή. Κανένας παίκτης δεν εντοπίστηκε ή τιμωρήθηκε."
-	"announcement.watermark"	"Αυτός ο διακομιστής προστατεύεται από το anti-cheat του {author}."
 
 	"evidence.aimbot.snap_return"	"Το όριο έφτασε μετά από {incidents} απότομες κινήσεις στόχευσης με εύστοχη βολή· η τελευταία ήταν επιστροφή {snap}°."
 	"evidence.aimbot.convergence"	"Το όριο έφτασε μετά από {incidents} απότομες κινήσεις στόχευσης με εύστοχη βολή· τελευταία κίνηση {snap}°, σφάλμα στόχου {before}° -> {after}°."
