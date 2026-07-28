@@ -120,7 +120,8 @@ namespace detection
 
 		attempt->success = true;
 		attempt->points = static_cast<int>(airborne) + static_cast<int>(noScope) + 2 * static_cast<int>(airborne && noScope)
-						  + static_cast<int>(distance >= longDistance) + 2 + static_cast<int>(event->GetBool("headshot", false));
+						  + static_cast<int>(distance >= longDistance) + static_cast<int>(event->GetInt("penetrated", 0) > 0) + 2
+						  + static_cast<int>(event->GetBool("headshot", false));
 		IRREGULAR_DEBUG("%s matched difficult kill %llu worth %d points.\n", attacker->GetName(), static_cast<unsigned long long>(shot.id),
 						attempt->points);
 	}
