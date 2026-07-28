@@ -8,6 +8,7 @@
 	"announcement.outcome.already_punished"	" och straffet hade redan verkställts."
 	"announcement.outcome.command_too_long"	", men straffkommandot är för långt."
 	"announcement.outcome.command_service_unavailable"	", men serverns kommandotjänst är inte tillgänglig."
+	"announcement.outcome.network_unstable"	", men inget straff skickades eftersom anslutningen var instabil."
 	"announcement.test"	"Detta är ett test. Ingen spelare upptäcktes eller straffades."
 
 	"evidence.aimbot.snap_return"	"Tröskeln nåddes efter {incidents} snabba siktförflyttningar med träff; den senaste var en återgång på {snap}°."
@@ -28,6 +29,7 @@
 	"evidence.dll_injection.many"	"{count} klientprenumerationer på svartlistade händelser hittades: {events}."
 	"evidence.doubletap.one_tick"	"Tre snabbeldspar nådde tröskeln; det senaste paret låg 1 servertick isär."
 	"evidence.doubletap.zero_ticks"	"Tre snabbeldspar nådde tröskeln; det senaste paret inträffade i samma servertick."
+	"evidence.doubletap.network_unstable"	"Tre snabbeldspar upptäcktes; det senaste låg {ticks} serverticks isär. Nätverkskontroll: {ping} ms ping, {jitter} ms jitter, {incoming_loss}/{outgoing_loss}% inkommande/utgående förlust, {incoming_choke}/{outgoing_choke}% inkommande/utgående choke, {gaps} kommandoluckor och {unavailable} otillgängliga mätningar."
 	"evidence.namechanger"	"Det synliga namnet ändrades {changes} gånger inom en minut."
 
 	"evidence.autostrafe.optimizer"	"Strafe-optimerare upptäckt."
@@ -65,6 +67,7 @@
 	"webhook.outcome.already_punished"	"Spelaren var redan straffad, så inget dubbelt kommando skickades."
 	"webhook.outcome.command_too_long"	"Inget straff skickades eftersom det konfigurerade kommandot är för långt."
 	"webhook.outcome.command_service_unavailable"	"Inget straff skickades eftersom serverns kommandotjänst inte är tillgänglig."
+	"webhook.outcome.network_unstable"	"Inget straff skickades eftersom spelarens anslutning överskred de säkra nätverksgränserna."
 	"webhook.outcome.unavailable"	"Inget straffresultat var tillgängligt."
 	"webhook.unknown_player"	"Okänd spelare"
 	"webhook.unknown_detection"	"OKÄND"

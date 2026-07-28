@@ -8,6 +8,7 @@
 	"announcement.outcome.already_punished"	" ja karistus oli juba rakendatud."
 	"announcement.outcome.command_too_long"	", kuid karistuskäsk on liiga pikk."
 	"announcement.outcome.command_service_unavailable"	", kuid serveri käsuteenus pole saadaval."
+	"announcement.outcome.network_unstable"	", kuid ebastabiilse ühenduse tõttu karistust ei saadetud."
 	"announcement.test"	"See on test. Ühtegi mängijat ei tuvastatud ega karistatud."
 
 	"evidence.aimbot.snap_return"	"Lävi saavutati pärast {incidents} järsku tabamusega sihtimisliigutust; viimane oli {snap}° tagasiliikumine."
@@ -28,6 +29,7 @@
 	"evidence.dll_injection.many"	"Leiti {count} kliendi tellimust musta nimekirja sündmustele: {events}."
 	"evidence.doubletap.one_tick"	"Kolm kiirtulepaari jõudsid läveni; viimase paari vahel oli 1 serveritick."
 	"evidence.doubletap.zero_ticks"	"Kolm kiirtulepaari jõudsid läveni; viimane paar toimus samas serveritickis."
+	"evidence.doubletap.network_unstable"	"Tuvastati kolm kiirtulepaari; viimase paari vahe oli {ticks} serveriticki. Võrgukontroll: ping {ping} ms, jitter {jitter} ms, sisenev/väljuv kadu {incoming_loss}/{outgoing_loss}%, sisenev/väljuv choke {incoming_choke}/{outgoing_choke}%, {gaps} käsulünka ja {unavailable} kättesaamatut proovi."
 	"evidence.namechanger"	"Nähtav nimi muutus ühe minuti jooksul {changes} korda."
 
 	"evidence.autostrafe.optimizer"	"Tuvastati strafe-optimeerija."
@@ -65,6 +67,7 @@
 	"webhook.outcome.already_punished"	"Mängija oli juba karistatud, seega topeltkäsku ei saadetud."
 	"webhook.outcome.command_too_long"	"Karistust ei saadetud, sest seadistatud käsk on liiga pikk."
 	"webhook.outcome.command_service_unavailable"	"Karistust ei saadetud, sest serveri käsuteenus pole saadaval."
+	"webhook.outcome.network_unstable"	"Karistust ei saadetud, sest mängija ühendus ületas turvalised võrgupiirid."
 	"webhook.outcome.unavailable"	"Karistuse tulemus polnud saadaval."
 	"webhook.unknown_player"	"Tundmatu mängija"
 	"webhook.unknown_detection"	"TUNDMATU"

@@ -39,6 +39,11 @@ namespace
 		g_CS2AC.HandleDetection(detection, player, evidence);
 	}
 
+	void HandleNetworkVetoDetectionCallback(const char *detection, MovementPlayer *player, const localization::Text &evidence)
+	{
+		g_CS2AC.HandleDetection(detection, player, evidence, false, true);
+	}
+
 	bool IsKickOnlyDetection(const char *detection)
 	{
 		return CS2AC_STREQI(detection, "DESUBTICKING") || CS2AC_STREQI(detection, "NULLS") || CS2AC_STREQI(detection, "SUBTICK SPAM");
@@ -450,7 +455,7 @@ bool CS2ACPlugin::Activate(char *error, size_t maxlen, bool late)
 	convarsRegistered = true;
 	MovementDetectionService::InitSvCheatsWatcher();
 	svCheatsWatcherInstalled = true;
-	detectionSystem.Load(HandleDetectionCallback);
+	detectionSystem.Load(HandleDetectionCallback, HandleNetworkVetoDetectionCallback);
 	hooks::Initialize(missing);
 
 	if (!missing.empty())
@@ -594,7 +599,8 @@ void CS2ACPlugin::OnGameEvent(IGameEvent *event, MovementPlayer *player)
 	detectionSystem.OnGameEvent(event, player, globals ? globals->tickcount : 0);
 }
 
-void CS2ACPlugin::HandleDetection(const char *detection, MovementPlayer *player, const localization::Text &evidence, bool kickOnly)
+void CS2ACPlugin::HandleDetection(const char *detection, MovementPlayer *player, const localization::Text &evidence, bool kickOnly,
+								  bool networkVetoed)
 {
 	if (!detection || !*detection || !player || player->index < 1 || player->index > MAXPLAYERS)
 	{
@@ -618,6 +624,12 @@ void CS2ACPlugin::HandleDetection(const char *detection, MovementPlayer *player,
 	else
 	{
 		Msg("[CS2AC] Detected %s on %s (SteamID64 unavailable).\n", detection, playerName.c_str());
+	}
+	if (networkVetoed)
+	{
+		finish(utils::DetectionOutcome::NetworkUnstable);
+		Msg("[CS2AC] No punishment was sent because %s's connection exceeded the safe network limits.\n", playerName.c_str());
+		return;
 	}
 	if (!steamId)
 	{

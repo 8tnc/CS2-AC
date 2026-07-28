@@ -8,6 +8,7 @@
 	"announcement.outcome.already_punished"	" et la sanction avait déjà été appliquée."
 	"announcement.outcome.command_too_long"	", mais la commande de sanction est trop longue."
 	"announcement.outcome.command_service_unavailable"	", mais le service de commandes du serveur est indisponible."
+	"announcement.outcome.network_unstable"	", mais aucune sanction n'a été envoyée car sa connexion était instable."
 	"announcement.test"	"Ceci est un test. Aucun joueur n'a été détecté ni sanctionné."
 
 	"evidence.aimbot.snap_return"	"Le seuil a été atteint après {incidents} visées brusques suivies d'un tir réussi ; la dernière était un retour de {snap}°."
@@ -28,6 +29,7 @@
 	"evidence.dll_injection.many"	"{count} abonnements client à des événements sur liste noire trouvés : {events}."
 	"evidence.doubletap.one_tick"	"Trois paires de tirs accélérés ont atteint le seuil ; la dernière paire était séparée de 1 tick serveur."
 	"evidence.doubletap.zero_ticks"	"Trois paires de tirs accélérés ont atteint le seuil ; la dernière paire a eu lieu dans le même tick serveur."
+	"evidence.doubletap.network_unstable"	"Trois paires de tirs rapides ont été détectées ; la dernière était espacée de {ticks} ticks serveur. Vérification réseau : ping {ping} ms, jitter {jitter} ms, perte entrante/sortante {incoming_loss}/{outgoing_loss} %, choke entrant/sortant {incoming_choke}/{outgoing_choke} %, {gaps} interruptions de commandes et {unavailable} mesures indisponibles."
 	"evidence.namechanger"	"Le nom visible a été modifié {changes} fois en une minute."
 
 	"evidence.autostrafe.optimizer"	"Optimiseur de strafe détecté."
@@ -65,6 +67,7 @@
 	"webhook.outcome.already_punished"	"Le joueur a déjà été sanctionné, aucune commande en double n'a donc été envoyée."
 	"webhook.outcome.command_too_long"	"Aucune sanction n'a été envoyée car la commande configurée est trop longue."
 	"webhook.outcome.command_service_unavailable"	"Aucune sanction n'a été envoyée car le service de commandes du serveur est indisponible."
+	"webhook.outcome.network_unstable"	"Aucune sanction n'a été envoyée car la connexion du joueur a dépassé les limites réseau sûres."
 	"webhook.outcome.unavailable"	"Aucun résultat de sanction n'était disponible."
 	"webhook.unknown_player"	"Joueur inconnu"
 	"webhook.unknown_detection"	"INCONNU"

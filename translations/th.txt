@@ -8,6 +8,7 @@
 	"announcement.outcome.already_punished"	" และมีการลงโทษไปแล้ว"
 	"announcement.outcome.command_too_long"	" แต่คำสั่งลงโทษยาวเกินไป"
 	"announcement.outcome.command_service_unavailable"	" แต่บริการคำสั่งของเซิร์ฟเวอร์ไม่พร้อมใช้งาน"
+	"announcement.outcome.network_unstable"	" แต่ไม่มีการส่งบทลงโทษเนื่องจากการเชื่อมต่อไม่เสถียร"
 	"announcement.test"	"นี่คือข้อความทดสอบ ไม่มีผู้เล่นถูกตรวจพบหรือลงโทษ"
 
 	"evidence.aimbot.snap_return"	"ถึงเกณฑ์หลังพบการสะบัดเป้าและยิงโดน {incidents} ครั้ง โดยครั้งล่าสุดสะบัดกลับ {snap}°"
@@ -28,6 +29,7 @@
 	"evidence.dll_injection.many"	"พบการสมัครรับอีเวนต์ฝั่งไคลเอนต์ในบัญชีดำ {count} รายการ: {events}"
 	"evidence.doubletap.one_tick"	"คู่การยิงเร็วสามคู่ถึงเกณฑ์ คู่ล่าสุดห่างกัน 1 tick ของเซิร์ฟเวอร์"
 	"evidence.doubletap.zero_ticks"	"คู่การยิงเร็วสามคู่ถึงเกณฑ์ คู่ล่าสุดเกิดใน tick เดียวกันของเซิร์ฟเวอร์"
+	"evidence.doubletap.network_unstable"	"ตรวจพบคู่การยิงเร็วสามคู่ คู่ล่าสุดห่างกัน {ticks} tick ของเซิร์ฟเวอร์ การตรวจสอบเครือข่าย: ping {ping} ms, jitter {jitter} ms, packet loss ขาเข้า/ขาออก {incoming_loss}/{outgoing_loss}%, choke ขาเข้า/ขาออก {incoming_choke}/{outgoing_choke}%, ช่องว่างคำสั่ง {gaps} ครั้ง และตัวอย่างที่ใช้ไม่ได้ {unavailable} รายการ"
 	"evidence.namechanger"	"ชื่อที่แสดงถูกเปลี่ยน {changes} ครั้งภายในหนึ่งนาที"
 
 	"evidence.autostrafe.optimizer"	"ตรวจพบตัวปรับ strafe อัตโนมัติ"
@@ -65,6 +67,7 @@
 	"webhook.outcome.already_punished"	"ผู้เล่นถูกลงโทษไปแล้ว จึงไม่ได้ส่งคำสั่งซ้ำ"
 	"webhook.outcome.command_too_long"	"ไม่ได้ส่งการลงโทษเพราะคำสั่งที่ตั้งค่าไว้ยาวเกินไป"
 	"webhook.outcome.command_service_unavailable"	"ไม่ได้ส่งการลงโทษเพราะบริการคำสั่งของเซิร์ฟเวอร์ไม่พร้อมใช้งาน"
+	"webhook.outcome.network_unstable"	"ไม่ได้ส่งการลงโทษเพราะการเชื่อมต่อของผู้เล่นเกินขีดจำกัดเครือข่ายที่ปลอดภัย"
 	"webhook.outcome.unavailable"	"ไม่มีผลการลงโทษ"
 	"webhook.unknown_player"	"ผู้เล่นไม่ทราบชื่อ"
 	"webhook.unknown_detection"	"ไม่ทราบ"

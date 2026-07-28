@@ -8,6 +8,7 @@
 	"announcement.outcome.already_punished"	" e a punição já havia sido aplicada."
 	"announcement.outcome.command_too_long"	", mas o comando de punição é longo demais."
 	"announcement.outcome.command_service_unavailable"	", mas o serviço de comandos do servidor está indisponível."
+	"announcement.outcome.network_unstable"	", mas nenhuma punição foi enviada porque a conexão estava instável."
 	"announcement.test"	"Isto é um teste. Nenhum jogador foi detectado ou punido."
 
 	"evidence.aimbot.snap_return"	"O limite foi atingido após {incidents} movimentos bruscos com acerto; o último foi um retorno de {snap}°."
@@ -28,6 +29,7 @@
 	"evidence.dll_injection.many"	"Foram encontradas {count} inscrições do cliente em eventos da lista negra: {events}."
 	"evidence.doubletap.one_tick"	"Três pares de tiros acelerados atingiram o limite; o último par ficou separado por 1 tick do servidor."
 	"evidence.doubletap.zero_ticks"	"Três pares de tiros acelerados atingiram o limite; o último par ocorreu no mesmo tick do servidor."
+	"evidence.doubletap.network_unstable"	"Três pares de tiros rápidos foram detectados; o último teve {ticks} ticks de servidor de intervalo. Verificação de rede: {ping} ms de ping, {jitter} ms de jitter, {incoming_loss}/{outgoing_loss}% de perda de entrada/saída, {incoming_choke}/{outgoing_choke}% de choke de entrada/saída, {gaps} falhas de comandos e {unavailable} amostras indisponíveis."
 	"evidence.namechanger"	"O nome visível mudou {changes} vezes em um minuto."
 
 	"evidence.autostrafe.optimizer"	"Otimizador de strafe detectado."
@@ -65,6 +67,7 @@
 	"webhook.outcome.already_punished"	"O jogador já foi punido, então nenhum comando duplicado foi enviado."
 	"webhook.outcome.command_too_long"	"Nenhuma punição foi enviada porque o comando configurado é longo demais."
 	"webhook.outcome.command_service_unavailable"	"Nenhuma punição foi enviada porque o serviço de comandos do servidor está indisponível."
+	"webhook.outcome.network_unstable"	"Nenhuma punição foi enviada porque a conexão do jogador ultrapassou os limites seguros de rede."
 	"webhook.outcome.unavailable"	"Nenhum resultado de punição estava disponível."
 	"webhook.unknown_player"	"Jogador desconhecido"
 	"webhook.unknown_detection"	"DESCONHECIDO"

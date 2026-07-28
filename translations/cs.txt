@@ -8,6 +8,7 @@
 	"announcement.outcome.already_punished"	" a trest už byl proveden."
 	"announcement.outcome.command_too_long"	", ale příkaz trestu je příliš dlouhý."
 	"announcement.outcome.command_service_unavailable"	", ale služba serverových příkazů není dostupná."
+	"announcement.outcome.network_unstable"	", ale trest nebyl odeslán, protože jeho připojení bylo nestabilní."
 	"announcement.test"	"Toto je test. Žádný hráč nebyl odhalen ani potrestán."
 
 	"evidence.aimbot.snap_return"	"Prahu bylo dosaženo po {incidents} prudkých zamířeních se zásahem; poslední byl návrat o {snap}°."
@@ -28,6 +29,7 @@
 	"evidence.dll_injection.many"	"Nalezeno {count} přihlášení klienta k událostem z černé listiny: {events}."
 	"evidence.doubletap.one_tick"	"Tři páry zrychlených výstřelů dosáhly prahu; poslední pár dělil 1 serverový tick."
 	"evidence.doubletap.zero_ticks"	"Tři páry zrychlených výstřelů dosáhly prahu; poslední pár proběhl ve stejném serverovém ticku."
+	"evidence.doubletap.network_unstable"	"Byly zjištěny tři páry rychlých výstřelů; poslední dělilo {ticks} serverových ticků. Kontrola sítě: ping {ping} ms, jitter {jitter} ms, příchozí/odchozí ztráta {incoming_loss}/{outgoing_loss} %, příchozí/odchozí choke {incoming_choke}/{outgoing_choke} %, {gaps} mezer v příkazech a {unavailable} nedostupných vzorků."
 	"evidence.namechanger"	"Viditelné jméno se během jedné minuty změnilo {changes}krát."
 
 	"evidence.autostrafe.optimizer"	"Zjištěn optimalizátor strafe."
@@ -65,6 +67,7 @@
 	"webhook.outcome.already_punished"	"Hráč už byl potrestán, proto nebyl odeslán duplicitní příkaz."
 	"webhook.outcome.command_too_long"	"Trest nebyl odeslán, protože nastavený příkaz je příliš dlouhý."
 	"webhook.outcome.command_service_unavailable"	"Trest nebyl odeslán, protože služba serverových příkazů není dostupná."
+	"webhook.outcome.network_unstable"	"Trest nebyl odeslán, protože připojení hráče překročilo bezpečné síťové limity."
 	"webhook.outcome.unavailable"	"Výsledek trestu nebyl dostupný."
 	"webhook.unknown_player"	"Neznámý hráč"
 	"webhook.unknown_detection"	"NEZNÁMÉ"

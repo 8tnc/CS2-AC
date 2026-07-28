@@ -8,6 +8,7 @@
 	"announcement.outcome.already_punished"	" e la punizione era già stata applicata."
 	"announcement.outcome.command_too_long"	", ma il comando di punizione è troppo lungo."
 	"announcement.outcome.command_service_unavailable"	", ma il servizio comandi del server non è disponibile."
+	"announcement.outcome.network_unstable"	", ma non è stata inviata alcuna punizione perché la connessione era instabile."
 	"announcement.test"	"Questo è un test. Nessun giocatore è stato rilevato o punito."
 
 	"evidence.aimbot.snap_return"	"La soglia è stata raggiunta dopo {incidents} movimenti bruschi con colpo a segno; l'ultimo è stato un ritorno di {snap}°."
@@ -28,6 +29,7 @@
 	"evidence.dll_injection.many"	"Trovate {count} sottoscrizioni del client a eventi nella blacklist: {events}."
 	"evidence.doubletap.one_tick"	"Tre coppie di colpi accelerati hanno raggiunto la soglia; l'ultima coppia era separata da 1 tick del server."
 	"evidence.doubletap.zero_ticks"	"Tre coppie di colpi accelerati hanno raggiunto la soglia; l'ultima coppia è avvenuta nello stesso tick del server."
+	"evidence.doubletap.network_unstable"	"Sono state rilevate tre coppie di colpi rapidi; l'ultima era separata da {ticks} tick del server. Controllo rete: ping {ping} ms, jitter {jitter} ms, perdita in entrata/uscita {incoming_loss}/{outgoing_loss}%, choke in entrata/uscita {incoming_choke}/{outgoing_choke}%, {gaps} salti nei comandi e {unavailable} campioni non disponibili."
 	"evidence.namechanger"	"Il nome visibile è cambiato {changes} volte in un minuto."
 
 	"evidence.autostrafe.optimizer"	"Rilevato un ottimizzatore di strafe."
@@ -65,6 +67,7 @@
 	"webhook.outcome.already_punished"	"Il giocatore è già stato punito, quindi non è stato inviato un comando duplicato."
 	"webhook.outcome.command_too_long"	"Non è stata inviata alcuna punizione perché il comando configurato è troppo lungo."
 	"webhook.outcome.command_service_unavailable"	"Non è stata inviata alcuna punizione perché il servizio comandi del server non è disponibile."
+	"webhook.outcome.network_unstable"	"Non è stata inviata alcuna punizione perché la connessione del giocatore ha superato i limiti di rete sicuri."
 	"webhook.outcome.unavailable"	"Nessun esito di punizione disponibile."
 	"webhook.unknown_player"	"Giocatore sconosciuto"
 	"webhook.unknown_detection"	"SCONOSCIUTO"

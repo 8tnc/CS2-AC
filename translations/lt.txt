@@ -8,6 +8,7 @@
 	"announcement.outcome.already_punished"	", o bausmė jau buvo pritaikyta."
 	"announcement.outcome.command_too_long"	", bet bausmės komanda per ilga."
 	"announcement.outcome.command_service_unavailable"	", bet serverio komandų paslauga nepasiekiama."
+	"announcement.outcome.network_unstable"	", bet bausmė neišsiųsta, nes ryšys buvo nestabilus."
 	"announcement.test"	"Tai yra testas. Joks žaidėjas nebuvo aptiktas ar nubaustas."
 
 	"evidence.aimbot.snap_return"	"Slenkstis pasiektas po {incidents} staigių taikymų su pataikymu; paskutinis buvo {snap}° grįžimas."
@@ -28,6 +29,7 @@
 	"evidence.dll_injection.many"	"Rastos {count} kliento prenumeratos juodojo sąrašo įvykiams: {events}."
 	"evidence.doubletap.one_tick"	"Trys pagreitintų šūvių poros pasiekė slenkstį; paskutinę porą skyrė 1 serverio tick."
 	"evidence.doubletap.zero_ticks"	"Trys pagreitintų šūvių poros pasiekė slenkstį; paskutinė pora įvyko tame pačiame serverio tick."
+	"evidence.doubletap.network_unstable"	"Aptiktos trys greitų šūvių poros; paskutinę skyrė {ticks} serverio tick. Tinklo patikra: {ping} ms ping, {jitter} ms jitter, gaunamas/siunčiamas praradimas {incoming_loss}/{outgoing_loss}%, gaunamas/siunčiamas choke {incoming_choke}/{outgoing_choke}%, {gaps} komandų tarpų ir {unavailable} nepasiekiamų mėginių."
 	"evidence.namechanger"	"Matomas vardas per vieną minutę pasikeitė {changes} kartus."
 
 	"evidence.autostrafe.optimizer"	"Aptiktas strafe optimizatorius."
@@ -65,6 +67,7 @@
 	"webhook.outcome.already_punished"	"Žaidėjas jau nubaustas, todėl pakartotinė komanda neišsiųsta."
 	"webhook.outcome.command_too_long"	"Bausmė neišsiųsta, nes sukonfigūruota komanda per ilga."
 	"webhook.outcome.command_service_unavailable"	"Bausmė neišsiųsta, nes serverio komandų paslauga nepasiekiama."
+	"webhook.outcome.network_unstable"	"Bausmė neišsiųsta, nes žaidėjo ryšys viršijo saugias tinklo ribas."
 	"webhook.outcome.unavailable"	"Bausmės rezultatas nebuvo pasiekiamas."
 	"webhook.unknown_player"	"Nežinomas žaidėjas"
 	"webhook.unknown_detection"	"NEŽINOMA"

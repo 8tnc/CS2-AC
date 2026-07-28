@@ -8,6 +8,7 @@
 	"announcement.outcome.already_punished"	", ja rangaistus oli jo suoritettu."
 	"announcement.outcome.command_too_long"	", mutta rangaistuskomento on liian pitkä."
 	"announcement.outcome.command_service_unavailable"	", mutta palvelimen komentopalvelu ei ole käytettävissä."
+	"announcement.outcome.network_unstable"	", mutta rangaistusta ei lähetetty epävakaan yhteyden vuoksi."
 	"announcement.test"	"Tämä on testi. Ketään pelaajaa ei havaittu tai rangaistu."
 
 	"evidence.aimbot.snap_return"	"Raja saavutettiin {incidents} nopean, osumaan johtaneen tähtäysliikkeen jälkeen; viimeisin oli {snap}°:n palautus."
@@ -28,6 +29,7 @@
 	"evidence.dll_injection.many"	"Löytyi {count} asiakkaan tilausta mustalla listalla oleviin tapahtumiin: {events}."
 	"evidence.doubletap.one_tick"	"Kolme nopeutettua laukausparia saavutti rajan; viimeisen parin välissä oli 1 palvelintick."
 	"evidence.doubletap.zero_ticks"	"Kolme nopeutettua laukausparia saavutti rajan; viimeinen pari tapahtui samassa palvelintickissä."
+	"evidence.doubletap.network_unstable"	"Kolme nopeaa laukausparia havaittiin; viimeisen parin väli oli {ticks} palvelintickiä. Verkkotarkistus: ping {ping} ms, jitter {jitter} ms, saapuva/lähtevä hävikki {incoming_loss}/{outgoing_loss} %, saapuva/lähtevä choke {incoming_choke}/{outgoing_choke} %, {gaps} komentokatkoa ja {unavailable} puuttuvaa näytettä."
 	"evidence.namechanger"	"Näkyvä nimi vaihtui {changes} kertaa minuutin aikana."
 
 	"evidence.autostrafe.optimizer"	"Strafe-optimointi havaittu."
@@ -65,6 +67,7 @@
 	"webhook.outcome.already_punished"	"Pelaaja oli jo rangaistu, joten toista komentoa ei lähetetty."
 	"webhook.outcome.command_too_long"	"Rangaistusta ei lähetetty, koska määritetty komento on liian pitkä."
 	"webhook.outcome.command_service_unavailable"	"Rangaistusta ei lähetetty, koska palvelimen komentopalvelu ei ole käytettävissä."
+	"webhook.outcome.network_unstable"	"Rangaistusta ei lähetetty, koska pelaajan yhteys ylitti turvalliset verkkorajat."
 	"webhook.outcome.unavailable"	"Rangaistuksen tulosta ei ollut saatavilla."
 	"webhook.unknown_player"	"Tuntematon pelaaja"
 	"webhook.unknown_detection"	"TUNTEMATON"

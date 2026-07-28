@@ -8,6 +8,7 @@
 	"announcement.outcome.already_punished"	" og straffen var allerede udført."
 	"announcement.outcome.command_too_long"	", men straffekommandoen er for lang."
 	"announcement.outcome.command_service_unavailable"	", men serverens kommandotjeneste er ikke tilgængelig."
+	"announcement.outcome.network_unstable"	", men der blev ikke sendt en straf, fordi forbindelsen var ustabil."
 	"announcement.test"	"Dette er en test. Ingen spiller blev opdaget eller straffet."
 
 	"evidence.aimbot.snap_return"	"Tærsklen blev nået efter {incidents} hurtige sigtebevægelser med træf; den seneste var en retur på {snap}°."
@@ -28,6 +29,7 @@
 	"evidence.dll_injection.many"	"{count} klientabonnementer på sortlistede hændelser fundet: {events}."
 	"evidence.doubletap.one_tick"	"Tre hurtigskydningspar nåede tærsklen; det seneste par var 1 servertick fra hinanden."
 	"evidence.doubletap.zero_ticks"	"Tre hurtigskydningspar nåede tærsklen; det seneste par skete i samme servertick."
+	"evidence.doubletap.network_unstable"	"Tre hurtigskydningspar blev registreret; det seneste var {ticks} serverticks fra hinanden. Netværkstjek: {ping} ms ping, {jitter} ms jitter, {incoming_loss}/{outgoing_loss}% indgående/udgående tab, {incoming_choke}/{outgoing_choke}% indgående/udgående choke, {gaps} kommandohuller og {unavailable} utilgængelige målinger."
 	"evidence.namechanger"	"Det synlige navn blev ændret {changes} gange på ét minut."
 
 	"evidence.autostrafe.optimizer"	"Strafe-optimering opdaget."
@@ -65,6 +67,7 @@
 	"webhook.outcome.already_punished"	"Spilleren var allerede straffet, så der blev ikke sendt en dobbelt kommando."
 	"webhook.outcome.command_too_long"	"Der blev ikke sendt en straf, fordi den konfigurerede kommando er for lang."
 	"webhook.outcome.command_service_unavailable"	"Der blev ikke sendt en straf, fordi serverens kommandotjeneste ikke er tilgængelig."
+	"webhook.outcome.network_unstable"	"Der blev ikke sendt en straf, fordi spillerens forbindelse overskred de sikre netværksgrænser."
 	"webhook.outcome.unavailable"	"Intet strafresultat var tilgængeligt."
 	"webhook.unknown_player"	"Ukendt spiller"
 	"webhook.unknown_detection"	"UKENDT"

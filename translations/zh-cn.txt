@@ -8,6 +8,7 @@
 	"announcement.outcome.already_punished"	"，且处罚此前已执行。"
 	"announcement.outcome.command_too_long"	"，但处罚命令过长。"
 	"announcement.outcome.command_service_unavailable"	"，但服务器命令服务不可用。"
+	"announcement.outcome.network_unstable"	"，但由于网络连接不稳定，未执行处罚。"
 	"announcement.test"	"这是一条测试消息。没有玩家被检测或处罚。"
 
 	"evidence.aimbot.snap_return"	"{incidents} 次急转命中达到阈值；最近一次为 {snap}° 的急转回正。"
@@ -28,6 +29,7 @@
 	"evidence.dll_injection.many"	"发现 {count} 个被列入黑名单的客户端事件订阅：{events}。"
 	"evidence.doubletap.one_tick"	"三组异常快速射击达到阈值；最近一组间隔 1 个服务器 tick。"
 	"evidence.doubletap.zero_ticks"	"三组异常快速射击达到阈值；最近一组发生在同一服务器 tick。"
+	"evidence.doubletap.network_unstable"	"检测到三组快速射击；最近一组相隔 {ticks} 个服务器 tick。网络检查：ping {ping} ms、jitter {jitter} ms、上行/下行丢包 {incoming_loss}/{outgoing_loss}%、上行/下行 choke {incoming_choke}/{outgoing_choke}%、{gaps} 个指令间断、{unavailable} 个不可用样本。"
 	"evidence.namechanger"	"一分钟内可见名称更改了 {changes} 次。"
 
 	"evidence.autostrafe.optimizer"	"检测到空中加速优化。"
@@ -65,6 +67,7 @@
 	"webhook.outcome.already_punished"	"该玩家此前已被处罚，因此未重复发送命令。"
 	"webhook.outcome.command_too_long"	"配置的命令过长，因此未发送处罚。"
 	"webhook.outcome.command_service_unavailable"	"服务器命令服务不可用，因此未发送处罚。"
+	"webhook.outcome.network_unstable"	"玩家的连接超过安全网络限制，因此未执行处罚。"
 	"webhook.outcome.unavailable"	"没有可用的处罚结果。"
 	"webhook.unknown_player"	"未知玩家"
 	"webhook.unknown_detection"	"未知"

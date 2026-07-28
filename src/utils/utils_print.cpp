@@ -349,6 +349,8 @@ static std::string DetectionOutcomeText(utils::DetectionOutcome outcome)
 			return localization::Get("announcement.outcome.command_too_long", ", but the punishment command is too long.");
 		case utils::DetectionOutcome::CommandServiceUnavailable:
 			return localization::Get("announcement.outcome.command_service_unavailable", ", but the server command service is unavailable.");
+		case utils::DetectionOutcome::NetworkUnstable:
+			return localization::Get("announcement.outcome.network_unstable", ", but no punishment was sent because their connection was unstable.");
 	}
 	return ".";
 }

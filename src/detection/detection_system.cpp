@@ -490,10 +490,10 @@ namespace detection
 		return playerData[playerIndex].shots;
 	}
 
-	void DetectionSystem::Load(AnnounceCallback announce)
+	void DetectionSystem::Load(AnnounceCallback announce, AnnounceCallback announceNetworkVeto)
 	{
 		shots.Reset();
-		doubletap.Load(announce);
+		doubletap.Load(announce, announceNetworkVeto);
 		silentAim.Load(announce, &shots);
 		aimbot.Load(announce, &shots);
 		aimlock.Load(announce, &shots);
@@ -560,6 +560,10 @@ namespace detection
 			return;
 		}
 		shots.OnProcessUsercmds(player, commands, numCommands);
+		if (settings::IsDetectionEnabled(DetectionType::Doubletap))
+		{
+			doubletap.OnProcessUsercmds(player, commands, numCommands);
+		}
 		if (settings::IsDetectionEnabled(DetectionType::Aimbot))
 		{
 			aimbot.OnProcessUsercmds(player, commands, numCommands);
@@ -600,6 +604,10 @@ namespace detection
 			return;
 		}
 		shots.CaptureFrame(currentTick);
+		if (settings::IsDetectionEnabled(DetectionType::Doubletap))
+		{
+			doubletap.OnGameFrame();
+		}
 		if (settings::IsDetectionEnabled(DetectionType::Aimbot))
 		{
 			aimbot.OnGameFrame(currentTick);

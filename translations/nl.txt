@@ -8,6 +8,7 @@
 	"announcement.outcome.already_punished"	" en de straf was al uitgevoerd."
 	"announcement.outcome.command_too_long"	", maar het strafcommando is te lang."
 	"announcement.outcome.command_service_unavailable"	", maar de servercommandodienst is niet beschikbaar."
+	"announcement.outcome.network_unstable"	", maar er is geen straf verzonden omdat de verbinding instabiel was."
 	"announcement.test"	"Dit is een test. Er is geen speler gedetecteerd of gestraft."
 
 	"evidence.aimbot.snap_return"	"De drempel werd bereikt na {incidents} abrupte richtbewegingen met een treffer; de laatste was een terugkeer van {snap}°."
@@ -28,6 +29,7 @@
 	"evidence.dll_injection.many"	"{count} clientabonnementen op geblokkeerde evenementen gevonden: {events}."
 	"evidence.doubletap.one_tick"	"Drie snelvuurparen bereikten de drempel; het laatste paar lag 1 servertick uit elkaar."
 	"evidence.doubletap.zero_ticks"	"Drie snelvuurparen bereikten de drempel; het laatste paar vond plaats in dezelfde servertick."
+	"evidence.doubletap.network_unstable"	"Drie snelvuurparen zijn gedetecteerd; het laatste paar lag {ticks} serverticks uit elkaar. Netwerkcontrole: {ping} ms ping, {jitter} ms jitter, {incoming_loss}/{outgoing_loss}% inkomend/uitgaand verlies, {incoming_choke}/{outgoing_choke}% inkomende/uitgaande choke, {gaps} commandogaten en {unavailable} onbeschikbare metingen."
 	"evidence.namechanger"	"De zichtbare naam veranderde {changes} keer binnen één minuut."
 
 	"evidence.autostrafe.optimizer"	"Strafe-optimalisatie gedetecteerd."
@@ -65,6 +67,7 @@
 	"webhook.outcome.already_punished"	"De speler was al gestraft, dus er is geen dubbel commando verzonden."
 	"webhook.outcome.command_too_long"	"Er is geen straf verzonden omdat het ingestelde commando te lang is."
 	"webhook.outcome.command_service_unavailable"	"Er is geen straf verzonden omdat de servercommandodienst niet beschikbaar is."
+	"webhook.outcome.network_unstable"	"Er is geen straf verzonden omdat de verbinding van de speler de veilige netwerklimieten overschreed."
 	"webhook.outcome.unavailable"	"Er was geen strafresultaat beschikbaar."
 	"webhook.unknown_player"	"Onbekende speler"
 	"webhook.unknown_detection"	"ONBEKEND"

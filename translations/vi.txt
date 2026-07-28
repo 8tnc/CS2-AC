@@ -8,6 +8,7 @@
 	"announcement.outcome.already_punished"	", và hình phạt đã được thực hiện trước đó."
 	"announcement.outcome.command_too_long"	", nhưng lệnh phạt quá dài."
 	"announcement.outcome.command_service_unavailable"	", nhưng dịch vụ lệnh máy chủ không khả dụng."
+	"announcement.outcome.network_unstable"	", nhưng không gửi hình phạt vì kết nối không ổn định."
 	"announcement.test"	"Đây là tin nhắn thử nghiệm. Không có người chơi nào bị phát hiện hoặc xử phạt."
 
 	"evidence.aimbot.snap_return"	"Đạt ngưỡng sau {incidents} lần kéo tâm đột ngột kèm trúng đạn; lần gần nhất là kéo rồi trả lại {snap}°."
@@ -28,6 +29,7 @@
 	"evidence.dll_injection.many"	"Phát hiện {count} đăng ký sự kiện phía máy khách nằm trong danh sách đen: {events}."
 	"evidence.doubletap.one_tick"	"Ba cặp bắn nhanh đạt ngưỡng; cặp gần nhất cách nhau 1 tick máy chủ."
 	"evidence.doubletap.zero_ticks"	"Ba cặp bắn nhanh đạt ngưỡng; cặp gần nhất xảy ra trong cùng tick máy chủ."
+	"evidence.doubletap.network_unstable"	"Đã phát hiện ba cặp bắn nhanh; cặp gần nhất cách nhau {ticks} tick máy chủ. Kiểm tra mạng: ping {ping} ms, jitter {jitter} ms, mất gói vào/ra {incoming_loss}/{outgoing_loss}%, choke vào/ra {incoming_choke}/{outgoing_choke}%, {gaps} khoảng trống lệnh và {unavailable} mẫu không khả dụng."
 	"evidence.namechanger"	"Tên hiển thị đã thay đổi {changes} lần trong một phút."
 
 	"evidence.autostrafe.optimizer"	"Phát hiện tối ưu hóa strafe."
@@ -65,6 +67,7 @@
 	"webhook.outcome.already_punished"	"Người chơi đã bị phạt trước đó nên không gửi lệnh trùng lặp."
 	"webhook.outcome.command_too_long"	"Không gửi hình phạt vì lệnh được cấu hình quá dài."
 	"webhook.outcome.command_service_unavailable"	"Không gửi hình phạt vì dịch vụ lệnh máy chủ không khả dụng."
+	"webhook.outcome.network_unstable"	"Không gửi hình phạt vì kết nối của người chơi vượt quá giới hạn mạng an toàn."
 	"webhook.outcome.unavailable"	"Không có kết quả hình phạt."
 	"webhook.unknown_player"	"Người chơi không xác định"
 	"webhook.unknown_detection"	"KHÔNG XÁC ĐỊNH"

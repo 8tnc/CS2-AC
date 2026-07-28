@@ -8,6 +8,7 @@
 	"announcement.outcome.already_punished"	", iar pedeapsa fusese deja aplicată."
 	"announcement.outcome.command_too_long"	", dar comanda de pedeapsă este prea lungă."
 	"announcement.outcome.command_service_unavailable"	", dar serviciul de comenzi al serverului nu este disponibil."
+	"announcement.outcome.network_unstable"	", dar nu a fost trimisă nicio pedeapsă deoarece conexiunea era instabilă."
 	"announcement.test"	"Acesta este un test. Niciun jucător nu a fost detectat sau pedepsit."
 
 	"evidence.aimbot.snap_return"	"Pragul a fost atins după {incidents} mișcări bruște urmate de lovitură; ultima a fost o revenire de {snap}°."
@@ -28,6 +29,7 @@
 	"evidence.dll_injection.many"	"Au fost găsite {count} abonamente ale clientului la evenimente din lista neagră: {events}."
 	"evidence.doubletap.one_tick"	"Trei perechi de focuri accelerate au atins pragul; ultima pereche a fost separată de 1 tick al serverului."
 	"evidence.doubletap.zero_ticks"	"Trei perechi de focuri accelerate au atins pragul; ultima pereche a avut loc în același tick al serverului."
+	"evidence.doubletap.network_unstable"	"Au fost detectate trei perechi de focuri rapide; ultima a avut {ticks} tick-uri de server între focuri. Verificare rețea: ping {ping} ms, jitter {jitter} ms, pierdere intrare/ieșire {incoming_loss}/{outgoing_loss}%, choke intrare/ieșire {incoming_choke}/{outgoing_choke}%, {gaps} goluri de comenzi și {unavailable} mostre indisponibile."
 	"evidence.namechanger"	"Numele vizibil s-a schimbat de {changes} ori într-un minut."
 
 	"evidence.autostrafe.optimizer"	"Optimizator de strafe detectat."
@@ -65,6 +67,7 @@
 	"webhook.outcome.already_punished"	"Jucătorul a fost deja pedepsit, deci nu a fost trimisă o comandă duplicată."
 	"webhook.outcome.command_too_long"	"Nu a fost trimisă nicio pedeapsă deoarece comanda configurată este prea lungă."
 	"webhook.outcome.command_service_unavailable"	"Nu a fost trimisă nicio pedeapsă deoarece serviciul de comenzi al serverului nu este disponibil."
+	"webhook.outcome.network_unstable"	"Nu a fost trimisă nicio pedeapsă deoarece conexiunea jucătorului a depășit limitele sigure ale rețelei."
 	"webhook.outcome.unavailable"	"Nu a fost disponibil niciun rezultat al pedepsei."
 	"webhook.unknown_player"	"Jucător necunoscut"
 	"webhook.unknown_detection"	"NECUNOSCUT"

@@ -8,6 +8,7 @@
 	"announcement.outcome.already_punished"	", και η ποινή είχε ήδη εφαρμοστεί."
 	"announcement.outcome.command_too_long"	", αλλά η εντολή ποινής είναι πολύ μεγάλη."
 	"announcement.outcome.command_service_unavailable"	", αλλά η υπηρεσία εντολών του διακομιστή δεν είναι διαθέσιμη."
+	"announcement.outcome.network_unstable"	", αλλά δεν στάλθηκε ποινή επειδή η σύνδεσή του ήταν ασταθής."
 	"announcement.test"	"Αυτό είναι δοκιμή. Κανένας παίκτης δεν εντοπίστηκε ή τιμωρήθηκε."
 
 	"evidence.aimbot.snap_return"	"Το όριο έφτασε μετά από {incidents} απότομες κινήσεις στόχευσης με εύστοχη βολή· η τελευταία ήταν επιστροφή {snap}°."
@@ -28,6 +29,7 @@
 	"evidence.dll_injection.many"	"Βρέθηκαν {count} συνδρομές πελάτη σε αποκλεισμένα συμβάντα: {events}."
 	"evidence.doubletap.one_tick"	"Τρία ζεύγη επιταχυνόμενων βολών έφτασαν το όριο· το τελευταίο ζεύγος απείχε 1 tick διακομιστή."
 	"evidence.doubletap.zero_ticks"	"Τρία ζεύγη επιταχυνόμενων βολών έφτασαν το όριο· το τελευταίο ζεύγος έγινε στο ίδιο tick διακομιστή."
+	"evidence.doubletap.network_unstable"	"Εντοπίστηκαν τρία ζεύγη γρήγορων βολών· το τελευταίο απείχε {ticks} server ticks. Έλεγχος δικτύου: ping {ping} ms, jitter {jitter} ms, εισερχόμενη/εξερχόμενη απώλεια {incoming_loss}/{outgoing_loss}%, εισερχόμενο/εξερχόμενο choke {incoming_choke}/{outgoing_choke}%, {gaps} κενά εντολών και {unavailable} μη διαθέσιμα δείγματα."
 	"evidence.namechanger"	"Το ορατό όνομα άλλαξε {changes} φορές μέσα σε ένα λεπτό."
 
 	"evidence.autostrafe.optimizer"	"Εντοπίστηκε βελτιστοποιητής strafe."
@@ -65,6 +67,7 @@
 	"webhook.outcome.already_punished"	"Ο παίκτης έχει ήδη τιμωρηθεί, οπότε δεν στάλθηκε διπλή εντολή."
 	"webhook.outcome.command_too_long"	"Δεν στάλθηκε ποινή επειδή η ρυθμισμένη εντολή είναι πολύ μεγάλη."
 	"webhook.outcome.command_service_unavailable"	"Δεν στάλθηκε ποινή επειδή η υπηρεσία εντολών του διακομιστή δεν είναι διαθέσιμη."
+	"webhook.outcome.network_unstable"	"Δεν στάλθηκε ποινή επειδή η σύνδεση του παίκτη ξεπέρασε τα ασφαλή όρια δικτύου."
 	"webhook.outcome.unavailable"	"Δεν υπήρχε διαθέσιμο αποτέλεσμα ποινής."
 	"webhook.unknown_player"	"Άγνωστος παίκτης"
 	"webhook.unknown_detection"	"ΑΓΝΩΣΤΟ"

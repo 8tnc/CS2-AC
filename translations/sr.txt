@@ -8,6 +8,7 @@
 	"announcement.outcome.already_punished"	", a kazna je već izvršena."
 	"announcement.outcome.command_too_long"	", ali je komanda za kaznu preduga."
 	"announcement.outcome.command_service_unavailable"	", ali servis serverskih komandi nije dostupan."
+	"announcement.outcome.network_unstable"	", ali kazna nije poslata jer je veza bila nestabilna."
 	"announcement.test"	"Ovo je test. Nijedan igrač nije otkriven niti kažnjen."
 
 	"evidence.aimbot.snap_return"	"Prag je dostignut nakon {incidents} naglih nišanjenja sa pogotkom; poslednje je bilo vraćanje od {snap}°."
@@ -28,6 +29,7 @@
 	"evidence.dll_injection.many"	"Pronađeno je {count} pretplata klijenta na događaje sa crne liste: {events}."
 	"evidence.doubletap.one_tick"	"Tri para ubrzanih hitaca dostigla su prag; poslednji par je bio udaljen 1 serverski tick."
 	"evidence.doubletap.zero_ticks"	"Tri para ubrzanih hitaca dostigla su prag; poslednji par se dogodio u istom serverskom ticku."
+	"evidence.doubletap.network_unstable"	"Otkrivena su tri para brzih hitaca; poslednji je bio udaljen {ticks} serverskih tickova. Provera mreže: ping {ping} ms, jitter {jitter} ms, dolazni/odlazni gubitak {incoming_loss}/{outgoing_loss}%, dolazni/odlazni choke {incoming_choke}/{outgoing_choke}%, {gaps} praznina u komandama i {unavailable} nedostupnih uzoraka."
 	"evidence.namechanger"	"Vidljivo ime se promenilo {changes} puta u jednom minutu."
 
 	"evidence.autostrafe.optimizer"	"Otkriven je strafe optimizator."
@@ -65,6 +67,7 @@
 	"webhook.outcome.already_punished"	"Igrač je već kažnjen, pa duplirana komanda nije poslata."
 	"webhook.outcome.command_too_long"	"Kazna nije poslata jer je podešena komanda preduga."
 	"webhook.outcome.command_service_unavailable"	"Kazna nije poslata jer servis serverskih komandi nije dostupan."
+	"webhook.outcome.network_unstable"	"Kazna nije poslata jer je veza igrača prešla bezbedne mrežne granice."
 	"webhook.outcome.unavailable"	"Ishod kazne nije bio dostupan."
 	"webhook.unknown_player"	"Nepoznat igrač"
 	"webhook.unknown_detection"	"NEPOZNATO"

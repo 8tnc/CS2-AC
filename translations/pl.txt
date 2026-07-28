@@ -8,6 +8,7 @@
 	"announcement.outcome.already_punished"	", a kara została już zastosowana."
 	"announcement.outcome.command_too_long"	", ale polecenie kary jest za długie."
 	"announcement.outcome.command_service_unavailable"	", ale usługa poleceń serwera jest niedostępna."
+	"announcement.outcome.network_unstable"	", ale kara nie została wysłana, ponieważ połączenie było niestabilne."
 	"announcement.test"	"To jest test. Żaden gracz nie został wykryty ani ukarany."
 
 	"evidence.aimbot.snap_return"	"Próg osiągnięto po {incidents} gwałtownych namierzeniach zakończonych trafieniem; ostatnie było powrotem o {snap}°."
@@ -28,6 +29,7 @@
 	"evidence.dll_injection.many"	"Znaleziono {count} subskrypcji klienta na zdarzenia z czarnej listy: {events}."
 	"evidence.doubletap.one_tick"	"Trzy pary przyspieszonych strzałów osiągnęły próg; ostatnią parę dzielił 1 tick serwera."
 	"evidence.doubletap.zero_ticks"	"Trzy pary przyspieszonych strzałów osiągnęły próg; ostatnia para nastąpiła w tym samym ticku serwera."
+	"evidence.doubletap.network_unstable"	"Wykryto trzy pary szybkich strzałów; ostatnią dzieliło {ticks} ticków serwera. Kontrola sieci: ping {ping} ms, jitter {jitter} ms, strata przychodząca/wychodząca {incoming_loss}/{outgoing_loss}%, choke przychodzący/wychodzący {incoming_choke}/{outgoing_choke}%, {gaps} luk w komendach i {unavailable} niedostępnych próbek."
 	"evidence.namechanger"	"W ciągu minuty widoczna nazwa zmieniła się {changes} razy."
 
 	"evidence.autostrafe.optimizer"	"Wykryto optymalizator strafe."
@@ -65,6 +67,7 @@
 	"webhook.outcome.already_punished"	"Gracz został już ukarany, więc nie wysłano ponownego polecenia."
 	"webhook.outcome.command_too_long"	"Kara nie została wysłana, ponieważ skonfigurowane polecenie jest za długie."
 	"webhook.outcome.command_service_unavailable"	"Kara nie została wysłana, ponieważ usługa poleceń serwera jest niedostępna."
+	"webhook.outcome.network_unstable"	"Kara nie została wysłana, ponieważ połączenie gracza przekroczyło bezpieczne limity sieci."
 	"webhook.outcome.unavailable"	"Wynik kary jest niedostępny."
 	"webhook.unknown_player"	"Nieznany gracz"
 	"webhook.unknown_detection"	"NIEZNANE"

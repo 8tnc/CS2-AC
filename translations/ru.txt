@@ -8,6 +8,7 @@
 	"announcement.outcome.already_punished"	", а наказание уже было применено."
 	"announcement.outcome.command_too_long"	", но команда наказания слишком длинная."
 	"announcement.outcome.command_service_unavailable"	", но служба серверных команд недоступна."
+	"announcement.outcome.network_unstable"	", но наказание не отправлено из-за нестабильного соединения."
 	"announcement.test"	"Это тест. Ни один игрок не был обнаружен или наказан."
 
 	"evidence.aimbot.snap_return"	"Порог достигнут после {incidents} резких доводок с попаданием; последняя была возвратом на {snap}°."
@@ -28,6 +29,7 @@
 	"evidence.dll_injection.many"	"Найдено подписок клиента на события из чёрного списка: {count}. События: {events}."
 	"evidence.doubletap.one_tick"	"Три пары ускоренных выстрелов достигли порога; последняя пара разделена 1 серверным тиком."
 	"evidence.doubletap.zero_ticks"	"Три пары ускоренных выстрелов достигли порога; последняя пара произошла в одном серверном тике."
+	"evidence.doubletap.network_unstable"	"Обнаружены три пары быстрых выстрелов; последняя была с интервалом {ticks} серверных тиков. Проверка сети: ping {ping} мс, jitter {jitter} мс, входящие/исходящие потери {incoming_loss}/{outgoing_loss}%, входящий/исходящий choke {incoming_choke}/{outgoing_choke}%, {gaps} пропусков команд и {unavailable} недоступных замеров."
 	"evidence.namechanger"	"За одну минуту имя игрока видимо изменилось {changes} раз."
 
 	"evidence.autostrafe.optimizer"	"Обнаружен оптимизатор стрейфа."
@@ -65,6 +67,7 @@
 	"webhook.outcome.already_punished"	"Игрок уже наказан, поэтому повторная команда не отправлена."
 	"webhook.outcome.command_too_long"	"Наказание не отправлено, потому что настроенная команда слишком длинная."
 	"webhook.outcome.command_service_unavailable"	"Наказание не отправлено, потому что служба серверных команд недоступна."
+	"webhook.outcome.network_unstable"	"Наказание не отправлено, потому что соединение игрока превысило безопасные сетевые пределы."
 	"webhook.outcome.unavailable"	"Результат наказания недоступен."
 	"webhook.unknown_player"	"Неизвестный игрок"
 	"webhook.unknown_detection"	"НЕИЗВЕСТНО"

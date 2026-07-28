@@ -8,6 +8,7 @@
 	"announcement.outcome.already_punished"	", un sods jau bija izpildīts."
 	"announcement.outcome.command_too_long"	", bet soda komanda ir pārāk gara."
 	"announcement.outcome.command_service_unavailable"	", bet servera komandu pakalpojums nav pieejams."
+	"announcement.outcome.network_unstable"	", bet sods netika nosūtīts, jo savienojums bija nestabils."
 	"announcement.test"	"Šis ir tests. Neviens spēlētājs netika konstatēts vai sodīts."
 
 	"evidence.aimbot.snap_return"	"Slieksnis sasniegts pēc {incidents} straujām tēmēšanas kustībām ar trāpījumu; pēdējā bija {snap}° atgriešanās."
@@ -28,6 +29,7 @@
 	"evidence.dll_injection.many"	"Atrasti {count} klienta abonementi melnā saraksta notikumiem: {events}."
 	"evidence.doubletap.one_tick"	"Trīs paātrinātu šāvienu pāri sasniedza slieksni; pēdējo pāri šķīra 1 servera tick."
 	"evidence.doubletap.zero_ticks"	"Trīs paātrinātu šāvienu pāri sasniedza slieksni; pēdējais pāris notika vienā servera tick."
+	"evidence.doubletap.network_unstable"	"Tika konstatēti trīs ātru šāvienu pāri; pēdējo šķīra {ticks} servera tick. Tīkla pārbaude: {ping} ms ping, {jitter} ms jitter, ienākošais/izejošais zudums {incoming_loss}/{outgoing_loss}%, ienākošais/izejošais choke {incoming_choke}/{outgoing_choke}%, {gaps} komandu pārrāvumi un {unavailable} nepieejami mērījumi."
 	"evidence.namechanger"	"Redzamais vārds vienas minūtes laikā mainījās {changes} reizes."
 
 	"evidence.autostrafe.optimizer"	"Konstatēts strafe optimizētājs."
@@ -65,6 +67,7 @@
 	"webhook.outcome.already_punished"	"Spēlētājs jau bija sodīts, tāpēc atkārtota komanda netika nosūtīta."
 	"webhook.outcome.command_too_long"	"Sods netika nosūtīts, jo konfigurētā komanda ir pārāk gara."
 	"webhook.outcome.command_service_unavailable"	"Sods netika nosūtīts, jo servera komandu pakalpojums nav pieejams."
+	"webhook.outcome.network_unstable"	"Sods netika nosūtīts, jo spēlētāja savienojums pārsniedza drošās tīkla robežas."
 	"webhook.outcome.unavailable"	"Soda rezultāts nebija pieejams."
 	"webhook.unknown_player"	"Nezināms spēlētājs"
 	"webhook.unknown_detection"	"NEZINĀMS"

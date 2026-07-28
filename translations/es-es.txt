@@ -8,6 +8,7 @@
 	"announcement.outcome.already_punished"	" y el castigo ya se había aplicado."
 	"announcement.outcome.command_too_long"	", pero el comando de castigo es demasiado largo."
 	"announcement.outcome.command_service_unavailable"	", pero el servicio de comandos del servidor no está disponible."
+	"announcement.outcome.network_unstable"	", pero no se envió ningún castigo porque su conexión era inestable."
 	"announcement.test"	"Esto es una prueba. No se ha detectado ni castigado a ningún jugador."
 
 	"evidence.aimbot.snap_return"	"El umbral se alcanzó tras {incidents} apuntados bruscos con impacto; el último fue un retorno de {snap}°."
@@ -28,6 +29,7 @@
 	"evidence.dll_injection.many"	"Se encontraron {count} suscripciones del cliente a eventos de la lista negra: {events}."
 	"evidence.doubletap.one_tick"	"Tres pares de disparos acelerados alcanzaron el umbral; el último par estuvo separado por 1 tick del servidor."
 	"evidence.doubletap.zero_ticks"	"Tres pares de disparos acelerados alcanzaron el umbral; el último par ocurrió en el mismo tick del servidor."
+	"evidence.doubletap.network_unstable"	"Se detectaron tres pares de disparos rápidos; el último tuvo {ticks} ticks de servidor de separación. Comprobación de red: {ping} ms de ping, {jitter} ms de jitter, {incoming_loss}/{outgoing_loss}% de pérdida entrante/saliente, {incoming_choke}/{outgoing_choke}% de choke entrante/saliente, {gaps} saltos de comandos y {unavailable} muestras no disponibles."
 	"evidence.namechanger"	"El nombre visible cambió {changes} veces en un minuto."
 
 	"evidence.autostrafe.optimizer"	"Se detectó un optimizador de strafe."
@@ -65,6 +67,7 @@
 	"webhook.outcome.already_punished"	"El jugador ya fue castigado, así que no se envió un comando duplicado."
 	"webhook.outcome.command_too_long"	"No se envió ningún castigo porque el comando configurado es demasiado largo."
 	"webhook.outcome.command_service_unavailable"	"No se envió ningún castigo porque el servicio de comandos del servidor no está disponible."
+	"webhook.outcome.network_unstable"	"No se envió ningún castigo porque la conexión del jugador superó los límites de red seguros."
 	"webhook.outcome.unavailable"	"No había ningún resultado de castigo disponible."
 	"webhook.unknown_player"	"Jugador desconocido"
 	"webhook.unknown_detection"	"DESCONOCIDO"

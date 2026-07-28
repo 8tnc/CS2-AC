@@ -8,6 +8,7 @@
 	"announcement.outcome.already_punished"	" a trest už bol vykonaný."
 	"announcement.outcome.command_too_long"	", ale príkaz trestu je príliš dlhý."
 	"announcement.outcome.command_service_unavailable"	", ale služba serverových príkazov nie je dostupná."
+	"announcement.outcome.network_unstable"	", ale trest nebol odoslaný, pretože pripojenie bolo nestabilné."
 	"announcement.test"	"Toto je test. Žiadny hráč nebol odhalený ani potrestaný."
 
 	"evidence.aimbot.snap_return"	"Prah bol dosiahnutý po {incidents} prudkých zamiereniach so zásahom; posledné bolo návratom o {snap}°."
@@ -28,6 +29,7 @@
 	"evidence.dll_injection.many"	"Nájdených {count} prihlásení klienta k udalostiam z čiernej listiny: {events}."
 	"evidence.doubletap.one_tick"	"Tri páry zrýchlených výstrelov dosiahli prah; posledný pár delil 1 serverový tick."
 	"evidence.doubletap.zero_ticks"	"Tri páry zrýchlených výstrelov dosiahli prah; posledný pár prebehol v rovnakom serverovom ticku."
+	"evidence.doubletap.network_unstable"	"Boli zistené tri páry rýchlych výstrelov; posledný delilo {ticks} serverových tickov. Kontrola siete: ping {ping} ms, jitter {jitter} ms, prichádzajúca/odchádzajúca strata {incoming_loss}/{outgoing_loss} %, prichádzajúci/odchádzajúci choke {incoming_choke}/{outgoing_choke} %, {gaps} medzier v príkazoch a {unavailable} nedostupných vzoriek."
 	"evidence.namechanger"	"Viditeľné meno sa počas jednej minúty zmenilo {changes}-krát."
 
 	"evidence.autostrafe.optimizer"	"Zistený optimalizátor strafe."
@@ -65,6 +67,7 @@
 	"webhook.outcome.already_punished"	"Hráč už bol potrestaný, preto nebol odoslaný duplicitný príkaz."
 	"webhook.outcome.command_too_long"	"Trest nebol odoslaný, pretože nastavený príkaz je príliš dlhý."
 	"webhook.outcome.command_service_unavailable"	"Trest nebol odoslaný, pretože služba serverových príkazov nie je dostupná."
+	"webhook.outcome.network_unstable"	"Trest nebol odoslaný, pretože pripojenie hráča prekročilo bezpečné sieťové limity."
 	"webhook.outcome.unavailable"	"Výsledok trestu nebol dostupný."
 	"webhook.unknown_player"	"Neznámy hráč"
 	"webhook.unknown_detection"	"NEZNÁME"

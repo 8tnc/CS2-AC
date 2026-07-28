@@ -8,6 +8,7 @@
 	"announcement.outcome.already_punished"	", והעונש כבר הופעל."
 	"announcement.outcome.command_too_long"	", אבל פקודת הענישה ארוכה מדי."
 	"announcement.outcome.command_service_unavailable"	", אבל שירות פקודות השרת אינו זמין."
+	"announcement.outcome.network_unstable"	", אבל לא נשלח עונש משום שהחיבור שלו היה לא יציב."
 	"announcement.test"	"זוהי בדיקה. אף שחקן לא זוהה או נענש."
 
 	"evidence.aimbot.snap_return"	"הסף הושג לאחר {incidents} תנועות כוונת חדות עם פגיעה; האחרונה הייתה חזרה של {snap}°."
@@ -28,6 +29,7 @@
 	"evidence.dll_injection.many"	"נמצאו {count} מנויי לקוח לאירועים ברשימה השחורה: {events}."
 	"evidence.doubletap.one_tick"	"שלושה זוגות ירי מואץ הגיעו לסף; בין הזוג האחרון היה tick שרת אחד."
 	"evidence.doubletap.zero_ticks"	"שלושה זוגות ירי מואץ הגיעו לסף; הזוג האחרון התרחש באותו tick שרת."
+	"evidence.doubletap.network_unstable"	"זוהו שלושה זוגות ירי מהיר; הזוג האחרון היה בהפרש של {ticks} טיקים של השרת. בדיקת רשת: ping של {ping} ms, jitter של {jitter} ms, אובדן נכנס/יוצא {incoming_loss}/{outgoing_loss}%, choke נכנס/יוצא {incoming_choke}/{outgoing_choke}%, ‏{gaps} פערי פקודות ו-{unavailable} דגימות לא זמינות."
 	"evidence.namechanger"	"השם הגלוי השתנה {changes} פעמים בתוך דקה."
 
 	"evidence.autostrafe.optimizer"	"זוהה מייעל strafe."
@@ -65,6 +67,7 @@
 	"webhook.outcome.already_punished"	"השחקן כבר נענש, לכן לא נשלחה פקודה כפולה."
 	"webhook.outcome.command_too_long"	"לא נשלח עונש משום שהפקודה שהוגדרה ארוכה מדי."
 	"webhook.outcome.command_service_unavailable"	"לא נשלח עונש משום ששירות פקודות השרת אינו זמין."
+	"webhook.outcome.network_unstable"	"לא נשלח עונש משום שחיבור השחקן חרג מגבולות הרשת הבטוחים."
 	"webhook.outcome.unavailable"	"לא הייתה תוצאת ענישה זמינה."
 	"webhook.unknown_player"	"שחקן לא ידוע"
 	"webhook.unknown_detection"	"לא ידוע"

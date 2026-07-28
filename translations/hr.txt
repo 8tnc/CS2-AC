@@ -8,6 +8,7 @@
 	"announcement.outcome.already_punished"	", a kazna je već izvršena."
 	"announcement.outcome.command_too_long"	", ali je naredba za kaznu preduga."
 	"announcement.outcome.command_service_unavailable"	", ali servis poslužiteljskih naredbi nije dostupan."
+	"announcement.outcome.network_unstable"	", ali kazna nije poslana jer je veza bila nestabilna."
 	"announcement.test"	"Ovo je test. Nijedan igrač nije otkriven niti kažnjen."
 
 	"evidence.aimbot.snap_return"	"Prag je dostignut nakon {incidents} naglih nišanjenja s pogotkom; posljednje je bilo vraćanje od {snap}°."
@@ -28,6 +29,7 @@
 	"evidence.dll_injection.many"	"Pronađeno je {count} pretplata klijenta na događaje s crne liste: {events}."
 	"evidence.doubletap.one_tick"	"Tri para ubrzanih hitaca dosegla su prag; posljednji par bio je udaljen 1 poslužiteljski tick."
 	"evidence.doubletap.zero_ticks"	"Tri para ubrzanih hitaca dosegla su prag; posljednji par dogodio se u istom poslužiteljskom ticku."
+	"evidence.doubletap.network_unstable"	"Otkrivena su tri para brzih hitaca; posljednji je bio udaljen {ticks} poslužiteljskih tickova. Provjera mreže: ping {ping} ms, jitter {jitter} ms, dolazni/odlazni gubitak {incoming_loss}/{outgoing_loss}%, dolazni/odlazni choke {incoming_choke}/{outgoing_choke}%, {gaps} praznina u naredbama i {unavailable} nedostupnih uzoraka."
 	"evidence.namechanger"	"Vidljivo ime promijenilo se {changes} puta u jednoj minuti."
 
 	"evidence.autostrafe.optimizer"	"Otkriven je strafe optimizator."
@@ -65,6 +67,7 @@
 	"webhook.outcome.already_punished"	"Igrač je već kažnjen, pa dvostruka naredba nije poslana."
 	"webhook.outcome.command_too_long"	"Kazna nije poslana jer je postavljena naredba preduga."
 	"webhook.outcome.command_service_unavailable"	"Kazna nije poslana jer servis poslužiteljskih naredbi nije dostupan."
+	"webhook.outcome.network_unstable"	"Kazna nije poslana jer je veza igrača prešla sigurne mrežne granice."
 	"webhook.outcome.unavailable"	"Ishod kazne nije bio dostupan."
 	"webhook.unknown_player"	"Nepoznat igrač"
 	"webhook.unknown_detection"	"NEPOZNATO"

@@ -8,6 +8,7 @@
 	"announcement.outcome.already_punished"	"，且處罰先前已執行。"
 	"announcement.outcome.command_too_long"	"，但處罰指令過長。"
 	"announcement.outcome.command_service_unavailable"	"，但伺服器指令服務無法使用。"
+	"announcement.outcome.network_unstable"	"，但由於網路連線不穩定，未執行處罰。"
 	"announcement.test"	"這是一則測試訊息。沒有玩家被偵測或處罰。"
 
 	"evidence.aimbot.snap_return"	"{incidents} 次急轉命中達到門檻；最近一次為 {snap}° 的急轉回正。"
@@ -28,6 +29,7 @@
 	"evidence.dll_injection.many"	"發現 {count} 個列入黑名單的用戶端事件訂閱：{events}。"
 	"evidence.doubletap.one_tick"	"三組異常快速射擊達到門檻；最近一組間隔 1 個伺服器 tick。"
 	"evidence.doubletap.zero_ticks"	"三組異常快速射擊達到門檻；最近一組發生在同一伺服器 tick。"
+	"evidence.doubletap.network_unstable"	"偵測到三組快速射擊；最近一組相隔 {ticks} 個伺服器 tick。網路檢查：ping {ping} ms、jitter {jitter} ms、上行/下行封包遺失 {incoming_loss}/{outgoing_loss}%、上行/下行 choke {incoming_choke}/{outgoing_choke}%、{gaps} 個指令中斷、{unavailable} 個無法使用的樣本。"
 	"evidence.namechanger"	"一分鐘內可見名稱變更了 {changes} 次。"
 
 	"evidence.autostrafe.optimizer"	"偵測到空中加速最佳化。"
@@ -65,6 +67,7 @@
 	"webhook.outcome.already_punished"	"該玩家先前已被處罰，因此未重複送出指令。"
 	"webhook.outcome.command_too_long"	"設定的指令過長，因此未送出處罰。"
 	"webhook.outcome.command_service_unavailable"	"伺服器指令服務無法使用，因此未送出處罰。"
+	"webhook.outcome.network_unstable"	"玩家的連線超過安全網路限制，因此未執行處罰。"
 	"webhook.outcome.unavailable"	"沒有可用的處罰結果。"
 	"webhook.unknown_player"	"未知玩家"
 	"webhook.unknown_detection"	"未知"

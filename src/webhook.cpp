@@ -111,6 +111,9 @@ namespace
 			case utils::DetectionOutcome::CommandServiceUnavailable:
 				return localization::Get("webhook.outcome.command_service_unavailable",
 										 "No punishment was sent because the server command service is unavailable.");
+			case utils::DetectionOutcome::NetworkUnstable:
+				return localization::Get("webhook.outcome.network_unstable",
+										 "No punishment was sent because the player's connection exceeded the safe network limits.");
 		}
 		return localization::Get("webhook.outcome.unavailable", "No punishment outcome was available.");
 	}

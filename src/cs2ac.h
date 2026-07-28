@@ -64,7 +64,8 @@ public:
 	void OnSetupMove(MovementPlayer *player, PlayerCommand *command);
 	void OnGameFrame(bool simulating);
 	void OnGameEvent(IGameEvent *event, MovementPlayer *player);
-	void HandleDetection(const char *detection, MovementPlayer *player, const localization::Text &evidence, bool kickOnly = false);
+	void HandleDetection(const char *detection, MovementPlayer *player, const localization::Text &evidence, bool kickOnly = false,
+						 bool networkVetoed = false);
 	void OnClientFullyConnect(CPlayerSlot slot);
 	void OnClientSettingsChanged(CPlayerSlot slot);
 	void OnClientDisconnect(CPlayerSlot slot);
