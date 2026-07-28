@@ -3,6 +3,7 @@
 #include "detection/detection_system.h"
 #include "clientcvar/client_cvar_value.h"
 #include "common.h"
+#include "localization.h"
 #include "version_gen.h"
 
 class WebhookService;
@@ -63,7 +64,7 @@ public:
 	void OnSetupMove(MovementPlayer *player, PlayerCommand *command);
 	void OnGameFrame(bool simulating);
 	void OnGameEvent(IGameEvent *event, MovementPlayer *player);
-	void HandleDetection(const char *detection, MovementPlayer *player, std::string_view evidence = {}, bool kickOnly = false);
+	void HandleDetection(const char *detection, MovementPlayer *player, const localization::Text &evidence, bool kickOnly = false);
 	void OnClientFullyConnect(CPlayerSlot slot);
 	void OnClientSettingsChanged(CPlayerSlot slot);
 	void OnClientDisconnect(CPlayerSlot slot);

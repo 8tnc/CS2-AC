@@ -125,9 +125,14 @@ namespace detection
 		{
 			if (announce)
 			{
-				announce("SILENTAIM", player,
-						 tfm::format("%.2f degrees from visible aim added %d points; the rolling score reached %d/%d.", shot.silentMaxDeviation,
-									 points, total, detectionScore));
+				announce(
+					"SILENTAIM", player,
+					localization::Format("evidence.silentaim",
+										 "{deviation} degrees from visible aim added {points} points; the rolling score reached {score}/{threshold}.",
+										 {{"deviation", tfm::format("%.2f", shot.silentMaxDeviation)},
+										  {"points", tfm::format("%d", points)},
+										  {"score", tfm::format("%d", total)},
+										  {"threshold", tfm::format("%d", detectionScore)}}));
 			}
 			incidents.clear();
 		}

@@ -82,8 +82,9 @@ namespace detection
 		if (announce)
 		{
 			announce("DOUBLETAP", player,
-					 tfm::format("Three rapid-fire pairs reached the threshold; the latest pair was %d server tick%s apart.", static_cast<int>(delta),
-								 delta == 1 ? "" : "s"));
+					 localization::Format(delta == 1 ? "evidence.doubletap.one_tick" : "evidence.doubletap.zero_ticks",
+										  delta == 1 ? "Three rapid-fire pairs reached the threshold; the latest pair was 1 server tick apart."
+													 : "Three rapid-fire pairs reached the threshold; the latest pair was 0 server ticks apart."));
 		}
 	}
 

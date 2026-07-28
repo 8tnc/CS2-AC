@@ -187,9 +187,14 @@ namespace detection
 		}
 		if (announce)
 		{
-			announce("IRREGULAR BEHAVIOR", player,
-					 tfm::format("%d points from %d successful difficult shots out of %d attempts (%.1f%% success).", score, successes, attempts,
-								 attempts ? successes * 100.0 / attempts : 0.0));
+			announce(
+				"IRREGULAR BEHAVIOR", player,
+				localization::Format("evidence.irregular_behavior",
+									 "{score} points from {successes} successful difficult shots out of {attempts} attempts ({accuracy}% success).",
+									 {{"score", tfm::format("%d", score)},
+									  {"successes", tfm::format("%d", successes)},
+									  {"attempts", tfm::format("%d", attempts)},
+									  {"accuracy", tfm::format("%.1f", attempts ? successes * 100.0 / attempts : 0.0)}}));
 		}
 		data.evidence.clear();
 		data.pending.clear();

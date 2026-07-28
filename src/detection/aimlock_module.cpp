@@ -528,11 +528,17 @@ namespace detection
 		{
 			if (announce)
 			{
-				announce("AIMLOCK", player,
-						 tfm::format("%zu precise tracking episodes reached the threshold; the latest stayed on target for %d/%d samples "
-									 "while the target moved %.1f degrees against a %.1f-degree requirement.",
-									 incidents.size(), hypothesis.onTargetSamples, data.track.samples, hypothesis.maximumTargetDisplacement,
-									 hypothesis.requiredTargetDisplacement));
+				announce(
+					"AIMLOCK", player,
+					localization::Format(
+						"evidence.aimlock",
+						"{incidents} precise tracking episodes reached the threshold; the latest stayed on target for {precise}/{samples} samples "
+						"while the target moved {movement} degrees against a {required}-degree requirement.",
+						{{"incidents", tfm::format("%zu", incidents.size())},
+						 {"precise", tfm::format("%d", hypothesis.onTargetSamples)},
+						 {"samples", tfm::format("%d", data.track.samples)},
+						 {"movement", tfm::format("%.1f", hypothesis.maximumTargetDisplacement)},
+						 {"required", tfm::format("%.1f", hypothesis.requiredTargetDisplacement)}}));
 			}
 			incidents.clear();
 			data.latched = true;

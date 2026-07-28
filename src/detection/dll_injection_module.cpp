@@ -244,9 +244,11 @@ namespace detection
 					break;
 				}
 			}
-			announce(
-				"DLL INJECTION", player,
-				tfm::format("%zu blacklisted client event subscription%s found: %s.", current.count(), current.count() == 1 ? "" : "s", matches));
+			announce("DLL INJECTION", player,
+					 localization::Format(current.count() == 1 ? "evidence.dll_injection.one" : "evidence.dll_injection.many",
+										  current.count() == 1 ? "{count} blacklisted client event subscription found: {events}."
+															   : "{count} blacklisted client event subscriptions found: {events}.",
+										  {{"count", tfm::format("%zu", current.count())}, {"events", matches}}));
 		}
 	}
 

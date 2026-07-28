@@ -27,6 +27,8 @@ jobs:
               ':(exclude)src/vendor/**'
           )
           clang-format --dry-run --Werror --style=file -- "${files[@]}"
+      - name: Check translations
+        run: python3 check-translations.py
 
   windows:
     needs: source

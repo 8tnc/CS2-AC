@@ -179,6 +179,7 @@ The included [`cs2ac.cfg`](cfg/cs2ac.cfg) explains every option in plain languag
 | `cs2ac_*_enabled` | `1` | Enable or disable one detection module. |
 | `cs2ac_chat_announcements` | `1` | Show detections in public chat. |
 | `cs2ac_center_announcements` | `1` | Show the five-second center alert. |
+| `cs2ac_language` | `en` | Language used for public messages and Discord reports. |
 | `cs2ac_punishment_command` | `css_addban ...` | Command used for permanent bans. |
 | `cs2ac_kick_command` | `css_kick ...` | Command used for kick-only detections. |
 | `cs2ac_webhook_url` | empty | Discord webhook that receives detection reports. |
@@ -198,6 +199,10 @@ Whitelist one account or a comma-separated list:
 ```cfg
 cs2ac_whitelist "76561198000000001,76561198000000002"
 ```
+
+Set `cs2ac_language` to one of the bundled language codes, then run `cs2ac_reload`:
+
+`ar`, `bg`, `cs`, `da`, `de`, `el`, `en`, `es-419`, `es-es`, `et`, `fi`, `fr`, `he`, `hr`, `hu`, `id`, `it`, `ja`, `ko`, `lt`, `lv`, `nl`, `no`, `pl`, `pt-br`, `pt-pt`, `ro`, `ru`, `sk`, `sr`, `sv`, `th`, `tr`, `uk`, `vi`, `zh-cn`, `zh-tw`.
 
 ### Discord in four steps
 

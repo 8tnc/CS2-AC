@@ -1,5 +1,6 @@
 #include "cs2ac.h"
 
+#include "localization.h"
 #include "movement_analysis/detection/movement_detection.h"
 #include "movement_analysis/player_context.h"
 #include "movement_analysis/settings/movement_settings.h"
@@ -33,7 +34,7 @@ namespace
 	};
 	static_assert(CS2AC_ARRAYSIZE(detectionNames) == static_cast<size_t>(DetectionType::Count));
 
-	void HandleDetectionCallback(const char *detection, MovementPlayer *player, std::string_view evidence)
+	void HandleDetectionCallback(const char *detection, MovementPlayer *player, const localization::Text &evidence)
 	{
 		g_CS2AC.HandleDetection(detection, player, evidence);
 	}
@@ -593,7 +594,7 @@ void CS2ACPlugin::OnGameEvent(IGameEvent *event, MovementPlayer *player)
 	detectionSystem.OnGameEvent(event, player, globals ? globals->tickcount : 0);
 }
 
-void CS2ACPlugin::HandleDetection(const char *detection, MovementPlayer *player, std::string_view evidence, bool kickOnly)
+void CS2ACPlugin::HandleDetection(const char *detection, MovementPlayer *player, const localization::Text &evidence, bool kickOnly)
 {
 	if (!detection || !*detection || !player || player->index < 1 || player->index > MAXPLAYERS)
 	{
@@ -607,7 +608,7 @@ void CS2ACPlugin::HandleDetection(const char *detection, MovementPlayer *player,
 		utils::AnnounceDetection(detection, player->GetName(), outcome);
 		if (webhook)
 		{
-			webhook->Report(detection, player, evidence, outcome);
+			webhook->Report(detection, player, evidence.localized, outcome);
 		}
 	};
 	if (steamId)
@@ -757,6 +758,7 @@ void CS2ACPlugin::OnConfigLoaded()
 	configLoadFailed = false;
 	lastConfigLoad = std::chrono::steady_clock::now();
 	settings::MarkConfigReloaded();
+	localization::Reload(settings::GetLanguage());
 	if (webhook)
 	{
 		webhook->Reload();
@@ -978,6 +980,7 @@ void CS2ACPlugin::CleanupRuntime()
 		MovementDetectionService::CleanupSvCheatsWatcher();
 		svCheatsWatcherInstalled = false;
 	}
+	localization::Shutdown();
 	settings::Shutdown();
 	if (convarsRegistered)
 	{

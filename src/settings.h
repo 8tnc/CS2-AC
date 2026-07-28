@@ -46,6 +46,7 @@ namespace settings
 	const char *GetWebhookRoleId();
 	const char *GetWebhookServerAddress();
 	const char *GetWebhookLogoUrl();
+	const char *GetLanguage();
 	void MarkConfigReloaded();
 	void ExecuteConfig();
 } // namespace settings

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common.h"
+#include "localization.h"
 #include "sdk/datatypes.h"
 
 #include <array>
@@ -17,7 +18,7 @@ class PlayerCommand;
 namespace detection
 {
 	using Clock = std::chrono::steady_clock;
-	using AnnounceCallback = void (*)(const char *detection, MovementPlayer *player, std::string_view evidence);
+	using AnnounceCallback = void (*)(const char *detection, MovementPlayer *player, const localization::Text &evidence);
 
 	bool IsBallisticWeapon(std::string_view weapon);
 	bool IsEligibleHuman(MovementPlayer *player);
@@ -347,7 +348,8 @@ namespace detection
 		void OnClientDisconnect(MovementPlayer *player);
 
 	private:
-		void AddEvidence(MovementPlayer *player, AntiAimPlayerData &data, float weight, const char *reason, bool continuous, bool mismatch = false);
+		void AddEvidence(MovementPlayer *player, AntiAimPlayerData &data, float weight, const char *reasonKey, const char *reason, bool continuous,
+						 bool mismatch = false);
 		void ApplyDecay(MovementPlayer *player, AntiAimPlayerData &data);
 		void EvaluateMotion(MovementPlayer *player, AntiAimPlayerData &data, AntiAimCommand &command);
 		void EvaluatePendingShot(MovementPlayer *player, AntiAimPlayerData &data, int currentTick);
