@@ -246,6 +246,7 @@ static bool detectionHtmlTimerRunning;
 static bool detectionHtmlIsDetection;
 static bool detectionHtmlAlwaysVisible;
 static int detectionHtmlBroadcasts;
+static int detectionHtmlDuration = 5;
 static constexpr int maximumDetectionHtmlBroadcasts = 51;
 
 static void SendDetectionHtml(const char *message, int duration)
@@ -305,13 +306,13 @@ static f64 ResendDetectionHtml()
 	}
 	if (detectionHtmlBroadcasts < maximumDetectionHtmlBroadcasts)
 	{
-		SendDetectionHtml(detectionHtml.c_str(), 5);
+		SendDetectionHtml(detectionHtml.c_str(), detectionHtmlDuration);
 		++detectionHtmlBroadcasts;
 	}
 	return 0.1;
 }
 
-static void ShowCenterMessage(std::string message, bool isDetection = false, bool alwaysVisible = false)
+static void ShowCenterMessage(std::string message, bool isDetection = false, bool alwaysVisible = false, int duration = 5)
 {
 	const auto now = std::chrono::steady_clock::now();
 	if (!isDetection && detectionHtmlIsDetection && now < detectionHtmlExpires)
@@ -319,10 +320,11 @@ static void ShowCenterMessage(std::string message, bool isDetection = false, boo
 		return;
 	}
 	detectionHtml = std::move(message);
-	detectionHtmlExpires = now + std::chrono::seconds(5);
+	detectionHtmlExpires = now + std::chrono::seconds(duration);
 	detectionHtmlIsDetection = isDetection;
 	detectionHtmlAlwaysVisible = alwaysVisible;
-	SendDetectionHtml(detectionHtml.c_str(), 5);
+	detectionHtmlDuration = duration;
+	SendDetectionHtml(detectionHtml.c_str(), detectionHtmlDuration);
 	detectionHtmlBroadcasts = 1;
 	if (!detectionHtmlTimerRunning)
 	{
@@ -443,7 +445,7 @@ void utils::AnnounceWatermark()
 	std::string centerBody = EscapeHtml(localization::Watermark().localized.c_str());
 	ReplaceAll(centerBody, "{author}", "<span color='#B0B0B0'>karola3vax</span>");
 	ShowCenterMessage("<span class='fontSize-l'><span color='#FF0000'>[CS2AC]</span> <span color='#FFFFFF'>" + centerBody + "</span></span>", false,
-					  true);
+					  true, 3);
 }
 
 void utils::ResetDetectionAnnouncement()
