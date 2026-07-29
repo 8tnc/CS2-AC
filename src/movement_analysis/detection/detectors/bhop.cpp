@@ -43,9 +43,9 @@ CConVar<bool> cs2ac_hyperscroll_debug("cs2ac_hyperscroll_debug", FCVAR_NONE,
 #define WINDOW_SIZE              30                                             // Number of recent jumps to consider for bhop hack detection
 // Number of consecutive perfect bhops in the window to trigger a bhop hack infraction, regardless of ratio
 #define NUM_CONSECUTIVE_PERFS_FOR_INFRACTION 12
-// Number of consecutive perfs in the window to trigger a pattern check for bhop hack detection, regardless of ratio.
-#define NUM_CONSECUTIVE_PERFS_FOR_PATTERN_CHECK 8
-#define PERF_RATIO_FOR_HYPERSCROLL_INFRACTION   0.6f
+// Perfect jumps add one and failed jumps remove one before repetitive input patterns can trigger an infraction.
+#define PERF_SCORE_FOR_PATTERN_CHECK          8
+#define PERF_RATIO_FOR_HYPERSCROLL_INFRACTION 0.6f
 
 #define REPETITIVE_PATTERN_THRESHOLD 0.9f // If 90% of the perfs are the same pattern, it might be a cheat...
 #define LOW_PATTERN_THRESHOLD        4    // ...if the most common pattern is smaller than 4.
@@ -257,6 +257,8 @@ void MovementDetectionService::CheckLandingEvents()
 		u32 totalChainEligibleEvents = 0;
 		u32 maxPerfChain = 0;
 		u32 currentPerfChain = 0;
+		u32 maxPatternPerfScore = 0;
+		u32 currentPatternPerfScore = 0;
 		std::unordered_map<u32, u32> patterns;
 		u32 mostCommonPattern = 0;
 		u32 mostCommonPatternCount = 0;
@@ -292,16 +294,19 @@ void MovementDetectionService::CheckLandingEvents()
 				numPerfs++;
 				currentPerfChain++;
 				maxPerfChain = Max(maxPerfChain, currentPerfChain);
+				currentPatternPerfScore++;
+				maxPatternPerfScore = Max(maxPatternPerfScore, currentPatternPerfScore);
 			}
 			else
 			{
 				currentPerfChain = 0;
+				currentPatternPerfScore = currentPatternPerfScore > 0 ? currentPatternPerfScore - 1 : 0;
 			}
 		}
 		f32 averagePattern = totalPatternOccurrences > 0 ? (f32)weightedPatternSum / (f32)totalPatternOccurrences : 0.0f;
-		BHOP_DEBUG("%s evaluation: %zu landings, %u eligible, %u perfect, longest perfect chain %u, %u completed patterns, "
+		BHOP_DEBUG("%s evaluation: %zu landings, %u eligible, %u perfect, longest perfect chain %u, best pattern score %u, %u completed patterns, "
 				   "dominant pattern %u repeated %u times.\n",
-				   this->player->GetName(), this->recentLandingEvents.size(), totalChainEligibleEvents, numPerfs, maxPerfChain,
+				   this->player->GetName(), this->recentLandingEvents.size(), totalChainEligibleEvents, numPerfs, maxPerfChain, maxPatternPerfScore,
 				   totalPatternOccurrences, mostCommonPattern, mostCommonPatternCount);
 
 		// Hard consecutive perf chain check.
@@ -317,10 +322,10 @@ void MovementDetectionService::CheckLandingEvents()
 			return;
 		}
 
-		// Pattern-based bhop infraction after medium chain threshold.
-		if (maxPerfChain >= NUM_CONSECUTIVE_PERFS_FOR_PATTERN_CHECK)
+		// Pattern-based bhop infraction after a decaying perfect-jump score.
+		if (maxPatternPerfScore >= PERF_SCORE_FOR_PATTERN_CHECK)
 		{
-			if (totalPatternOccurrences >= NUM_CONSECUTIVE_PERFS_FOR_PATTERN_CHECK
+			if (totalPatternOccurrences >= PERF_SCORE_FOR_PATTERN_CHECK
 				&& mostCommonPatternCount >= totalPatternOccurrences * REPETITIVE_PATTERN_THRESHOLD && mostCommonPattern < LOW_PATTERN_THRESHOLD
 				&& settings::IsDetectionEnabled(DetectionType::Bhop))
 			{
