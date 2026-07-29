@@ -117,8 +117,8 @@ namespace detection
 		const int points = (excess > blatantExcess ? 3
 							: shot.airborne        ? 3
 												   : 2)
-						   + static_cast<int>(shot.headshot) + 2 * static_cast<int>(shot.wallbang)
-						   + 2 * static_cast<int>(shot.throughSmoke) + static_cast<int>(noscope);
+						   + static_cast<int>(shot.headshot) + 2 * static_cast<int>(shot.wallbang) + 2 * static_cast<int>(shot.throughSmoke)
+						   + static_cast<int>(noscope);
 		const auto now = Clock::now();
 		auto &incidents = evidence[player->index];
 		while (!incidents.empty() && now - incidents.front().time >= evidenceWindow)
