@@ -29,7 +29,8 @@
 	"evidence.dll_injection.many"	"Trovate {count} sottoscrizioni del client a eventi nella blacklist: {events}."
 	"evidence.doubletap.one_tick"	"Tre coppie di colpi accelerati hanno raggiunto la soglia; l'ultima coppia era separata da 1 tick del server."
 	"evidence.doubletap.zero_ticks"	"Tre coppie di colpi accelerati hanno raggiunto la soglia; l'ultima coppia è avvenuta nello stesso tick del server."
-	"evidence.doubletap.network_unstable"	"Sono state rilevate tre coppie di colpi rapidi; l'ultima era separata da {ticks} tick del server. Controllo rete: ping {ping} ms, jitter {jitter} ms, perdita in entrata/uscita {incoming_loss}/{outgoing_loss}%, choke in entrata/uscita {incoming_choke}/{outgoing_choke}%, {gaps} salti nei comandi e {unavailable} campioni non disponibili."
+	"evidence.doubletap.network_unstable"	"Sono state rilevate tre coppie di colpi rapidi; l'ultima era separata da {ticks} tick del server."
+	"evidence.network_check"	"Controllo rete: ping {ping} ms, jitter {jitter} ms, perdita in entrata/uscita {incoming_loss}/{outgoing_loss}%, choke in entrata/uscita {incoming_choke}/{outgoing_choke}%, {gaps} salti nei comandi e {unavailable} campioni non disponibili."
 	"evidence.namechanger"	"Il nome visibile è cambiato {changes} volte in un minuto."
 
 	"evidence.autostrafe.optimizer"	"Rilevato un ottimizzatore di strafe."

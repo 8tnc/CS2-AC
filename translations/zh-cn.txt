@@ -29,7 +29,8 @@
 	"evidence.dll_injection.many"	"发现 {count} 个被列入黑名单的客户端事件订阅：{events}。"
 	"evidence.doubletap.one_tick"	"三组异常快速射击达到阈值；最近一组间隔 1 个服务器 tick。"
 	"evidence.doubletap.zero_ticks"	"三组异常快速射击达到阈值；最近一组发生在同一服务器 tick。"
-	"evidence.doubletap.network_unstable"	"检测到三组快速射击；最近一组相隔 {ticks} 个服务器 tick。网络检查：ping {ping} ms、jitter {jitter} ms、上行/下行丢包 {incoming_loss}/{outgoing_loss}%、上行/下行 choke {incoming_choke}/{outgoing_choke}%、{gaps} 个指令间断、{unavailable} 个不可用样本。"
+	"evidence.doubletap.network_unstable"	"检测到三组快速射击；最近一组相隔 {ticks} 个服务器 tick。"
+	"evidence.network_check"	"网络检查：ping {ping} ms、jitter {jitter} ms、上行/下行丢包 {incoming_loss}/{outgoing_loss}%、上行/下行 choke {incoming_choke}/{outgoing_choke}%、{gaps} 个指令间断、{unavailable} 个不可用样本。"
 	"evidence.namechanger"	"一分钟内可见名称更改了 {changes} 次。"
 
 	"evidence.autostrafe.optimizer"	"检测到空中加速优化。"

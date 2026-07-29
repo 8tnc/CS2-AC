@@ -29,7 +29,8 @@
 	"evidence.dll_injection.many"	"{count} klientabonnementer på svartelistede hendelser funnet: {events}."
 	"evidence.doubletap.one_tick"	"Tre hurtigskytingspar nådde terskelen; det siste paret var 1 servertick fra hverandre."
 	"evidence.doubletap.zero_ticks"	"Tre hurtigskytingspar nådde terskelen; det siste paret skjedde i samme servertick."
-	"evidence.doubletap.network_unstable"	"Tre hurtigskytingspar ble oppdaget; det siste var {ticks} serverticks fra hverandre. Nettverkssjekk: {ping} ms ping, {jitter} ms jitter, {incoming_loss}/{outgoing_loss}% innkommende/utgående tap, {incoming_choke}/{outgoing_choke}% innkommende/utgående choke, {gaps} kommandohull og {unavailable} utilgjengelige målinger."
+	"evidence.doubletap.network_unstable"	"Tre hurtigskytingspar ble oppdaget; det siste var {ticks} serverticks fra hverandre."
+	"evidence.network_check"	"Nettverkssjekk: {ping} ms ping, {jitter} ms jitter, {incoming_loss}/{outgoing_loss}% innkommende/utgående tap, {incoming_choke}/{outgoing_choke}% innkommende/utgående choke, {gaps} kommandohull og {unavailable} utilgjengelige målinger."
 	"evidence.namechanger"	"Det synlige navnet ble endret {changes} ganger på ett minutt."
 
 	"evidence.autostrafe.optimizer"	"Strafe-optimalisering oppdaget."

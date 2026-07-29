@@ -123,22 +123,10 @@ namespace detection
 		{
 			if (announceNetworkVeto)
 			{
-				announceNetworkVeto(
-					"DOUBLETAP", player,
-					localization::Format(
-						"evidence.doubletap.network_unstable",
-						"Three rapid-fire pairs were detected; the latest was {ticks} server ticks apart. Network check: {ping} ms ping, "
-						"{jitter} ms jitter, {incoming_loss}/{outgoing_loss}% incoming/outgoing loss, "
-						"{incoming_choke}/{outgoing_choke}% incoming/outgoing choke, {gaps} command gaps, and {unavailable} unavailable samples.",
-						{{"ticks", tfm::format("%lld", static_cast<long long>(delta))},
-						 {"ping", tfm::format("%.1f", networkEvidence.pingMilliseconds)},
-						 {"jitter", tfm::format("%.1f", networkEvidence.jitterMilliseconds)},
-						 {"incoming_loss", tfm::format("%.1f", networkEvidence.incomingLoss * 100.0f)},
-						 {"outgoing_loss", tfm::format("%.1f", networkEvidence.outgoingLoss * 100.0f)},
-						 {"incoming_choke", tfm::format("%.1f", networkEvidence.incomingChoke * 100.0f)},
-						 {"outgoing_choke", tfm::format("%.1f", networkEvidence.outgoingChoke * 100.0f)},
-						 {"gaps", tfm::format("%d", networkEvidence.commandGaps)},
-						 {"unavailable", tfm::format("%d", networkEvidence.unavailableSamples)}}));
+				const auto details = localization::Format("evidence.doubletap.network_unstable",
+														  "Three rapid-fire pairs were detected; the latest was {ticks} server ticks apart.",
+														  {{"ticks", tfm::format("%lld", static_cast<long long>(delta))}});
+				announceNetworkVeto("DOUBLETAP", player, AddNetworkSafetyDetails(details, networkEvidence));
 			}
 			return;
 		}

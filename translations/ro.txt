@@ -29,7 +29,8 @@
 	"evidence.dll_injection.many"	"Au fost găsite {count} abonamente ale clientului la evenimente din lista neagră: {events}."
 	"evidence.doubletap.one_tick"	"Trei perechi de focuri accelerate au atins pragul; ultima pereche a fost separată de 1 tick al serverului."
 	"evidence.doubletap.zero_ticks"	"Trei perechi de focuri accelerate au atins pragul; ultima pereche a avut loc în același tick al serverului."
-	"evidence.doubletap.network_unstable"	"Au fost detectate trei perechi de focuri rapide; ultima a avut {ticks} tick-uri de server între focuri. Verificare rețea: ping {ping} ms, jitter {jitter} ms, pierdere intrare/ieșire {incoming_loss}/{outgoing_loss}%, choke intrare/ieșire {incoming_choke}/{outgoing_choke}%, {gaps} goluri de comenzi și {unavailable} mostre indisponibile."
+	"evidence.doubletap.network_unstable"	"Au fost detectate trei perechi de focuri rapide; ultima a avut {ticks} tick-uri de server între focuri."
+	"evidence.network_check"	"Verificare rețea: ping {ping} ms, jitter {jitter} ms, pierdere intrare/ieșire {incoming_loss}/{outgoing_loss}%, choke intrare/ieșire {incoming_choke}/{outgoing_choke}%, {gaps} goluri de comenzi și {unavailable} mostre indisponibile."
 	"evidence.namechanger"	"Numele vizibil s-a schimbat de {changes} ori într-un minut."
 
 	"evidence.autostrafe.optimizer"	"Optimizator de strafe detectat."

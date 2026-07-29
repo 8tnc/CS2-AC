@@ -29,7 +29,8 @@
 	"evidence.dll_injection.many"	"נמצאו {count} מנויי לקוח לאירועים ברשימה השחורה: {events}."
 	"evidence.doubletap.one_tick"	"שלושה זוגות ירי מואץ הגיעו לסף; בין הזוג האחרון היה tick שרת אחד."
 	"evidence.doubletap.zero_ticks"	"שלושה זוגות ירי מואץ הגיעו לסף; הזוג האחרון התרחש באותו tick שרת."
-	"evidence.doubletap.network_unstable"	"זוהו שלושה זוגות ירי מהיר; הזוג האחרון היה בהפרש של {ticks} טיקים של השרת. בדיקת רשת: ping של {ping} ms, jitter של {jitter} ms, אובדן נכנס/יוצא {incoming_loss}/{outgoing_loss}%, choke נכנס/יוצא {incoming_choke}/{outgoing_choke}%, ‏{gaps} פערי פקודות ו-{unavailable} דגימות לא זמינות."
+	"evidence.doubletap.network_unstable"	"זוהו שלושה זוגות ירי מהיר; הזוג האחרון היה בהפרש של {ticks} טיקים של השרת."
+	"evidence.network_check"	"בדיקת רשת: ping של {ping} ms, jitter של {jitter} ms, אובדן נכנס/יוצא {incoming_loss}/{outgoing_loss}%, choke נכנס/יוצא {incoming_choke}/{outgoing_choke}%, ‏{gaps} פערי פקודות ו-{unavailable} דגימות לא זמינות."
 	"evidence.namechanger"	"השם הגלוי השתנה {changes} פעמים בתוך דקה."
 
 	"evidence.autostrafe.optimizer"	"זוהה מייעל strafe."

@@ -29,7 +29,8 @@
 	"evidence.dll_injection.many"	"{count} clientabonnementen op geblokkeerde evenementen gevonden: {events}."
 	"evidence.doubletap.one_tick"	"Drie snelvuurparen bereikten de drempel; het laatste paar lag 1 servertick uit elkaar."
 	"evidence.doubletap.zero_ticks"	"Drie snelvuurparen bereikten de drempel; het laatste paar vond plaats in dezelfde servertick."
-	"evidence.doubletap.network_unstable"	"Drie snelvuurparen zijn gedetecteerd; het laatste paar lag {ticks} serverticks uit elkaar. Netwerkcontrole: {ping} ms ping, {jitter} ms jitter, {incoming_loss}/{outgoing_loss}% inkomend/uitgaand verlies, {incoming_choke}/{outgoing_choke}% inkomende/uitgaande choke, {gaps} commandogaten en {unavailable} onbeschikbare metingen."
+	"evidence.doubletap.network_unstable"	"Drie snelvuurparen zijn gedetecteerd; het laatste paar lag {ticks} serverticks uit elkaar."
+	"evidence.network_check"	"Netwerkcontrole: {ping} ms ping, {jitter} ms jitter, {incoming_loss}/{outgoing_loss}% inkomend/uitgaand verlies, {incoming_choke}/{outgoing_choke}% inkomende/uitgaande choke, {gaps} commandogaten en {unavailable} onbeschikbare metingen."
 	"evidence.namechanger"	"De zichtbare naam veranderde {changes} keer binnen één minuut."
 
 	"evidence.autostrafe.optimizer"	"Strafe-optimalisatie gedetecteerd."

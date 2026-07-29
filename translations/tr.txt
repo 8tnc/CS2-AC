@@ -29,7 +29,8 @@
 	"evidence.dll_injection.many"	"Yasaklı {count} istemci olay aboneliği bulundu: {events}."
 	"evidence.doubletap.one_tick"	"Üç hızlı ateş çifti eşiğe ulaştı; son çift arasında 1 sunucu ticki vardı."
 	"evidence.doubletap.zero_ticks"	"Üç hızlı ateş çifti eşiğe ulaştı; son çift arasında 0 sunucu ticki vardı."
-	"evidence.doubletap.network_unstable"	"Üç hızlı ateş çifti tespit edildi; son çift arasında {ticks} sunucu ticki vardı. Ağ kontrolü: {ping} ms ping, {jitter} ms jitter, %{incoming_loss}/%{outgoing_loss} gelen/giden kayıp, %{incoming_choke}/%{outgoing_choke} gelen/giden choke, {gaps} komut boşluğu ve {unavailable} kullanılamayan örnek."
+	"evidence.doubletap.network_unstable"	"Üç hızlı ateş çifti tespit edildi; son çift arasında {ticks} sunucu ticki vardı."
+	"evidence.network_check"	"Ağ kontrolü: {ping} ms ping, {jitter} ms jitter, %{incoming_loss}/%{outgoing_loss} gelen/giden kayıp, %{incoming_choke}/%{outgoing_choke} gelen/giden choke, {gaps} komut boşluğu ve {unavailable} kullanılamayan örnek."
 	"evidence.namechanger"	"Bir dakika içinde {changes} görünür isim değişikliği yapıldı."
 
 	"evidence.autostrafe.optimizer"	"Strafe optimizasyonu tespit edildi."

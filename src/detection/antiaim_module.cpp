@@ -170,7 +170,7 @@ namespace detection
 		if (callback)
 		{
 			const std::string localizedReason = localization::Get(reasonKey, reason);
-			localization::Text details {
+			const localization::Text details {
 				tfm::format("%s added %.1f points and reached %.1f/%.0f evidence.", reason, weight, total, detectionThreshold),
 				localization::Format("evidence.antiaim", "{reason} added {points} points and reached {score}/{threshold} evidence.",
 									 {{"reason", localizedReason},
@@ -179,17 +179,7 @@ namespace detection
 									  {"threshold", tfm::format("%.0f", detectionThreshold)}})
 					.localized,
 			};
-			if (networkVetoed)
-			{
-				const std::string networkDetails =
-					tfm::format(" Network check: %.1f ms ping, %.1f ms jitter, %.1f/%.1f%% incoming/outgoing loss, "
-								"%.1f/%.1f%% incoming/outgoing choke, %d command gaps, and %d unavailable samples.",
-								network.pingMilliseconds, network.jitterMilliseconds, network.incomingLoss * 100.0f, network.outgoingLoss * 100.0f,
-								network.incomingChoke * 100.0f, network.outgoingChoke * 100.0f, network.commandGaps, network.unavailableSamples);
-				details.english += networkDetails;
-				details.localized += networkDetails;
-			}
-			callback("ANTIAIM", player, details);
+			callback("ANTIAIM", player, networkVetoed ? AddNetworkSafetyDetails(details, network) : details);
 		}
 		data.score = 0.0f;
 		data.mismatchScore = 0.0f;

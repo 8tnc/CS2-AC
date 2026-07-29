@@ -29,7 +29,8 @@
 	"evidence.dll_injection.many"	"Намерени са {count} абонамента на клиента за събития от черния списък: {events}."
 	"evidence.doubletap.one_tick"	"Три двойки ускорени изстрели достигнаха прага; последната двойка беше разделена от 1 сървърен tick."
 	"evidence.doubletap.zero_ticks"	"Три двойки ускорени изстрели достигнаха прага; последната двойка беше в един и същ сървърен tick."
-	"evidence.doubletap.network_unstable"	"Бяха засечени три двойки бързи изстрели; последната беше на {ticks} сървърни tick-а разстояние. Мрежова проверка: {ping} ms ping, {jitter} ms jitter, {incoming_loss}/{outgoing_loss}% входяща/изходяща загуба, {incoming_choke}/{outgoing_choke}% входящ/изходящ choke, {gaps} пропуска в командите и {unavailable} недостъпни проби."
+	"evidence.doubletap.network_unstable"	"Бяха засечени три двойки бързи изстрели; последната беше на {ticks} сървърни tick-а разстояние."
+	"evidence.network_check"	"Мрежова проверка: {ping} ms ping, {jitter} ms jitter, {incoming_loss}/{outgoing_loss}% входяща/изходяща загуба, {incoming_choke}/{outgoing_choke}% входящ/изходящ choke, {gaps} пропуска в командите и {unavailable} недостъпни проби."
 	"evidence.namechanger"	"Видимото име се промени {changes} пъти за една минута."
 
 	"evidence.autostrafe.optimizer"	"Засечен е оптимизатор за strafe."

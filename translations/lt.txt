@@ -29,7 +29,8 @@
 	"evidence.dll_injection.many"	"Rastos {count} kliento prenumeratos juodojo sąrašo įvykiams: {events}."
 	"evidence.doubletap.one_tick"	"Trys pagreitintų šūvių poros pasiekė slenkstį; paskutinę porą skyrė 1 serverio tick."
 	"evidence.doubletap.zero_ticks"	"Trys pagreitintų šūvių poros pasiekė slenkstį; paskutinė pora įvyko tame pačiame serverio tick."
-	"evidence.doubletap.network_unstable"	"Aptiktos trys greitų šūvių poros; paskutinę skyrė {ticks} serverio tick. Tinklo patikra: {ping} ms ping, {jitter} ms jitter, gaunamas/siunčiamas praradimas {incoming_loss}/{outgoing_loss}%, gaunamas/siunčiamas choke {incoming_choke}/{outgoing_choke}%, {gaps} komandų tarpų ir {unavailable} nepasiekiamų mėginių."
+	"evidence.doubletap.network_unstable"	"Aptiktos trys greitų šūvių poros; paskutinę skyrė {ticks} serverio tick."
+	"evidence.network_check"	"Tinklo patikra: {ping} ms ping, {jitter} ms jitter, gaunamas/siunčiamas praradimas {incoming_loss}/{outgoing_loss}%, gaunamas/siunčiamas choke {incoming_choke}/{outgoing_choke}%, {gaps} komandų tarpų ir {unavailable} nepasiekiamų mėginių."
 	"evidence.namechanger"	"Matomas vardas per vieną minutę pasikeitė {changes} kartus."
 
 	"evidence.autostrafe.optimizer"	"Aptiktas strafe optimizatorius."

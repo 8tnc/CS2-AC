@@ -29,7 +29,8 @@
 	"evidence.dll_injection.many"	"Ditemukan {count} langganan event klien dalam daftar hitam: {events}."
 	"evidence.doubletap.one_tick"	"Tiga pasangan tembakan cepat mencapai ambang; pasangan terakhir berjarak 1 tick server."
 	"evidence.doubletap.zero_ticks"	"Tiga pasangan tembakan cepat mencapai ambang; pasangan terakhir terjadi pada tick server yang sama."
-	"evidence.doubletap.network_unstable"	"Tiga pasangan tembakan cepat terdeteksi; pasangan terakhir berjarak {ticks} tick server. Pemeriksaan jaringan: ping {ping} ms, jitter {jitter} ms, loss masuk/keluar {incoming_loss}/{outgoing_loss}%, choke masuk/keluar {incoming_choke}/{outgoing_choke}%, {gaps} celah perintah, dan {unavailable} sampel tidak tersedia."
+	"evidence.doubletap.network_unstable"	"Tiga pasangan tembakan cepat terdeteksi; pasangan terakhir berjarak {ticks} tick server."
+	"evidence.network_check"	"Pemeriksaan jaringan: ping {ping} ms, jitter {jitter} ms, loss masuk/keluar {incoming_loss}/{outgoing_loss}%, choke masuk/keluar {incoming_choke}/{outgoing_choke}%, {gaps} celah perintah, dan {unavailable} sampel tidak tersedia."
 	"evidence.namechanger"	"Nama yang terlihat berubah {changes} kali dalam satu menit."
 
 	"evidence.autostrafe.optimizer"	"Pengoptimal strafe terdeteksi."

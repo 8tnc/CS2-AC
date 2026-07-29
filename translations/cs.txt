@@ -29,7 +29,8 @@
 	"evidence.dll_injection.many"	"Nalezeno {count} přihlášení klienta k událostem z černé listiny: {events}."
 	"evidence.doubletap.one_tick"	"Tři páry zrychlených výstřelů dosáhly prahu; poslední pár dělil 1 serverový tick."
 	"evidence.doubletap.zero_ticks"	"Tři páry zrychlených výstřelů dosáhly prahu; poslední pár proběhl ve stejném serverovém ticku."
-	"evidence.doubletap.network_unstable"	"Byly zjištěny tři páry rychlých výstřelů; poslední dělilo {ticks} serverových ticků. Kontrola sítě: ping {ping} ms, jitter {jitter} ms, příchozí/odchozí ztráta {incoming_loss}/{outgoing_loss} %, příchozí/odchozí choke {incoming_choke}/{outgoing_choke} %, {gaps} mezer v příkazech a {unavailable} nedostupných vzorků."
+	"evidence.doubletap.network_unstable"	"Byly zjištěny tři páry rychlých výstřelů; poslední dělilo {ticks} serverových ticků."
+	"evidence.network_check"	"Kontrola sítě: ping {ping} ms, jitter {jitter} ms, příchozí/odchozí ztráta {incoming_loss}/{outgoing_loss} %, příchozí/odchozí choke {incoming_choke}/{outgoing_choke} %, {gaps} mezer v příkazech a {unavailable} nedostupných vzorků."
 	"evidence.namechanger"	"Viditelné jméno se během jedné minuty změnilo {changes}krát."
 
 	"evidence.autostrafe.optimizer"	"Zjištěn optimalizátor strafe."

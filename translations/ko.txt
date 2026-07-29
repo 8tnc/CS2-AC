@@ -29,7 +29,8 @@
 	"evidence.dll_injection.many"	"블랙리스트에 있는 클라이언트 이벤트 구독 {count}개 발견: {events}."
 	"evidence.doubletap.one_tick"	"빠른 연속 사격 세 쌍이 기준에 도달했습니다. 최근 쌍은 서버 tick 1개 간격이었습니다."
 	"evidence.doubletap.zero_ticks"	"빠른 연속 사격 세 쌍이 기준에 도달했습니다. 최근 쌍은 같은 서버 tick에서 발생했습니다."
-	"evidence.doubletap.network_unstable"	"빠른 연속 사격 세 쌍을 감지했습니다. 최근 쌍의 간격은 서버 {ticks} tick이었습니다. 네트워크 확인: ping {ping} ms, jitter {jitter} ms, 수신/송신 손실 {incoming_loss}/{outgoing_loss}%, 수신/송신 choke {incoming_choke}/{outgoing_choke}%, 명령 누락 {gaps}개, 사용할 수 없는 샘플 {unavailable}개."
+	"evidence.doubletap.network_unstable"	"빠른 연속 사격 세 쌍을 감지했습니다. 최근 쌍의 간격은 서버 {ticks} tick이었습니다."
+	"evidence.network_check"	"네트워크 확인: ping {ping} ms, jitter {jitter} ms, 수신/송신 손실 {incoming_loss}/{outgoing_loss}%, 수신/송신 choke {incoming_choke}/{outgoing_choke}%, 명령 누락 {gaps}개, 사용할 수 없는 샘플 {unavailable}개."
 	"evidence.namechanger"	"1분 안에 표시 이름이 {changes}회 변경되었습니다."
 
 	"evidence.autostrafe.optimizer"	"스트레이프 최적화를 감지했습니다."

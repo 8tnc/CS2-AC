@@ -29,7 +29,8 @@
 	"evidence.dll_injection.many"	"{count} Client-Abonnements für gesperrte Ereignisse gefunden: {events}."
 	"evidence.doubletap.one_tick"	"Drei Schnellfeuer-Paare erreichten den Schwellenwert; das letzte Paar lag 1 Server-Tick auseinander."
 	"evidence.doubletap.zero_ticks"	"Drei Schnellfeuer-Paare erreichten den Schwellenwert; das letzte Paar lag im selben Server-Tick."
-	"evidence.doubletap.network_unstable"	"Drei Schnellfeuer-Paare wurden erkannt; das letzte lag {ticks} Server-Ticks auseinander. Netzwerkprüfung: {ping} ms Ping, {jitter} ms Jitter, {incoming_loss}/{outgoing_loss}% eingehender/ausgehender Verlust, {incoming_choke}/{outgoing_choke}% eingehender/ausgehender Choke, {gaps} Befehlslücken und {unavailable} nicht verfügbare Messwerte."
+	"evidence.doubletap.network_unstable"	"Drei Schnellfeuer-Paare wurden erkannt; das letzte lag {ticks} Server-Ticks auseinander."
+	"evidence.network_check"	"Netzwerkprüfung: {ping} ms Ping, {jitter} ms Jitter, {incoming_loss}/{outgoing_loss}% eingehender/ausgehender Verlust, {incoming_choke}/{outgoing_choke}% eingehender/ausgehender Choke, {gaps} Befehlslücken und {unavailable} nicht verfügbare Messwerte."
 	"evidence.namechanger"	"Der sichtbare Name wurde innerhalb einer Minute {changes}-mal geändert."
 
 	"evidence.autostrafe.optimizer"	"Strafe-Optimierer erkannt."

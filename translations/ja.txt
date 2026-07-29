@@ -29,7 +29,8 @@
 	"evidence.dll_injection.many"	"ブラックリスト対象のクライアントイベント購読を {count} 件検出しました: {events}。"
 	"evidence.doubletap.one_tick"	"高速射撃の組が3件に達しました。直近の2発はサーバーtick 1つ分の間隔でした。"
 	"evidence.doubletap.zero_ticks"	"高速射撃の組が3件に達しました。直近の2発は同じサーバーtick内でした。"
-	"evidence.doubletap.network_unstable"	"高速射撃の組を3件検出しました。直近の2発の間隔は{ticks}サーバーtickでした。ネットワーク確認: ping {ping} ms、jitter {jitter} ms、受信/送信loss {incoming_loss}/{outgoing_loss}% 、受信/送信choke {incoming_choke}/{outgoing_choke}% 、コマンド欠落{gaps}件、取得不能サンプル{unavailable}件。"
+	"evidence.doubletap.network_unstable"	"高速射撃の組を3件検出しました。直近の2発の間隔は{ticks}サーバーtickでした。"
+	"evidence.network_check"	"ネットワーク確認: ping {ping} ms、jitter {jitter} ms、受信/送信loss {incoming_loss}/{outgoing_loss}% 、受信/送信choke {incoming_choke}/{outgoing_choke}% 、コマンド欠落{gaps}件、取得不能サンプル{unavailable}件。"
 	"evidence.namechanger"	"表示名が1分以内に {changes} 回変更されました。"
 
 	"evidence.autostrafe.optimizer"	"ストレイフ最適化を検出しました。"

@@ -29,7 +29,8 @@
 	"evidence.dll_injection.many"	"{count} tiltólistás kliens eseményfeliratkozás található: {events}."
 	"evidence.doubletap.one_tick"	"Három gyorsított lövéspár elérte a küszöböt; a legutóbbi pár között 1 szervertick volt."
 	"evidence.doubletap.zero_ticks"	"Három gyorsított lövéspár elérte a küszöböt; a legutóbbi pár ugyanabban a szervertickben történt."
-	"evidence.doubletap.network_unstable"	"Három gyors lövéspárt észleltünk; a legutóbbi között {ticks} szervertick telt el. Hálózati ellenőrzés: {ping} ms ping, {jitter} ms jitter, {incoming_loss}/{outgoing_loss}% bejövő/kimenő veszteség, {incoming_choke}/{outgoing_choke}% bejövő/kimenő choke, {gaps} parancshézag és {unavailable} nem elérhető minta."
+	"evidence.doubletap.network_unstable"	"Három gyors lövéspárt észleltünk; a legutóbbi között {ticks} szervertick telt el."
+	"evidence.network_check"	"Hálózati ellenőrzés: {ping} ms ping, {jitter} ms jitter, {incoming_loss}/{outgoing_loss}% bejövő/kimenő veszteség, {incoming_choke}/{outgoing_choke}% bejövő/kimenő choke, {gaps} parancshézag és {unavailable} nem elérhető minta."
 	"evidence.namechanger"	"A látható név egy percen belül {changes} alkalommal változott."
 
 	"evidence.autostrafe.optimizer"	"Strafe-optimalizáló észlelve."

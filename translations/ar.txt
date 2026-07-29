@@ -29,7 +29,8 @@
 	"evidence.dll_injection.many"	"تم العثور على {count} اشتراكات للعميل في أحداث ضمن القائمة السوداء: {events}."
 	"evidence.doubletap.one_tick"	"بلغت ثلاثة أزواج من الطلقات المتسارعة الحد؛ وكان بين الزوج الأخير tick خادم واحد."
 	"evidence.doubletap.zero_ticks"	"بلغت ثلاثة أزواج من الطلقات المتسارعة الحد؛ وحدث الزوج الأخير في tick الخادم نفسه."
-	"evidence.doubletap.network_unstable"	"تم اكتشاف ثلاثة أزواج من الطلقات السريعة؛ كان الفاصل في أحدثها {ticks} tick خادم. فحص الشبكة: ping ‏{ping} ms، وjitter ‏{jitter} ms، وفقدان وارد/صادر {incoming_loss}/{outgoing_loss}%، واختناق وارد/صادر {incoming_choke}/{outgoing_choke}%، و{gaps} فجوات أوامر، و{unavailable} عينات غير متاحة."
+	"evidence.doubletap.network_unstable"	"تم اكتشاف ثلاثة أزواج من الطلقات السريعة؛ كان الفاصل في أحدثها {ticks} tick خادم."
+	"evidence.network_check"	"فحص الشبكة: ping ‏{ping} ms، وjitter ‏{jitter} ms، وفقدان وارد/صادر {incoming_loss}/{outgoing_loss}%، واختناق وارد/صادر {incoming_choke}/{outgoing_choke}%، و{gaps} فجوات أوامر، و{unavailable} عينات غير متاحة."
 	"evidence.namechanger"	"تغير الاسم الظاهر {changes} مرات خلال دقيقة واحدة."
 
 	"evidence.autostrafe.optimizer"	"تم اكتشاف محسّن strafe."

@@ -43,6 +43,13 @@ if source_keys != english.keys():
         f"unused={english.keys() - source_keys}"
     )
 
+raw_localized_mutations = re.findall(
+    r"\.localized\s*(?:\+=|=)|\.localized\.(?:append|assign|insert|replace)\s*\(",
+    source,
+)
+if raw_localized_mutations:
+    raise ValueError("localized text must be composed through localization::Text instead of being mutated directly")
+
 watermark_languages = set(re.findall(r'^\s*\{"([^"]+)", "[^"]*\{author\}[^"]*"\},$', source, re.MULTILINE))
 if watermark_languages != languages:
     raise ValueError(

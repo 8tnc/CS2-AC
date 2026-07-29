@@ -29,7 +29,8 @@
 	"evidence.dll_injection.many"	"發現 {count} 個列入黑名單的用戶端事件訂閱：{events}。"
 	"evidence.doubletap.one_tick"	"三組異常快速射擊達到門檻；最近一組間隔 1 個伺服器 tick。"
 	"evidence.doubletap.zero_ticks"	"三組異常快速射擊達到門檻；最近一組發生在同一伺服器 tick。"
-	"evidence.doubletap.network_unstable"	"偵測到三組快速射擊；最近一組相隔 {ticks} 個伺服器 tick。網路檢查：ping {ping} ms、jitter {jitter} ms、上行/下行封包遺失 {incoming_loss}/{outgoing_loss}%、上行/下行 choke {incoming_choke}/{outgoing_choke}%、{gaps} 個指令中斷、{unavailable} 個無法使用的樣本。"
+	"evidence.doubletap.network_unstable"	"偵測到三組快速射擊；最近一組相隔 {ticks} 個伺服器 tick。"
+	"evidence.network_check"	"網路檢查：ping {ping} ms、jitter {jitter} ms、上行/下行封包遺失 {incoming_loss}/{outgoing_loss}%、上行/下行 choke {incoming_choke}/{outgoing_choke}%、{gaps} 個指令中斷、{unavailable} 個無法使用的樣本。"
 	"evidence.namechanger"	"一分鐘內可見名稱變更了 {changes} 次。"
 
 	"evidence.autostrafe.optimizer"	"偵測到空中加速最佳化。"

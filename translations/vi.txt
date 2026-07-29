@@ -29,7 +29,8 @@
 	"evidence.dll_injection.many"	"Phát hiện {count} đăng ký sự kiện phía máy khách nằm trong danh sách đen: {events}."
 	"evidence.doubletap.one_tick"	"Ba cặp bắn nhanh đạt ngưỡng; cặp gần nhất cách nhau 1 tick máy chủ."
 	"evidence.doubletap.zero_ticks"	"Ba cặp bắn nhanh đạt ngưỡng; cặp gần nhất xảy ra trong cùng tick máy chủ."
-	"evidence.doubletap.network_unstable"	"Đã phát hiện ba cặp bắn nhanh; cặp gần nhất cách nhau {ticks} tick máy chủ. Kiểm tra mạng: ping {ping} ms, jitter {jitter} ms, mất gói vào/ra {incoming_loss}/{outgoing_loss}%, choke vào/ra {incoming_choke}/{outgoing_choke}%, {gaps} khoảng trống lệnh và {unavailable} mẫu không khả dụng."
+	"evidence.doubletap.network_unstable"	"Đã phát hiện ba cặp bắn nhanh; cặp gần nhất cách nhau {ticks} tick máy chủ."
+	"evidence.network_check"	"Kiểm tra mạng: ping {ping} ms, jitter {jitter} ms, mất gói vào/ra {incoming_loss}/{outgoing_loss}%, choke vào/ra {incoming_choke}/{outgoing_choke}%, {gaps} khoảng trống lệnh và {unavailable} mẫu không khả dụng."
 	"evidence.namechanger"	"Tên hiển thị đã thay đổi {changes} lần trong một phút."
 
 	"evidence.autostrafe.optimizer"	"Phát hiện tối ưu hóa strafe."

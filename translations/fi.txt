@@ -29,7 +29,8 @@
 	"evidence.dll_injection.many"	"Löytyi {count} asiakkaan tilausta mustalla listalla oleviin tapahtumiin: {events}."
 	"evidence.doubletap.one_tick"	"Kolme nopeutettua laukausparia saavutti rajan; viimeisen parin välissä oli 1 palvelintick."
 	"evidence.doubletap.zero_ticks"	"Kolme nopeutettua laukausparia saavutti rajan; viimeinen pari tapahtui samassa palvelintickissä."
-	"evidence.doubletap.network_unstable"	"Kolme nopeaa laukausparia havaittiin; viimeisen parin väli oli {ticks} palvelintickiä. Verkkotarkistus: ping {ping} ms, jitter {jitter} ms, saapuva/lähtevä hävikki {incoming_loss}/{outgoing_loss} %, saapuva/lähtevä choke {incoming_choke}/{outgoing_choke} %, {gaps} komentokatkoa ja {unavailable} puuttuvaa näytettä."
+	"evidence.doubletap.network_unstable"	"Kolme nopeaa laukausparia havaittiin; viimeisen parin väli oli {ticks} palvelintickiä."
+	"evidence.network_check"	"Verkkotarkistus: ping {ping} ms, jitter {jitter} ms, saapuva/lähtevä hävikki {incoming_loss}/{outgoing_loss} %, saapuva/lähtevä choke {incoming_choke}/{outgoing_choke} %, {gaps} komentokatkoa ja {unavailable} puuttuvaa näytettä."
 	"evidence.namechanger"	"Näkyvä nimi vaihtui {changes} kertaa minuutin aikana."
 
 	"evidence.autostrafe.optimizer"	"Strafe-optimointi havaittu."

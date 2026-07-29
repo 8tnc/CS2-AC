@@ -64,6 +64,23 @@ namespace
 
 namespace detection
 {
+	localization::Text AddNetworkSafetyDetails(localization::Text details, const NetworkSafetyEvidence &evidence)
+	{
+		const auto network = localization::Format(
+			"evidence.network_check",
+			"Network check: {ping} ms ping, {jitter} ms jitter, {incoming_loss}/{outgoing_loss}% incoming/outgoing loss, "
+			"{incoming_choke}/{outgoing_choke}% incoming/outgoing choke, {gaps} command gaps, and {unavailable} unavailable samples.",
+			{{"ping", tfm::format("%.1f", evidence.pingMilliseconds)},
+			 {"jitter", tfm::format("%.1f", evidence.jitterMilliseconds)},
+			 {"incoming_loss", tfm::format("%.1f", evidence.incomingLoss * 100.0f)},
+			 {"outgoing_loss", tfm::format("%.1f", evidence.outgoingLoss * 100.0f)},
+			 {"incoming_choke", tfm::format("%.1f", evidence.incomingChoke * 100.0f)},
+			 {"outgoing_choke", tfm::format("%.1f", evidence.outgoingChoke * 100.0f)},
+			 {"gaps", tfm::format("%d", evidence.commandGaps)},
+			 {"unavailable", tfm::format("%d", evidence.unavailableSamples)}});
+		return {details.english + " " + network.english, details.localized + " " + network.localized};
+	}
+
 	void NetworkSafetyMonitor::Reset()
 	{
 		playerData = {};

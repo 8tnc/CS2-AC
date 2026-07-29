@@ -29,7 +29,8 @@
 	"evidence.dll_injection.many"	"Atrasti {count} klienta abonementi melnā saraksta notikumiem: {events}."
 	"evidence.doubletap.one_tick"	"Trīs paātrinātu šāvienu pāri sasniedza slieksni; pēdējo pāri šķīra 1 servera tick."
 	"evidence.doubletap.zero_ticks"	"Trīs paātrinātu šāvienu pāri sasniedza slieksni; pēdējais pāris notika vienā servera tick."
-	"evidence.doubletap.network_unstable"	"Tika konstatēti trīs ātru šāvienu pāri; pēdējo šķīra {ticks} servera tick. Tīkla pārbaude: {ping} ms ping, {jitter} ms jitter, ienākošais/izejošais zudums {incoming_loss}/{outgoing_loss}%, ienākošais/izejošais choke {incoming_choke}/{outgoing_choke}%, {gaps} komandu pārrāvumi un {unavailable} nepieejami mērījumi."
+	"evidence.doubletap.network_unstable"	"Tika konstatēti trīs ātru šāvienu pāri; pēdējo šķīra {ticks} servera tick."
+	"evidence.network_check"	"Tīkla pārbaude: {ping} ms ping, {jitter} ms jitter, ienākošais/izejošais zudums {incoming_loss}/{outgoing_loss}%, ienākošais/izejošais choke {incoming_choke}/{outgoing_choke}%, {gaps} komandu pārrāvumi un {unavailable} nepieejami mērījumi."
 	"evidence.namechanger"	"Redzamais vārds vienas minūtes laikā mainījās {changes} reizes."
 
 	"evidence.autostrafe.optimizer"	"Konstatēts strafe optimizētājs."

@@ -29,7 +29,8 @@
 	"evidence.dll_injection.many"	"Знайдено підписок клієнта на події з чорного списку: {count}. Події: {events}."
 	"evidence.doubletap.one_tick"	"Три пари пришвидшених пострілів досягли порога; останню пару розділяв 1 серверний тік."
 	"evidence.doubletap.zero_ticks"	"Три пари пришвидшених пострілів досягли порога; остання пара сталася в одному серверному тіку."
-	"evidence.doubletap.network_unstable"	"Виявлено три пари швидких пострілів; остання була з інтервалом {ticks} серверних тіків. Перевірка мережі: ping {ping} мс, jitter {jitter} мс, вхідні/вихідні втрати {incoming_loss}/{outgoing_loss}%, вхідний/вихідний choke {incoming_choke}/{outgoing_choke}%, {gaps} пропусків команд і {unavailable} недоступних вимірів."
+	"evidence.doubletap.network_unstable"	"Виявлено три пари швидких пострілів; остання була з інтервалом {ticks} серверних тіків."
+	"evidence.network_check"	"Перевірка мережі: ping {ping} мс, jitter {jitter} мс, вхідні/вихідні втрати {incoming_loss}/{outgoing_loss}%, вхідний/вихідний choke {incoming_choke}/{outgoing_choke}%, {gaps} пропусків команд і {unavailable} недоступних вимірів."
 	"evidence.namechanger"	"За одну хвилину видиме ім'я гравця змінилося {changes} разів."
 
 	"evidence.autostrafe.optimizer"	"Виявлено оптимізатор стрейфу."

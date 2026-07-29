@@ -43,6 +43,8 @@ namespace detection
 		bool vetoed {};
 	};
 
+	localization::Text AddNetworkSafetyDetails(localization::Text details, const NetworkSafetyEvidence &evidence);
+
 	struct NetworkSafetySample
 	{
 		Clock::time_point time;

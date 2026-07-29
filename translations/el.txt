@@ -29,7 +29,8 @@
 	"evidence.dll_injection.many"	"Βρέθηκαν {count} συνδρομές πελάτη σε αποκλεισμένα συμβάντα: {events}."
 	"evidence.doubletap.one_tick"	"Τρία ζεύγη επιταχυνόμενων βολών έφτασαν το όριο· το τελευταίο ζεύγος απείχε 1 tick διακομιστή."
 	"evidence.doubletap.zero_ticks"	"Τρία ζεύγη επιταχυνόμενων βολών έφτασαν το όριο· το τελευταίο ζεύγος έγινε στο ίδιο tick διακομιστή."
-	"evidence.doubletap.network_unstable"	"Εντοπίστηκαν τρία ζεύγη γρήγορων βολών· το τελευταίο απείχε {ticks} server ticks. Έλεγχος δικτύου: ping {ping} ms, jitter {jitter} ms, εισερχόμενη/εξερχόμενη απώλεια {incoming_loss}/{outgoing_loss}%, εισερχόμενο/εξερχόμενο choke {incoming_choke}/{outgoing_choke}%, {gaps} κενά εντολών και {unavailable} μη διαθέσιμα δείγματα."
+	"evidence.doubletap.network_unstable"	"Εντοπίστηκαν τρία ζεύγη γρήγορων βολών· το τελευταίο απείχε {ticks} server ticks."
+	"evidence.network_check"	"Έλεγχος δικτύου: ping {ping} ms, jitter {jitter} ms, εισερχόμενη/εξερχόμενη απώλεια {incoming_loss}/{outgoing_loss}%, εισερχόμενο/εξερχόμενο choke {incoming_choke}/{outgoing_choke}%, {gaps} κενά εντολών και {unavailable} μη διαθέσιμα δείγματα."
 	"evidence.namechanger"	"Το ορατό όνομα άλλαξε {changes} φορές μέσα σε ένα λεπτό."
 
 	"evidence.autostrafe.optimizer"	"Εντοπίστηκε βελτιστοποιητής strafe."

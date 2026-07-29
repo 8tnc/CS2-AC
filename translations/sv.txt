@@ -29,7 +29,8 @@
 	"evidence.dll_injection.many"	"{count} klientprenumerationer på svartlistade händelser hittades: {events}."
 	"evidence.doubletap.one_tick"	"Tre snabbeldspar nådde tröskeln; det senaste paret låg 1 servertick isär."
 	"evidence.doubletap.zero_ticks"	"Tre snabbeldspar nådde tröskeln; det senaste paret inträffade i samma servertick."
-	"evidence.doubletap.network_unstable"	"Tre snabbeldspar upptäcktes; det senaste låg {ticks} serverticks isär. Nätverkskontroll: {ping} ms ping, {jitter} ms jitter, {incoming_loss}/{outgoing_loss}% inkommande/utgående förlust, {incoming_choke}/{outgoing_choke}% inkommande/utgående choke, {gaps} kommandoluckor och {unavailable} otillgängliga mätningar."
+	"evidence.doubletap.network_unstable"	"Tre snabbeldspar upptäcktes; det senaste låg {ticks} serverticks isär."
+	"evidence.network_check"	"Nätverkskontroll: {ping} ms ping, {jitter} ms jitter, {incoming_loss}/{outgoing_loss}% inkommande/utgående förlust, {incoming_choke}/{outgoing_choke}% inkommande/utgående choke, {gaps} kommandoluckor och {unavailable} otillgängliga mätningar."
 	"evidence.namechanger"	"Det synliga namnet ändrades {changes} gånger inom en minut."
 
 	"evidence.autostrafe.optimizer"	"Strafe-optimerare upptäckt."

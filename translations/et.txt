@@ -29,7 +29,8 @@
 	"evidence.dll_injection.many"	"Leiti {count} kliendi tellimust musta nimekirja sündmustele: {events}."
 	"evidence.doubletap.one_tick"	"Kolm kiirtulepaari jõudsid läveni; viimase paari vahel oli 1 serveritick."
 	"evidence.doubletap.zero_ticks"	"Kolm kiirtulepaari jõudsid läveni; viimane paar toimus samas serveritickis."
-	"evidence.doubletap.network_unstable"	"Tuvastati kolm kiirtulepaari; viimase paari vahe oli {ticks} serveriticki. Võrgukontroll: ping {ping} ms, jitter {jitter} ms, sisenev/väljuv kadu {incoming_loss}/{outgoing_loss}%, sisenev/väljuv choke {incoming_choke}/{outgoing_choke}%, {gaps} käsulünka ja {unavailable} kättesaamatut proovi."
+	"evidence.doubletap.network_unstable"	"Tuvastati kolm kiirtulepaari; viimase paari vahe oli {ticks} serveriticki."
+	"evidence.network_check"	"Võrgukontroll: ping {ping} ms, jitter {jitter} ms, sisenev/väljuv kadu {incoming_loss}/{outgoing_loss}%, sisenev/väljuv choke {incoming_choke}/{outgoing_choke}%, {gaps} käsulünka ja {unavailable} kättesaamatut proovi."
 	"evidence.namechanger"	"Nähtav nimi muutus ühe minuti jooksul {changes} korda."
 
 	"evidence.autostrafe.optimizer"	"Tuvastati strafe-optimeerija."

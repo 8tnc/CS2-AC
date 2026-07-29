@@ -29,7 +29,8 @@
 	"evidence.dll_injection.many"	"{count} blacklisted client event subscriptions found: {events}."
 	"evidence.doubletap.one_tick"	"Three rapid-fire pairs reached the threshold; the latest pair was 1 server tick apart."
 	"evidence.doubletap.zero_ticks"	"Three rapid-fire pairs reached the threshold; the latest pair was 0 server ticks apart."
-	"evidence.doubletap.network_unstable"	"Three rapid-fire pairs were detected; the latest was {ticks} server ticks apart. Network check: {ping} ms ping, {jitter} ms jitter, {incoming_loss}/{outgoing_loss}% incoming/outgoing loss, {incoming_choke}/{outgoing_choke}% incoming/outgoing choke, {gaps} command gaps, and {unavailable} unavailable samples."
+	"evidence.doubletap.network_unstable"	"Three rapid-fire pairs were detected; the latest was {ticks} server ticks apart."
+	"evidence.network_check"	"Network check: {ping} ms ping, {jitter} ms jitter, {incoming_loss}/{outgoing_loss}% incoming/outgoing loss, {incoming_choke}/{outgoing_choke}% incoming/outgoing choke, {gaps} command gaps, and {unavailable} unavailable samples."
 	"evidence.namechanger"	"{changes} visible name changes occurred within one minute."
 
 	"evidence.autostrafe.optimizer"	"Strafe optimizer detected."

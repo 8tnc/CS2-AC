@@ -29,7 +29,8 @@
 	"evidence.dll_injection.many"	"Foram encontradas {count} subscrições do cliente em eventos da lista negra: {events}."
 	"evidence.doubletap.one_tick"	"Três pares de tiros acelerados atingiram o limite; o último par ficou separado por 1 tick do servidor."
 	"evidence.doubletap.zero_ticks"	"Três pares de tiros acelerados atingiram o limite; o último par ocorreu no mesmo tick do servidor."
-	"evidence.doubletap.network_unstable"	"Foram detetados três pares de tiros rápidos; o último teve {ticks} ticks de servidor de intervalo. Verificação de rede: {ping} ms de ping, {jitter} ms de jitter, {incoming_loss}/{outgoing_loss}% de perda de entrada/saída, {incoming_choke}/{outgoing_choke}% de choke de entrada/saída, {gaps} falhas de comandos e {unavailable} amostras indisponíveis."
+	"evidence.doubletap.network_unstable"	"Foram detetados três pares de tiros rápidos; o último teve {ticks} ticks de servidor de intervalo."
+	"evidence.network_check"	"Verificação de rede: {ping} ms de ping, {jitter} ms de jitter, {incoming_loss}/{outgoing_loss}% de perda de entrada/saída, {incoming_choke}/{outgoing_choke}% de choke de entrada/saída, {gaps} falhas de comandos e {unavailable} amostras indisponíveis."
 	"evidence.namechanger"	"O nome visível mudou {changes} vezes num minuto."
 
 	"evidence.autostrafe.optimizer"	"Otimizador de strafe detetado."

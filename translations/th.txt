@@ -29,7 +29,8 @@
 	"evidence.dll_injection.many"	"พบการสมัครรับอีเวนต์ฝั่งไคลเอนต์ในบัญชีดำ {count} รายการ: {events}"
 	"evidence.doubletap.one_tick"	"คู่การยิงเร็วสามคู่ถึงเกณฑ์ คู่ล่าสุดห่างกัน 1 tick ของเซิร์ฟเวอร์"
 	"evidence.doubletap.zero_ticks"	"คู่การยิงเร็วสามคู่ถึงเกณฑ์ คู่ล่าสุดเกิดใน tick เดียวกันของเซิร์ฟเวอร์"
-	"evidence.doubletap.network_unstable"	"ตรวจพบคู่การยิงเร็วสามคู่ คู่ล่าสุดห่างกัน {ticks} tick ของเซิร์ฟเวอร์ การตรวจสอบเครือข่าย: ping {ping} ms, jitter {jitter} ms, packet loss ขาเข้า/ขาออก {incoming_loss}/{outgoing_loss}%, choke ขาเข้า/ขาออก {incoming_choke}/{outgoing_choke}%, ช่องว่างคำสั่ง {gaps} ครั้ง และตัวอย่างที่ใช้ไม่ได้ {unavailable} รายการ"
+	"evidence.doubletap.network_unstable"	"ตรวจพบคู่การยิงเร็วสามคู่ คู่ล่าสุดห่างกัน {ticks} tick ของเซิร์ฟเวอร์"
+	"evidence.network_check"	"การตรวจสอบเครือข่าย: ping {ping} ms, jitter {jitter} ms, packet loss ขาเข้า/ขาออก {incoming_loss}/{outgoing_loss}%, choke ขาเข้า/ขาออก {incoming_choke}/{outgoing_choke}%, ช่องว่างคำสั่ง {gaps} ครั้ง และตัวอย่างที่ใช้ไม่ได้ {unavailable} รายการ"
 	"evidence.namechanger"	"ชื่อที่แสดงถูกเปลี่ยน {changes} ครั้งภายในหนึ่งนาที"
 
 	"evidence.autostrafe.optimizer"	"ตรวจพบตัวปรับ strafe อัตโนมัติ"

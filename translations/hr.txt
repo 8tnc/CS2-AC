@@ -29,7 +29,8 @@
 	"evidence.dll_injection.many"	"Pronađeno je {count} pretplata klijenta na događaje s crne liste: {events}."
 	"evidence.doubletap.one_tick"	"Tri para ubrzanih hitaca dosegla su prag; posljednji par bio je udaljen 1 poslužiteljski tick."
 	"evidence.doubletap.zero_ticks"	"Tri para ubrzanih hitaca dosegla su prag; posljednji par dogodio se u istom poslužiteljskom ticku."
-	"evidence.doubletap.network_unstable"	"Otkrivena su tri para brzih hitaca; posljednji je bio udaljen {ticks} poslužiteljskih tickova. Provjera mreže: ping {ping} ms, jitter {jitter} ms, dolazni/odlazni gubitak {incoming_loss}/{outgoing_loss}%, dolazni/odlazni choke {incoming_choke}/{outgoing_choke}%, {gaps} praznina u naredbama i {unavailable} nedostupnih uzoraka."
+	"evidence.doubletap.network_unstable"	"Otkrivena su tri para brzih hitaca; posljednji je bio udaljen {ticks} poslužiteljskih tickova."
+	"evidence.network_check"	"Provjera mreže: ping {ping} ms, jitter {jitter} ms, dolazni/odlazni gubitak {incoming_loss}/{outgoing_loss}%, dolazni/odlazni choke {incoming_choke}/{outgoing_choke}%, {gaps} praznina u naredbama i {unavailable} nedostupnih uzoraka."
 	"evidence.namechanger"	"Vidljivo ime promijenilo se {changes} puta u jednoj minuti."
 
 	"evidence.autostrafe.optimizer"	"Otkriven je strafe optimizator."
