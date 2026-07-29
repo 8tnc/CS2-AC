@@ -512,13 +512,14 @@ namespace detection
 
 	void DetectionSystem::Load(AnnounceCallback announce, AnnounceCallback announceNetworkVeto)
 	{
+		networkSafety.Reset();
 		shots.Reset();
-		doubletap.Load(announce, announceNetworkVeto);
+		doubletap.Load(announce, announceNetworkVeto, &networkSafety);
 		silentAim.Load(announce, &shots);
 		aimbot.Load(announce, &shots);
 		aimlock.Load(announce, &shots);
 		dllInjection.Load(announce);
-		antiAim.Load(announce);
+		antiAim.Load(announce, announceNetworkVeto, &networkSafety);
 		irregularBehavior.Load(announce);
 		inhumanAccuracy.Load(announce, &shots);
 		nameChanger.Load(announce);
@@ -539,6 +540,7 @@ namespace detection
 		irregularBehavior.Unload();
 		inhumanAccuracy.Unload();
 		nameChanger.Unload();
+		networkSafety.Reset();
 		shots.Reset();
 		settingsMask = 0;
 		settingsRevision = 0;
@@ -557,6 +559,7 @@ namespace detection
 		irregularBehavior.Reset();
 		inhumanAccuracy.Reset();
 		nameChanger.Reset();
+		networkSafety.Reset();
 		shots.Reset();
 	}
 
@@ -583,9 +586,9 @@ namespace detection
 			return;
 		}
 		shots.OnProcessUsercmds(player, commands, numCommands);
-		if (settings::IsDetectionEnabled(DetectionType::Doubletap))
+		if (settings::IsDetectionEnabled(DetectionType::Doubletap) || settings::IsDetectionEnabled(DetectionType::AntiAim))
 		{
-			doubletap.OnProcessUsercmds(player, commands, numCommands);
+			networkSafety.OnProcessUsercmds(player, commands, numCommands);
 		}
 		if (settings::IsDetectionEnabled(DetectionType::Aimbot))
 		{
@@ -627,9 +630,9 @@ namespace detection
 			return;
 		}
 		shots.CaptureFrame(currentTick);
-		if (settings::IsDetectionEnabled(DetectionType::Doubletap))
+		if (settings::IsDetectionEnabled(DetectionType::Doubletap) || settings::IsDetectionEnabled(DetectionType::AntiAim))
 		{
-			doubletap.OnGameFrame();
+			networkSafety.OnGameFrame();
 		}
 		if (settings::IsDetectionEnabled(DetectionType::Aimbot))
 		{
@@ -761,6 +764,7 @@ namespace detection
 		irregularBehavior.OnClientDisconnect(player);
 		inhumanAccuracy.OnClientDisconnect(player);
 		nameChanger.OnClientDisconnect(player);
+		networkSafety.OnClientDisconnect(player);
 		shots.OnClientDisconnect(player);
 	}
 

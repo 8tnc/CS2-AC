@@ -1,129 +1,17 @@
 #include "detection/detection_system.h"
 
-#include "inetchannelinfo.h"
 #include "igameevents.h"
-#include "movement_analysis/player_context.h"
 #include "movement/movement.h"
-#include "sdk/usercmd.h"
-#include "utils/interfaces.h"
 
 #include <algorithm>
-#include <cmath>
 
 CConVar<bool> cs2ac_doubletap_debug("cs2ac_doubletap_debug", FCVAR_NONE, "Show Doubletap tick spacing and network safety checks", false);
 
 namespace
 {
 	constexpr int detectionThreshold = 3;
-	constexpr float maximumPingMilliseconds = 150.0f;
-	constexpr float maximumJitterMilliseconds = 25.0f;
-	constexpr float maximumLoss = 0.02f;
-	constexpr float maximumChoke = 0.02f;
-	constexpr auto networkWindow = std::chrono::seconds(5);
-	constexpr auto networkSampleInterval = std::chrono::milliseconds(100);
 
-	constexpr bool ShouldVetoNetwork(float ping, float jitter, float incomingLoss, float outgoingLoss, float incomingChoke, float outgoingChoke,
-									 int commandGaps, int unavailableSamples)
-	{
-		return ping >= maximumPingMilliseconds || jitter >= maximumJitterMilliseconds || incomingLoss >= maximumLoss || outgoingLoss >= maximumLoss
-			   || incomingChoke >= maximumChoke || outgoingChoke >= maximumChoke || commandGaps > 0 || unavailableSamples > 0;
-	}
-
-	static_assert(!ShouldVetoNetwork(149.9f, 24.9f, 0.019f, 0.019f, 0.019f, 0.019f, 0, 0));
-	static_assert(ShouldVetoNetwork(150.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0, 0));
-	static_assert(ShouldVetoNetwork(0.0f, 25.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0, 0));
-	static_assert(ShouldVetoNetwork(0.0f, 0.0f, 0.02f, 0.0f, 0.0f, 0.0f, 0, 0));
-	static_assert(ShouldVetoNetwork(0.0f, 0.0f, 0.0f, 0.0f, 0.02f, 0.0f, 0, 0));
-	static_assert(ShouldVetoNetwork(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1, 0));
-	static_assert(ShouldVetoNetwork(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0, 1));
-
-	void PruneNetworkHistory(detection::DoubletapState &state, detection::Clock::time_point now)
-	{
-		const auto cutoff = now - networkWindow;
-		while (!state.networkSamples.empty() && state.networkSamples.front().time < cutoff)
-		{
-			state.networkSamples.pop_front();
-		}
-		while (!state.commandGaps.empty() && state.commandGaps.front() < cutoff)
-		{
-			state.commandGaps.pop_front();
-		}
-	}
-
-	detection::DoubletapState::NetworkSample CaptureNetworkSample(MovementPlayer *player, detection::Clock::time_point now)
-	{
-		detection::DoubletapState::NetworkSample sample;
-		sample.time = now;
-		if (!player || !interfaces::pEngine)
-		{
-			return sample;
-		}
-
-		auto *network = interfaces::pEngine->GetPlayerNetInfo(player->GetPlayerSlot());
-		if (!network)
-		{
-			return sample;
-		}
-
-		sample.pingMilliseconds = network->GetEngineLatency() * 1000.0f;
-		sample.incomingLoss = network->GetAvgLoss(FLOW_INCOMING);
-		sample.outgoingLoss = network->GetAvgLoss(FLOW_OUTGOING);
-		sample.incomingChoke = network->GetAvgChoke(FLOW_INCOMING);
-		sample.outgoingChoke = network->GetAvgChoke(FLOW_OUTGOING);
-		sample.valid = std::isfinite(sample.pingMilliseconds) && sample.pingMilliseconds >= 0.0f && std::isfinite(sample.incomingLoss)
-					   && sample.incomingLoss >= 0.0f && sample.incomingLoss <= 1.0f && std::isfinite(sample.outgoingLoss)
-					   && sample.outgoingLoss >= 0.0f && sample.outgoingLoss <= 1.0f && std::isfinite(sample.incomingChoke)
-					   && sample.incomingChoke >= 0.0f && sample.incomingChoke <= 1.0f && std::isfinite(sample.outgoingChoke)
-					   && sample.outgoingChoke >= 0.0f && sample.outgoingChoke <= 1.0f;
-		return sample;
-	}
-
-	detection::DoubletapState::NetworkEvidence EvaluateNetwork(detection::DoubletapState &state, detection::Clock::time_point now)
-	{
-		PruneNetworkHistory(state, now);
-		detection::DoubletapState::NetworkEvidence evidence;
-		evidence.commandGaps = static_cast<int>(state.commandGaps.size());
-
-		float previousPing = 0.0f;
-		float totalVariation = 0.0f;
-		int validSamples = 0;
-		int variationSamples = 0;
-		for (const auto &sample : state.networkSamples)
-		{
-			if (!sample.valid)
-			{
-				++evidence.unavailableSamples;
-				continue;
-			}
-
-			evidence.pingMilliseconds = (std::max)(evidence.pingMilliseconds, sample.pingMilliseconds);
-			evidence.incomingLoss = (std::max)(evidence.incomingLoss, sample.incomingLoss);
-			evidence.outgoingLoss = (std::max)(evidence.outgoingLoss, sample.outgoingLoss);
-			evidence.incomingChoke = (std::max)(evidence.incomingChoke, sample.incomingChoke);
-			evidence.outgoingChoke = (std::max)(evidence.outgoingChoke, sample.outgoingChoke);
-			if (validSamples > 0)
-			{
-				totalVariation += std::fabs(sample.pingMilliseconds - previousPing);
-				++variationSamples;
-			}
-			previousPing = sample.pingMilliseconds;
-			++validSamples;
-		}
-		if (validSamples < 2 && evidence.unavailableSamples == 0)
-		{
-			evidence.unavailableSamples = 1;
-		}
-		if (variationSamples > 0)
-		{
-			evidence.jitterMilliseconds = totalVariation / variationSamples;
-		}
-
-		evidence.vetoed = ShouldVetoNetwork(evidence.pingMilliseconds, evidence.jitterMilliseconds, evidence.incomingLoss, evidence.outgoingLoss,
-											evidence.incomingChoke, evidence.outgoingChoke, evidence.commandGaps, evidence.unavailableSamples);
-		return evidence;
-	}
-
-	void MergeNetworkEvidence(detection::DoubletapState::NetworkEvidence &combined, const detection::DoubletapState::NetworkEvidence &current)
+	void MergeNetworkEvidence(detection::NetworkSafetyEvidence &combined, const detection::NetworkSafetyEvidence &current)
 	{
 		combined.pingMilliseconds = (std::max)(combined.pingMilliseconds, current.pingMilliseconds);
 		combined.jitterMilliseconds = (std::max)(combined.jitterMilliseconds, current.jitterMilliseconds);
@@ -146,10 +34,11 @@ namespace
 
 namespace detection
 {
-	void DoubletapModule::Load(AnnounceCallback announceCallback, AnnounceCallback networkVetoCallback)
+	void DoubletapModule::Load(AnnounceCallback announceCallback, AnnounceCallback networkVetoCallback, NetworkSafetyMonitor *networkSafetyMonitor)
 	{
 		announce = announceCallback;
 		announceNetworkVeto = networkVetoCallback;
+		networkSafety = networkSafetyMonitor;
 	}
 
 	void DoubletapModule::Unload()
@@ -157,83 +46,12 @@ namespace detection
 		Reset();
 		announce = nullptr;
 		announceNetworkVeto = nullptr;
+		networkSafety = nullptr;
 	}
 
 	void DoubletapModule::Reset()
 	{
 		playerData = {};
-	}
-
-	void DoubletapModule::OnGameFrame()
-	{
-		if (!g_pCS2ACPlayerManager)
-		{
-			return;
-		}
-
-		const auto now = Clock::now();
-		for (u32 index = 1; index <= MAXPLAYERS; ++index)
-		{
-			auto *player = g_pCS2ACPlayerManager->ToPlayer(index);
-			if (!player || !player->IsConnected() || !player->IsInGame() || !IsEligibleHuman(player))
-			{
-				continue;
-			}
-
-			auto &state = playerData[index];
-			if (state.nextNetworkSample != Clock::time_point {} && now < state.nextNetworkSample)
-			{
-				continue;
-			}
-			state.nextNetworkSample = now + networkSampleInterval;
-			state.networkSamples.push_back(CaptureNetworkSample(player, now));
-			while (state.networkSamples.size() > 64)
-			{
-				state.networkSamples.pop_front();
-			}
-			PruneNetworkHistory(state, now);
-		}
-	}
-
-	void DoubletapModule::OnProcessUsercmds(MovementPlayer *player, PlayerCommand *commands, int numCommands)
-	{
-		if (!IsEligibleHuman(player) || !commands || numCommands <= 0)
-		{
-			return;
-		}
-
-		auto &state = playerData[player->index];
-		const auto now = Clock::now();
-		PruneNetworkHistory(state, now);
-		bool discontinuity = false;
-		for (int index = 0; index < numCommands; ++index)
-		{
-			auto &command = commands[index];
-			if (command.cmdNum <= state.lastCommandNumber)
-			{
-				discontinuity = discontinuity || command.cmdNum < state.lastCommandNumber;
-				continue;
-			}
-
-			const int clientTick = command.has_base() ? command.base().client_tick() : -1;
-			discontinuity =
-				discontinuity || (state.lastCommandNumber >= 0 && command.cmdNum > state.lastCommandNumber + 1)
-				|| (clientTick >= 0 && state.lastClientTick >= 0 && (clientTick > state.lastClientTick + 1 || clientTick < state.lastClientTick));
-			state.lastCommandNumber = command.cmdNum;
-			if (clientTick >= 0)
-			{
-				state.lastClientTick = clientTick;
-			}
-		}
-		if (discontinuity)
-		{
-			state.commandGaps.push_back(now);
-			while (state.commandGaps.size() > 512)
-			{
-				state.commandGaps.pop_front();
-			}
-			DOUBLETAP_DEBUG("%s had a command discontinuity inside the network safety window.\n", player->GetName());
-		}
 	}
 
 	void DoubletapModule::OnWeaponFire(IGameEvent *event, MovementPlayer *player, int currentTick)
@@ -272,7 +90,16 @@ namespace detection
 
 		previous.serverTick = currentTick;
 		const int incidents = ++previous.incidents;
-		const auto network = EvaluateNetwork(previous, Clock::now());
+		NetworkSafetyEvidence network;
+		if (networkSafety)
+		{
+			network = networkSafety->Evaluate(player);
+		}
+		else
+		{
+			network.unavailableSamples = 1;
+			network.vetoed = true;
+		}
 		MergeNetworkEvidence(previous.networkEvidence, network);
 		DOUBLETAP_DEBUG("%s matched pair %d/%d at %lld server tick%s apart.\n", player->GetName(), incidents, detectionThreshold,
 						static_cast<long long>(delta), delta == 1 ? "" : "s");

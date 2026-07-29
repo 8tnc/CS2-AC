@@ -30,6 +30,54 @@ namespace detection
 	float AngularDistance(const QAngle &first, const QAngle &second);
 	std::string_view NormalizeWeapon(std::string_view weapon);
 
+	struct NetworkSafetyEvidence
+	{
+		float pingMilliseconds {};
+		float jitterMilliseconds {};
+		float incomingLoss {};
+		float outgoingLoss {};
+		float incomingChoke {};
+		float outgoingChoke {};
+		int commandGaps {};
+		int unavailableSamples {};
+		bool vetoed {};
+	};
+
+	struct NetworkSafetySample
+	{
+		Clock::time_point time;
+		float pingMilliseconds {};
+		float incomingLoss {};
+		float outgoingLoss {};
+		float incomingChoke {};
+		float outgoingChoke {};
+		bool valid {};
+	};
+
+	struct NetworkSafetyPlayerData
+	{
+		int lastCommandNumber {-1};
+		int lastClientTick {-1};
+		Clock::time_point nextSample;
+		std::deque<Clock::time_point> commandGaps;
+		std::deque<NetworkSafetySample> samples;
+	};
+
+	class NetworkSafetyMonitor
+	{
+	public:
+		void Reset();
+		void OnGameFrame();
+		void OnProcessUsercmds(MovementPlayer *player, PlayerCommand *commands, int numCommands);
+		NetworkSafetyEvidence Evaluate(MovementPlayer *player);
+		void OnClientDisconnect(MovementPlayer *player);
+
+	private:
+		static void Prune(NetworkSafetyPlayerData &data, Clock::time_point now);
+
+		std::array<NetworkSafetyPlayerData, MAXPLAYERS + 1> playerData;
+	};
+
 	struct TrackedPosition
 	{
 		Vector origin;
@@ -137,53 +185,23 @@ namespace detection
 		int serverTick {-1};
 		int incidents {};
 		std::string weapon;
-		int lastCommandNumber {-1};
-		int lastClientTick {-1};
-		Clock::time_point nextNetworkSample;
-		std::deque<Clock::time_point> commandGaps;
-
-		struct NetworkSample
-		{
-			Clock::time_point time;
-			float pingMilliseconds {};
-			float incomingLoss {};
-			float outgoingLoss {};
-			float incomingChoke {};
-			float outgoingChoke {};
-			bool valid {};
-		};
-
-		struct NetworkEvidence
-		{
-			float pingMilliseconds {};
-			float jitterMilliseconds {};
-			float incomingLoss {};
-			float outgoingLoss {};
-			float incomingChoke {};
-			float outgoingChoke {};
-			int commandGaps {};
-			int unavailableSamples {};
-			bool vetoed {};
-		} networkEvidence;
-
-		std::deque<NetworkSample> networkSamples;
+		NetworkSafetyEvidence networkEvidence;
 	};
 
 	// Detects two weapon-fire events arriving in the same or next server tick.
 	class DoubletapModule
 	{
 	public:
-		void Load(AnnounceCallback announce, AnnounceCallback announceNetworkVeto);
+		void Load(AnnounceCallback announce, AnnounceCallback announceNetworkVeto, NetworkSafetyMonitor *networkSafety);
 		void Unload();
 		void Reset();
-		void OnGameFrame();
-		void OnProcessUsercmds(MovementPlayer *player, PlayerCommand *commands, int numCommands);
 		void OnWeaponFire(IGameEvent *event, MovementPlayer *player, int currentTick);
 		void OnClientDisconnect(MovementPlayer *player);
 
 	private:
 		AnnounceCallback announce {};
 		AnnounceCallback announceNetworkVeto {};
+		NetworkSafetyMonitor *networkSafety {};
 		std::array<DoubletapState, MAXPLAYERS + 1> playerData;
 	};
 
@@ -377,7 +395,7 @@ namespace detection
 	class AntiAimModule
 	{
 	public:
-		void Load(AnnounceCallback announce);
+		void Load(AnnounceCallback announce, AnnounceCallback announceNetworkVeto, NetworkSafetyMonitor *networkSafety);
 		void Unload();
 		void Reset();
 		void OnProcessUsercmds(MovementPlayer *player, PlayerCommand *commands, int numCommands);
@@ -396,6 +414,8 @@ namespace detection
 		void ResetMotion(AntiAimPlayerData &data);
 
 		AnnounceCallback announce {};
+		AnnounceCallback announceNetworkVeto {};
+		NetworkSafetyMonitor *networkSafety {};
 		std::array<AntiAimPlayerData, MAXPLAYERS + 1> playerData;
 	};
 
@@ -517,6 +537,7 @@ namespace detection
 	private:
 		void RefreshSettings();
 
+		NetworkSafetyMonitor networkSafety;
 		ShotCorrelator shots;
 		DoubletapModule doubletap;
 		SilentAimModule silentAim;

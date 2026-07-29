@@ -75,15 +75,19 @@ namespace
 
 namespace detection
 {
-	void AntiAimModule::Load(AnnounceCallback announceCallback)
+	void AntiAimModule::Load(AnnounceCallback announceCallback, AnnounceCallback networkVetoCallback, NetworkSafetyMonitor *networkSafetyMonitor)
 	{
 		announce = announceCallback;
+		announceNetworkVeto = networkVetoCallback;
+		networkSafety = networkSafetyMonitor;
 	}
 
 	void AntiAimModule::Unload()
 	{
 		Reset();
 		announce = nullptr;
+		announceNetworkVeto = nullptr;
+		networkSafety = nullptr;
 	}
 
 	void AntiAimModule::Reset()
@@ -146,7 +150,24 @@ namespace detection
 		{
 			return;
 		}
-		if (announce)
+
+		const bool mismatchRequired = data.mismatchScore > 0.0f && data.score < detectionThreshold;
+		NetworkSafetyEvidence network;
+		if (mismatchRequired)
+		{
+			if (networkSafety)
+			{
+				network = networkSafety->Evaluate(player);
+			}
+			else
+			{
+				network.unavailableSamples = 1;
+				network.vetoed = true;
+			}
+		}
+		const bool networkVetoed = mismatchRequired && network.vetoed;
+		const AnnounceCallback callback = networkVetoed ? announceNetworkVeto : announce;
+		if (callback)
 		{
 			const std::string localizedReason = localization::Get(reasonKey, reason);
 			localization::Text details {
@@ -158,14 +179,35 @@ namespace detection
 									  {"threshold", tfm::format("%.0f", detectionThreshold)}})
 					.localized,
 			};
-			announce("ANTIAIM", player, details);
+			if (networkVetoed)
+			{
+				const std::string networkDetails =
+					tfm::format(" Network check: %.1f ms ping, %.1f ms jitter, %.1f/%.1f%% incoming/outgoing loss, "
+								"%.1f/%.1f%% incoming/outgoing choke, %d command gaps, and %d unavailable samples.",
+								network.pingMilliseconds, network.jitterMilliseconds, network.incomingLoss * 100.0f, network.outgoingLoss * 100.0f,
+								network.incomingChoke * 100.0f, network.outgoingChoke * 100.0f, network.commandGaps, network.unavailableSamples);
+				details.english += networkDetails;
+				details.localized += networkDetails;
+			}
+			callback("ANTIAIM", player, details);
 		}
 		data.score = 0.0f;
 		data.mismatchScore = 0.0f;
 		data.scoreTime = std::chrono::steady_clock::now();
 		data.suppressContinuous = continuous;
-		ANTIAIM_DEBUG("%s reached the threshold; evidence was cleared%s.\n", player->GetName(),
-					  continuous ? " until this continuous episode ends" : "");
+		if (networkVetoed)
+		{
+			ANTIAIM_DEBUG(
+				"%s reached the threshold through mismatch evidence, but punishment was withheld: %.1f ms ping, %.1f ms jitter, %.1f/%.1f%% "
+				"loss, %.1f/%.1f%% choke, %d command gaps, and %d unavailable samples.\n",
+				player->GetName(), network.pingMilliseconds, network.jitterMilliseconds, network.incomingLoss * 100.0f, network.outgoingLoss * 100.0f,
+				network.incomingChoke * 100.0f, network.outgoingChoke * 100.0f, network.commandGaps, network.unavailableSamples);
+		}
+		else
+		{
+			ANTIAIM_DEBUG("%s reached the threshold; evidence was cleared%s.\n", player->GetName(),
+						  continuous ? " until this continuous episode ends" : "");
+		}
 	}
 
 	void AntiAimModule::OnProcessUsercmds(MovementPlayer *player, PlayerCommand *commands, int numCommands)
@@ -507,7 +549,7 @@ namespace detection
 					  shot->subtickYaw);
 		if (std::isfinite(surrounding) && std::isfinite(snap) && surrounding < 10.0f && snap > minimumAttackReturnAngle && snap > surrounding * 5.0f)
 		{
-			AddEvidence(player, data, 5.0f, "evidence.antiaim.reason.attack_return", "one-command attack return", false);
+			AddEvidence(player, data, 20.0f, "evidence.antiaim.reason.attack_return", "one-command attack return", false);
 		}
 		else
 		{
