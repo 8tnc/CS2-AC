@@ -19,11 +19,11 @@ CConVar<bool> cs2ac_inhuman_accuracy_debug("cs2ac_inhuman_accuracy_debug", FCVAR
 namespace
 {
 	constexpr int evidenceWindowSeconds = 10 * 60;
-	constexpr int minimumAttempts = 24;
-	constexpr int requiredHitsPerTwentyFour = 20;
+	constexpr int minimumAttempts = 20;
+	constexpr int requiredHitsPerTwenty = 16;
 	constexpr float minimumDistance = 100.0f;
 	constexpr float attemptHalfWidth = 32.0f;
-	static_assert(requiredHitsPerTwentyFour <= 24);
+	static_assert(requiredHitsPerTwenty <= 20);
 
 	bool IsAccuracyWeapon(std::string_view weapon)
 	{
@@ -186,7 +186,7 @@ namespace detection
 		}
 		ACCURACY_DEBUG("%s shot %llu counted at %.3f degrees: %d/%d hits.\n", player->GetName(), static_cast<unsigned long long>(shot.id),
 					   matchedError, hits, attempts);
-		if (attempts < minimumAttempts || hits * 24 < attempts * requiredHitsPerTwentyFour)
+		if (attempts < minimumAttempts || hits * 20 < attempts * requiredHitsPerTwenty)
 		{
 			return;
 		}
