@@ -53,7 +53,9 @@ static_global bool HasExcessiveSubtickMovesWithAngles(const PlayerCommand &cmd)
 	{
 		return false;
 	}
-	std::set<std::pair<u64, f32>> buttonTimes;
+	static std::vector<std::pair<u64, f32>> buttonTimes;
+	buttonTimes.clear();
+	buttonTimes.reserve(cmd.base().subtick_moves_size());
 	// Get a list of all button presses with timings
 	for (i32 i = 0; i < cmd.base().subtick_moves_size(); i++)
 	{
@@ -70,9 +72,11 @@ static_global bool HasExcessiveSubtickMovesWithAngles(const PlayerCommand &cmd)
 		}
 		if (step.has_pitch_delta() || step.has_yaw_delta())
 		{
-			buttonTimes.insert({step.button(), step.when()});
+			buttonTimes.emplace_back(step.button(), step.when());
 		}
 	}
+	std::sort(buttonTimes.begin(), buttonTimes.end());
+	buttonTimes.erase(std::unique(buttonTimes.begin(), buttonTimes.end()), buttonTimes.end());
 	// Go through the list again. If we find the same button + timing again on release, it's suspicious.
 	i32 numSuspicious = 0;
 	for (i32 i = 0; i < cmd.base().subtick_moves_size(); i++)
@@ -82,8 +86,7 @@ static_global bool HasExcessiveSubtickMovesWithAngles(const PlayerCommand &cmd)
 		{
 			continue;
 		}
-		auto it = buttonTimes.find({step.button(), step.when()});
-		if (it != buttonTimes.end())
+		if (std::binary_search(buttonTimes.begin(), buttonTimes.end(), std::pair<u64, f32> {step.button(), step.when()}))
 		{
 			numSuspicious++;
 			if (numSuspicious >= 2)

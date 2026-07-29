@@ -48,6 +48,10 @@ void MovementDetectionService::Reset()
 {
 	currentMaxFps = 0.0f;
 	cvarMonitorStarted = false;
+	cvarQueryIndex = 0;
+	cvarCycleInterval = 0.0;
+	nullsFramerateBuffer.reserve(maxNullInputEvents);
+	nullsUnderlapBuffer.reserve(maxNullInputEvents);
 	invalidCvarLatches.clear();
 	invalidQueriedCvars.clear();
 	invalidUserInfoCvars.clear();

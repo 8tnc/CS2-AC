@@ -79,12 +79,10 @@ namespace
 		{
 			RETURN_META_VALUE(MRES_IGNORED, true);
 		}
-		PendingGameEvent pending {};
 		if (IsConsumedEvent(event))
 		{
-			pending = {interfaces::pGameEventManager->DuplicateEvent(event), ResolveEventPlayer(event)};
+			pendingGameEvents.push_back({interfaces::pGameEventManager->DuplicateEvent(event), ResolveEventPlayer(event)});
 		}
-		pendingGameEvents.push_back(pending);
 		RETURN_META_VALUE(MRES_IGNORED, true);
 	}
 
@@ -107,9 +105,13 @@ namespace
 		RETURN_META(MRES_IGNORED);
 	}
 
-	bool HookFireEventAfter(IGameEvent *, bool)
+	bool HookFireEventAfter(IGameEvent *event, bool)
 	{
 		if (!g_CS2AC.IsLoaded())
+		{
+			RETURN_META_VALUE(MRES_IGNORED, true);
+		}
+		if (!IsConsumedEvent(event))
 		{
 			RETURN_META_VALUE(MRES_IGNORED, true);
 		}

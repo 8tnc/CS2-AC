@@ -24,6 +24,7 @@ namespace
 	constexpr size_t positionHistoryLimit = 128;
 	constexpr int shotMatchTicks = 1;
 	constexpr int shotLifetimeTicks = 2;
+	bool cachedTeammatesAreEnemies {};
 	static_assert(shotLifetimeTicks > shotMatchTicks, "Shots must survive long enough for every accepted event.");
 
 	bool TeammatesAreEnemies()
@@ -63,7 +64,7 @@ namespace detection
 	{
 		const bool firstIsPlaying = firstTeam == CS_TEAM_T || firstTeam == CS_TEAM_CT;
 		const bool secondIsPlaying = secondTeam == CS_TEAM_T || secondTeam == CS_TEAM_CT;
-		return firstIsPlaying && secondIsPlaying && (firstTeam != secondTeam || TeammatesAreEnemies());
+		return firstIsPlaying && secondIsPlaying && (firstTeam != secondTeam || cachedTeammatesAreEnemies);
 	}
 
 	bool IsFinite(const QAngle &angles)
@@ -524,6 +525,7 @@ namespace detection
 		settingsMask = settings::GetDetectionMask();
 		settingsRevision = settings::GetRevision();
 		teammatesAreEnemies = TeammatesAreEnemies();
+		cachedTeammatesAreEnemies = teammatesAreEnemies;
 	}
 
 	void DetectionSystem::Unload()
@@ -541,6 +543,7 @@ namespace detection
 		settingsMask = 0;
 		settingsRevision = 0;
 		teammatesAreEnemies = false;
+		cachedTeammatesAreEnemies = false;
 	}
 
 	void DetectionSystem::Reset()
@@ -568,6 +571,7 @@ namespace detection
 			settingsMask = currentMask;
 			settingsRevision = currentRevision;
 			teammatesAreEnemies = currentTeammatesAreEnemies;
+			cachedTeammatesAreEnemies = currentTeammatesAreEnemies;
 		}
 	}
 

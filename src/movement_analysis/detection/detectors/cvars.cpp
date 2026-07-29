@@ -382,18 +382,30 @@ static_function f64 CheckClientCvars(CPlayerUserId userID)
 	}
 	if (!player->movementDetection->ShouldCheckClientCvars())
 	{
+		player->movementDetection->cvarQueryIndex = 0;
+		player->movementDetection->cvarCycleInterval = 0.0;
 		return RandomFloat(INTEGRITY_CHECK_MIN_INTERVAL, INTEGRITY_CHECK_MAX_INTERVAL);
 	}
-	CheckUserInfoCvars(player);
-	if (!g_pClientCvarValue)
+	auto *detection = player->movementDetection;
+	if (detection->cvarQueryIndex >= std::size(cvarNames))
 	{
-		return RandomFloat(INTEGRITY_CHECK_MIN_INTERVAL, INTEGRITY_CHECK_MAX_INTERVAL);
+		detection->cvarQueryIndex = 0;
 	}
-	for (auto &name : cvarNames)
+	if (detection->cvarQueryIndex == 0)
 	{
-		g_pClientCvarValue->QueryCvarValue(player->GetPlayerSlot(), name, ValidateQueriedCvar);
+		CheckUserInfoCvars(player);
+		detection->cvarCycleInterval = RandomFloat(INTEGRITY_CHECK_MIN_INTERVAL, INTEGRITY_CHECK_MAX_INTERVAL);
 	}
-	return RandomFloat(INTEGRITY_CHECK_MIN_INTERVAL, INTEGRITY_CHECK_MAX_INTERVAL);
+	if (g_pClientCvarValue)
+	{
+		g_pClientCvarValue->QueryCvarValue(player->GetPlayerSlot(), cvarNames[detection->cvarQueryIndex], ValidateQueriedCvar);
+	}
+	++detection->cvarQueryIndex;
+	if (detection->cvarQueryIndex == std::size(cvarNames))
+	{
+		detection->cvarQueryIndex = 0;
+	}
+	return detection->cvarCycleInterval / std::size(cvarNames);
 }
 
 void MovementDetectionService::InitCvarMonitor()

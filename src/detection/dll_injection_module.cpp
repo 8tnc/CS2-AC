@@ -172,6 +172,7 @@ namespace detection
 			return;
 		}
 
+		bool scannedPlayerThisFrame = false;
 		for (u32 index = 1; index <= MAXPLAYERS; ++index)
 		{
 			auto *player = g_pCS2ACPlayerManager->ToPlayer(index);
@@ -197,6 +198,10 @@ namespace detection
 			{
 				continue;
 			}
+			if (scannedPlayerThisFrame)
+			{
+				continue;
+			}
 
 			auto *listener = g_pCS2ACUtils->GetLegacyGameEventListener(player->GetPlayerSlot());
 			if (!listener)
@@ -205,6 +210,7 @@ namespace detection
 				DLL_INJECTION_DEBUG("%s has no legacy event listener yet; retrying in 10 seconds.\n", player->GetName());
 				continue;
 			}
+			scannedPlayerThisFrame = true;
 			nextScan = now + scanInterval;
 
 			std::bitset<blacklistedEvents.size()> current;

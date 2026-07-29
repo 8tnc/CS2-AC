@@ -18,8 +18,6 @@
 // If the player's underlap average is above this value, we won't consider them for nulls detection.
 // If 10% or more of their strafes have underlap, we should start taking the threshold below into consideration.
 #define UNDERLAP_MEDIAN_FORGIVENESS_THRESHOLD 0.02f // ~10% of a flat ground jump, considering 7.5 strafes on average
-#define MAX_INPUT_EVENTS                      2048
-
 CConVar<bool> cs2ac_nulls_debug("cs2ac_nulls_debug", FCVAR_NONE, "Show Nulls timing checks and evidence", false);
 
 void MovementDetectionService::CreateInputEvents(PlayerCommand *cmd)
@@ -114,7 +112,7 @@ void MovementDetectionService::CreateInputEvents(PlayerCommand *cmd)
 		}
 		events.push_back(event);
 		dirty = true;
-		if (events.size() > MAX_INPUT_EVENTS)
+		if (events.size() > maxNullInputEvents)
 		{
 			events.pop_front();
 		}

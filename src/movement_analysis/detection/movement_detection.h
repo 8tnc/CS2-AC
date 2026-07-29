@@ -135,6 +135,8 @@ public:
 
 	f32 currentMaxFps {};
 	bool cvarMonitorStarted {};
+	std::size_t cvarQueryIndex {};
+	f64 cvarCycleInterval {};
 	std::set<std::string> invalidCvarLatches;
 	std::set<std::string> invalidQueriedCvars;
 	std::set<std::string> invalidUserInfoCvars;
@@ -148,5 +150,6 @@ private:
 	u32 currentCmdNum {};
 	std::uint64_t settingsMask {};
 	std::uint64_t settingsRevision {};
+	static constexpr std::size_t maxNullInputEvents = 2048;
 	void ClearDetectionBuffers();
 };
