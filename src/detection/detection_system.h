@@ -83,6 +83,7 @@ namespace detection
 		bool deathSeen {};
 		bool headshot {};
 		bool wallbang {};
+		bool throughSmoke {};
 		bool aimbotConsumed {};
 		bool silentMeasured {};
 		bool silentConsumed {};

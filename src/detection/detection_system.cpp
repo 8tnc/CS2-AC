@@ -414,6 +414,7 @@ namespace detection
 		shot->deathSeen = true;
 		shot->victimIndex = victim->index;
 		shot->wallbang = event->GetInt("penetrated", 0) > 0;
+		shot->throughSmoke = event->GetBool("thrusmoke", false);
 		return shot;
 	}
 

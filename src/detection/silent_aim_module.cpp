@@ -108,7 +108,7 @@ namespace detection
 		const int points = (shot.silentMaxDeviation > 22.5f ? 3
 							: shot.airborne                 ? 1
 															: 2)
-						   + static_cast<int>(shot.headshot) + static_cast<int>(shot.wallbang);
+						   + static_cast<int>(shot.headshot) + static_cast<int>(shot.wallbang) + static_cast<int>(shot.throughSmoke);
 		const auto now = Clock::now();
 		auto &incidents = evidence[player->index];
 		while (!incidents.empty() && now - incidents.front().time >= evidenceWindow)
