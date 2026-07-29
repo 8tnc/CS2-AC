@@ -79,7 +79,7 @@ static_function localization::Text MustEqual(const char *cvar, double value, con
 }
 
 static_global const char *cvarNames[] = {
-	"m_yaw",          // Client-controlled, but unsafe outside the accepted range.
+	// "m_yaw",       // Disabled: this was kick-only, but legitimate turn binds temporarily use high values.
 	"fps_max",        // Expected to stay at or above the server tick rate.
 	"sv_cheats",      // replicated
 	"sensitivity",    // capped (0.0001f => 8.0f)
@@ -94,7 +94,7 @@ static_global const char *cvarNames[] = {
 
 static_global const char *userInfoCvarNames[] = {
 	"sensitivity",
-	"m_yaw",
+	// "m_yaw", // Disabled with the queried check above; keep its validation code in case the check returns later.
 };
 
 static_global auto cheatCvarCheckerGraceUntil = (std::chrono::steady_clock::time_point::min)();
