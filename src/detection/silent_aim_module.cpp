@@ -112,11 +112,13 @@ namespace detection
 		}
 
 		const float excess = shot.silentDeviation - shot.silentAllowance;
+		const std::string_view weapon = NormalizeWeapon(shot.weapon);
+		const bool noscope = !shot.scoped && (weapon == "awp" || weapon == "ssg08" || weapon == "g3sg1" || weapon == "scar20");
 		const int points = (excess > blatantExcess ? 3
 							: shot.airborne        ? 3
 												   : 2)
 						   + static_cast<int>(shot.headshot) + 2 * static_cast<int>(shot.wallbang)
-						   + 2 * static_cast<int>(shot.throughSmoke);
+						   + 2 * static_cast<int>(shot.throughSmoke) + static_cast<int>(noscope);
 		const auto now = Clock::now();
 		auto &incidents = evidence[player->index];
 		while (!incidents.empty() && now - incidents.front().time >= evidenceWindow)
