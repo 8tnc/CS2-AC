@@ -7,6 +7,7 @@
 #include "version_gen.h"
 
 class WebhookService;
+class CMsgTEFireBullets;
 
 class CS2ACPlugin final : public ISmmPlugin, public IMetamodListener
 {
@@ -64,12 +65,12 @@ public:
 	void OnSetupMove(MovementPlayer *player, PlayerCommand *command);
 	void OnGameFrame(bool simulating);
 	void OnGameEvent(IGameEvent *event, MovementPlayer *player);
+	void OnFireBullets(const CMsgTEFireBullets &event);
 	void HandleDetection(const char *detection, MovementPlayer *player, const localization::Text &evidence, bool kickOnly = false,
 						 bool networkVetoed = false);
 	void OnClientFullyConnect(CPlayerSlot slot);
 	void OnClientSettingsChanged(CPlayerSlot slot);
 	void OnClientDisconnect(CPlayerSlot slot);
-	MovementPlayer *ResolveImpactShooter(int truncatedUserId) const;
 	void PrintConfigSummary(bool reloaded) const;
 	void PrintStatus() const;
 	void PrintHelp() const;

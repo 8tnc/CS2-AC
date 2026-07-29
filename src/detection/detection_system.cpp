@@ -7,13 +7,15 @@
 #include "sdk/entity/ccsplayerpawn.h"
 #include "sdk/usercmd.h"
 #include "settings.h"
-#include "utils/interfaces.h"
+
+#include "cs_gameevents.pb.h"
 
 #include <algorithm>
 #include <cmath>
 #include <limits>
 
 CConVarRef<bool> mp_teammates_are_enemies("mp_teammates_are_enemies");
+extern CConVar<bool> cs2ac_silentaim_debug;
 
 namespace
 {
@@ -149,14 +151,16 @@ namespace detection
 			}
 
 			const auto &base = command.base();
-			const auto &view = command.input_history(attackIndex).view_angles();
-			QAngle angles(view.x(), view.y(), view.z());
-			if (!IsFinite(angles))
+			const auto &baseView = base.viewangles();
+			const auto &attackView = command.input_history(attackIndex).view_angles();
+			const QAngle baseAngles(baseView.x(), baseView.y(), baseView.z());
+			const QAngle attackAngles(attackView.x(), attackView.y(), attackView.z());
+			if (!IsFinite(baseAngles) || !IsFinite(attackAngles))
 			{
 				continue;
 			}
 
-			data.commands.push_back({command.cmdNum, base.client_tick(), -1, angles});
+			data.commands.push_back({command.cmdNum, base.client_tick(), -1, baseAngles, attackAngles});
 			while (data.commands.size() > shotCommandLimit)
 			{
 				data.commands.pop_front();
@@ -305,12 +309,8 @@ namespace detection
 		shot.clientTick = match->clientTick;
 		shot.serverTick = match->serverTick;
 		shot.fireTick = currentTick;
-		shot.angles = match->angles;
-		if (auto *pawn = player->GetPlayerPawn())
-		{
-			shot.visibleAngles = pawn->m_angEyeAngles();
-			shot.hasVisibleAngles = IsFinite(shot.visibleAngles);
-		}
+		shot.angles = match->attackAngles;
+		shot.baseAngles = match->baseAngles;
 		shot.eyePosition = match->eyePosition;
 		shot.weapon.assign(weapon);
 		shot.fireTime = Clock::now();
@@ -322,6 +322,76 @@ namespace detection
 			data.shots.pop_front();
 		}
 		return &data.shots.back();
+	}
+
+	ShotRecord *ShotCorrelator::OnFireBullets(const CMsgTEFireBullets &event, int currentTick)
+	{
+		std::string missing;
+		const auto require = [&](bool present, const char *name)
+		{
+			if (!present)
+			{
+				missing += missing.empty() ? name : tfm::format(", %s", name);
+			}
+		};
+		require(event.has_player(), "player");
+		require(event.has_inaccuracy(), "inaccuracy");
+		require(event.has_spread(), "spread");
+		require(event.has_weapon_id(), "weapon_id");
+		if (!missing.empty())
+		{
+			if (cs2ac_silentaim_debug.GetBool())
+			{
+				Msg("[CS2AC Silentaim] FireBullets rejected: missing %s.\n", missing.c_str());
+			}
+			return nullptr;
+		}
+
+		const bool validInaccuracy = std::isfinite(event.inaccuracy()) && event.inaccuracy() >= 0.0f;
+		const bool validSpread = std::isfinite(event.spread()) && event.spread() >= 0.0f;
+		if (!validInaccuracy || !validSpread)
+		{
+			if (cs2ac_silentaim_debug.GetBool())
+			{
+				Msg("[CS2AC Silentaim] FireBullets rejected: invalid%s%s.\n", validInaccuracy ? "" : " inaccuracy", validSpread ? "" : " spread");
+			}
+			return nullptr;
+		}
+
+		const CEntityIndex playerEntity(static_cast<int>(event.player() & 0x3FFF));
+		auto *player = g_pCS2ACPlayerManager ? g_pCS2ACPlayerManager->ToPlayer(playerEntity) : nullptr;
+		if (!IsEligibleHuman(player))
+		{
+			return nullptr;
+		}
+
+		auto &data = playerData[player->index];
+		ShotRecord *match = nullptr;
+		int matches = 0;
+		for (auto &shot : data.shots)
+		{
+			const std::int64_t delta = static_cast<std::int64_t>(currentTick) - shot.fireTick;
+			if (shot.generation != data.generation || shot.silentFireSeen || delta < 0 || delta > shotMatchTicks)
+			{
+				continue;
+			}
+			match = &shot;
+			++matches;
+		}
+		if (matches != 1)
+		{
+			if (cs2ac_silentaim_debug.GetBool())
+			{
+				Msg("[CS2AC Silentaim] FireBullets rejected for entity %d: %d compatible shots.\n", playerEntity.Get(), matches);
+			}
+			return nullptr;
+		}
+
+		match->silentInaccuracy = event.inaccuracy();
+		match->silentSpread = event.spread();
+		match->silentWeaponId = event.weapon_id();
+		match->silentFireSeen = true;
+		return match;
 	}
 
 	ShotRecord *ShotCorrelator::MatchEvent(MovementPlayer *player, std::string_view weapon, int currentTick)
@@ -348,23 +418,6 @@ namespace detection
 		return matches == 1 ? match : nullptr;
 	}
 
-	ShotRecord *ShotCorrelator::OnBulletImpact(IGameEvent *event, MovementPlayer *player, int currentTick)
-	{
-		if (!event)
-		{
-			return nullptr;
-		}
-		ShotRecord *shot = MatchEvent(player, {}, currentTick);
-		const Vector impact(event->GetFloat("x"), event->GetFloat("y"), event->GetFloat("z"));
-		if (!shot || shot->impactSeen || !IsFinite(impact))
-		{
-			return nullptr;
-		}
-		shot->impactPosition = impact;
-		shot->impactSeen = true;
-		return shot;
-	}
-
 	ShotRecord *ShotCorrelator::OnPlayerHurt(IGameEvent *event, MovementPlayer *victim, int currentTick)
 	{
 		if (!event || !g_pCS2ACPlayerManager)
@@ -386,6 +439,7 @@ namespace detection
 			return nullptr;
 		}
 		shot->hurtSeen = true;
+		shot->silentHitSeen = true;
 		shot->victimIndex = victim->index;
 		shot->headshot = event->GetInt("hitgroup", HITGROUP_GENERIC) == HITGROUP_HEAD;
 		return shot;
@@ -442,42 +496,6 @@ namespace detection
 			return nullptr;
 		}
 		return &frame->players[playerIndex];
-	}
-
-	MovementPlayer *ShotCorrelator::ResolveImpactShooter(int truncatedUserId, int currentTick) const
-	{
-		if (truncatedUserId < 0 || !interfaces::pEngine || !g_pCS2ACPlayerManager)
-		{
-			return nullptr;
-		}
-
-		MovementPlayer *match = nullptr;
-		for (int index = 1; index <= MAXPLAYERS; ++index)
-		{
-			auto *player = g_pCS2ACPlayerManager->ToPlayer(static_cast<u32>(index));
-			if (!IsEligibleHuman(player) || (interfaces::pEngine->GetPlayerUserId(player->GetPlayerSlot()).Get() & 0xff) != (truncatedUserId & 0xff))
-			{
-				continue;
-			}
-
-			int compatibleShots = 0;
-			const auto &data = playerData[index];
-			for (const auto &shot : data.shots)
-			{
-				const std::int64_t delta = static_cast<std::int64_t>(currentTick) - shot.fireTick;
-				compatibleShots += shot.generation == data.generation && delta >= 0 && delta <= shotMatchTicks;
-			}
-			if (compatibleShots != 1)
-			{
-				continue;
-			}
-			if (match)
-			{
-				return nullptr;
-			}
-			match = player;
-		}
-		return match;
 	}
 
 	std::deque<ShotRecord> &ShotCorrelator::GetShots(int playerIndex)
@@ -670,26 +688,12 @@ namespace detection
 				}
 			}
 		}
-		else if (CS2AC_STREQ(event->GetName(), "bullet_impact"))
-		{
-			if (ShotRecord *shot = shots.OnBulletImpact(event, player, currentTick))
-			{
-				if (settings::IsDetectionEnabled(DetectionType::SilentAim))
-				{
-					silentAim.OnShotUpdated(player, *shot);
-				}
-			}
-		}
 		else if (CS2AC_STREQ(event->GetName(), "player_hurt"))
 		{
 			if (ShotRecord *shot = shots.OnPlayerHurt(event, player, currentTick))
 			{
 				auto *attacker = g_pCS2ACPlayerManager->ToPlayer(static_cast<u32>(shot->playerIndex));
 				auto *victim = g_pCS2ACPlayerManager->ToPlayer(static_cast<u32>(shot->victimIndex));
-				if (settings::IsDetectionEnabled(DetectionType::SilentAim))
-				{
-					silentAim.OnShotUpdated(attacker, *shot);
-				}
 				if (settings::IsDetectionEnabled(DetectionType::Aimbot))
 				{
 					aimbot.OnPlayerHurt(attacker, victim, *shot);
@@ -707,6 +711,20 @@ namespace detection
 					irregularBehavior.OnPlayerDeath(event, attacker, victim, *shot);
 				}
 			}
+		}
+	}
+
+	void DetectionSystem::OnFireBullets(const CMsgTEFireBullets &event, int currentTick)
+	{
+		RefreshSettings();
+		if (!settings::IsPluginEnabled() || !settings::IsDetectionEnabled(DetectionType::SilentAim))
+		{
+			return;
+		}
+		if (ShotRecord *shot = shots.OnFireBullets(event, currentTick))
+		{
+			auto *player = g_pCS2ACPlayerManager->ToPlayer(static_cast<u32>(shot->playerIndex));
+			silentAim.OnShotUpdated(player, *shot);
 		}
 	}
 
@@ -742,8 +760,4 @@ namespace detection
 		shots.OnClientDisconnect(player);
 	}
 
-	MovementPlayer *DetectionSystem::ResolveImpactShooter(int truncatedUserId, int currentTick) const
-	{
-		return shots.ResolveImpactShooter(truncatedUserId, currentTick);
-	}
 } // namespace detection

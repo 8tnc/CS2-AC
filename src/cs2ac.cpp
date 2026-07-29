@@ -17,6 +17,7 @@
 #include "utils/schema.h"
 #include "utils/utils.h"
 #include "networksystem/inetworkmessages.h"
+#include "cs_gameevents.pb.h"
 #include "gameevents.pb.h"
 #include "igameevents.h"
 
@@ -385,6 +386,10 @@ bool CS2ACPlugin::Activate(char *error, size_t maxlen, bool late)
 	{
 		missing.emplace_back("The center-screen event message used for detection announcements is unavailable.");
 	}
+	if (g_pNetworkMessages && !g_pNetworkMessages->FindNetworkMessageById(GE_FireBulletsId))
+	{
+		missing.emplace_back("The exact weapon firing data used by Silentaim is unavailable.");
+	}
 	if (g_pCVar)
 	{
 		movement_settings::Validate(missing);
@@ -597,6 +602,12 @@ void CS2ACPlugin::OnGameEvent(IGameEvent *event, MovementPlayer *player)
 {
 	auto *globals = g_pCS2ACUtils->GetServerGlobals();
 	detectionSystem.OnGameEvent(event, player, globals ? globals->tickcount : 0);
+}
+
+void CS2ACPlugin::OnFireBullets(const CMsgTEFireBullets &event)
+{
+	auto *globals = g_pCS2ACUtils->GetServerGlobals();
+	detectionSystem.OnFireBullets(event, globals ? globals->tickcount : 0);
 }
 
 void CS2ACPlugin::HandleDetection(const char *detection, MovementPlayer *player, const localization::Text &evidence, bool kickOnly,
@@ -939,12 +950,6 @@ void CS2ACPlugin::PrintStatus() const
 		webhook && webhook->IsConfigured() ? (webhook->IsDisabled() ? "disabled after an error" : "configured") : "not configured", webhookQueueSize,
 		webhookQueueSize == 1 ? "" : "s");
 	Msg("[CS2AC] sv_cheats testing: %s.\n", MovementDetectionService::IsSvCheatsTestingAllowed() ? "allowed" : "not allowed");
-}
-
-MovementPlayer *CS2ACPlugin::ResolveImpactShooter(int truncatedUserId) const
-{
-	auto *globals = g_pCS2ACUtils->GetServerGlobals();
-	return detectionSystem.ResolveImpactShooter(truncatedUserId, globals ? globals->tickcount : 0);
 }
 
 void CS2ACPlugin::ResetRuntime()

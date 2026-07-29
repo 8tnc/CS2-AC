@@ -14,6 +14,7 @@
 class IGameEvent;
 class MovementPlayer;
 class PlayerCommand;
+class CMsgTEFireBullets;
 
 namespace detection
 {
@@ -50,7 +51,8 @@ namespace detection
 		int commandNumber {};
 		int clientTick {};
 		int serverTick {-1};
-		QAngle angles;
+		QAngle baseAngles;
+		QAngle attackAngles;
 		Vector eyePosition;
 		bool airborne {};
 		bool scoped {};
@@ -68,22 +70,26 @@ namespace detection
 		int serverTick {-1};
 		int fireTick {-1};
 		QAngle angles;
-		QAngle visibleAngles;
+		QAngle baseAngles;
 		Vector eyePosition;
-		Vector impactPosition;
 		std::string weapon;
 		Clock::time_point fireTime;
-		float silentMaxDeviation {};
+		float silentDeviation {};
+		float silentAllowance {};
+		float silentInaccuracy {};
+		float silentSpread {};
+		std::uint32_t silentWeaponId {};
 		int victimIndex {-1};
 		bool airborne {};
 		bool scoped {};
-		bool hasVisibleAngles {};
-		bool impactSeen {};
 		bool hurtSeen {};
 		bool deathSeen {};
 		bool headshot {};
 		bool wallbang {};
 		bool throughSmoke {};
+		bool silentFireSeen {};
+		bool silentHitSeen {};
+		bool silentRejected {};
 		bool aimbotConsumed {};
 		bool silentMeasured {};
 		bool silentConsumed {};
@@ -109,13 +115,12 @@ namespace detection
 		void Prune(int currentTick);
 
 		ShotRecord *OnWeaponFire(IGameEvent *event, MovementPlayer *player, int currentTick);
-		ShotRecord *OnBulletImpact(IGameEvent *event, MovementPlayer *player, int currentTick);
+		ShotRecord *OnFireBullets(const CMsgTEFireBullets &event, int currentTick);
 		ShotRecord *OnPlayerHurt(IGameEvent *event, MovementPlayer *victim, int currentTick);
 		ShotRecord *OnPlayerDeath(IGameEvent *event, MovementPlayer *victim, int currentTick);
 
 		const PositionFrame *FindFrame(int serverTick) const;
 		const TrackedPosition *FindPosition(int serverTick, int playerIndex) const;
-		MovementPlayer *ResolveImpactShooter(int truncatedUserId, int currentTick) const;
 		std::deque<ShotRecord> &GetShots(int playerIndex);
 
 	private:
@@ -188,7 +193,7 @@ namespace detection
 		int points {};
 	};
 
-	// Detects damaging bullet impacts that sharply disagree with the visible firing angle.
+	// Detects damaging shots whose attack-history angle disagrees with the command's base view angle.
 	class SilentAimModule
 	{
 	public:
@@ -201,7 +206,6 @@ namespace detection
 
 	private:
 		void Finalize(MovementPlayer *player, ShotRecord &shot);
-		static float GetHighDeviationThreshold(std::string_view weapon);
 
 		AnnounceCallback announce {};
 		ShotCorrelator *shots {};
@@ -505,10 +509,10 @@ namespace detection
 		void OnSetupMove(MovementPlayer *player, PlayerCommand *command, int currentTick);
 		void OnGameFrame(int currentTick);
 		void OnGameEvent(IGameEvent *event, MovementPlayer *player, int currentTick);
+		void OnFireBullets(const CMsgTEFireBullets &event, int currentTick);
 		void OnClientReady(MovementPlayer *player);
 		void OnClientSettingsChanged(MovementPlayer *player);
 		void OnClientDisconnect(MovementPlayer *player);
-		MovementPlayer *ResolveImpactShooter(int truncatedUserId, int currentTick) const;
 
 	private:
 		void RefreshSettings();

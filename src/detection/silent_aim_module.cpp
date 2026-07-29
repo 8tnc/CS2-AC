@@ -19,8 +19,9 @@ namespace
 {
 	constexpr int detectionScore = 12;
 	constexpr auto evidenceWindow = std::chrono::minutes(10);
-	constexpr float minimumImpactDistance = 100.0f;
-	constexpr float maximumImpactDistance = 10000.0f;
+	constexpr float minimumAllowance = 1.0f;
+	constexpr float allowanceMargin = 0.5f;
+	constexpr float blatantExcess = 22.5f;
 } // namespace
 
 namespace detection
@@ -45,29 +46,35 @@ namespace detection
 
 	void SilentAimModule::OnShotUpdated(MovementPlayer *player, ShotRecord &shot)
 	{
-		if (!IsEligibleHuman(player) || shot.playerIndex != player->index || shot.silentMeasured || shot.silentConsumed || !shot.hasVisibleAngles
-			|| !shot.impactSeen || !IsFinite(shot.eyePosition) || !IsFinite(shot.impactPosition) || !IsFinite(shot.visibleAngles))
-		{
-			return;
-		}
-
-		Vector direction = shot.impactPosition - shot.eyePosition;
-		const float distance = direction.Length();
-		if (!std::isfinite(distance) || distance < minimumImpactDistance || distance > maximumImpactDistance)
-		{
-			SILENTAIM_DEBUG("%s impact rejected at %.1f units.\n", player->GetName(), distance);
-			return;
-		}
-		direction.NormalizeInPlace();
-		const float dot = std::clamp(DotProduct(AimForward(shot.visibleAngles), direction), -1.0f, 1.0f);
-		const float deviation = static_cast<float>(std::acos(dot) * (180.0 / M_PI));
-		if (!std::isfinite(deviation))
+		if (!IsEligibleHuman(player) || shot.playerIndex != player->index || shot.silentMeasured || shot.silentConsumed || !shot.silentFireSeen
+			|| !IsFinite(shot.baseAngles) || !IsFinite(shot.angles) || !std::isfinite(shot.silentInaccuracy) || !std::isfinite(shot.silentSpread)
+			|| shot.silentInaccuracy < 0.0f || shot.silentSpread < 0.0f)
 		{
 			return;
 		}
 		shot.silentMeasured = true;
-		shot.silentMaxDeviation = (std::max)(shot.silentMaxDeviation, deviation);
-		SILENTAIM_DEBUG("%s matched impact %.2f degrees from visible aim for command %d.\n", player->GetName(), deviation, shot.commandNumber);
+
+		if (NormalizeWeapon(shot.weapon) == "taser")
+		{
+			shot.silentRejected = true;
+			SILENTAIM_DEBUG("%s shot rejected: tasers are not evaluated.\n", player->GetName());
+			return;
+		}
+
+		constexpr float radiansToDegrees = static_cast<float>(180.0 / M_PI);
+		shot.silentAllowance =
+			(std::max)(minimumAllowance,
+					   static_cast<float>(std::atan(shot.silentInaccuracy + shot.silentSpread) * radiansToDegrees) + allowanceMargin);
+		shot.silentDeviation = AngularDistance(shot.baseAngles, shot.angles);
+		if (!std::isfinite(shot.silentAllowance) || !std::isfinite(shot.silentDeviation))
+		{
+			shot.silentRejected = true;
+			return;
+		}
+
+		SILENTAIM_DEBUG("%s matched command %d to FireBullets weapon %u: deviation %.2f, allowance %.2f, inaccuracy %.5f, spread %.5f.\n",
+						player->GetName(), shot.commandNumber, shot.silentWeaponId, shot.silentDeviation, shot.silentAllowance, shot.silentInaccuracy,
+						shot.silentSpread);
 	}
 
 	void SilentAimModule::OnGameFrame(int currentTick)
@@ -93,22 +100,23 @@ namespace detection
 	void SilentAimModule::Finalize(MovementPlayer *player, ShotRecord &shot)
 	{
 		shot.silentConsumed = true;
-		if (!IsEligibleHuman(player) || !shot.hurtSeen || !shot.impactSeen)
+		if (!IsEligibleHuman(player) || !shot.silentMeasured || !shot.silentHitSeen || shot.silentRejected)
 		{
 			return;
 		}
 
-		const float threshold = GetHighDeviationThreshold(shot.weapon);
-		if (!std::isfinite(shot.silentMaxDeviation) || shot.silentMaxDeviation <= threshold)
+		if (shot.silentDeviation <= shot.silentAllowance)
 		{
-			SILENTAIM_DEBUG("%s confirmed hit was normal: %.2f <= %.2f degrees.\n", player->GetName(), shot.silentMaxDeviation, threshold);
+			SILENTAIM_DEBUG("%s confirmed hit was normal: %.2f <= %.2f degrees.\n", player->GetName(), shot.silentDeviation, shot.silentAllowance);
 			return;
 		}
 
-		const int points = (shot.silentMaxDeviation > 22.5f ? 3
-							: shot.airborne                 ? 1
-															: 2)
-						   + static_cast<int>(shot.headshot) + static_cast<int>(shot.wallbang) + static_cast<int>(shot.throughSmoke);
+		const float excess = shot.silentDeviation - shot.silentAllowance;
+		const int points = (excess > blatantExcess ? 3
+							: shot.airborne        ? 3
+												   : 2)
+						   + static_cast<int>(shot.headshot) + 2 * static_cast<int>(shot.wallbang)
+						   + 2 * static_cast<int>(shot.throughSmoke);
 		const auto now = Clock::now();
 		auto &incidents = evidence[player->index];
 		while (!incidents.empty() && now - incidents.front().time >= evidenceWindow)
@@ -123,7 +131,7 @@ namespace detection
 			total += incident.points;
 		}
 		SILENTAIM_DEBUG("%s added %d point%s for %.2f degrees; score %d/%d.\n", player->GetName(), points, points == 1 ? "" : "s",
-						shot.silentMaxDeviation, total, detectionScore);
+						shot.silentDeviation, total, detectionScore);
 		if (total >= detectionScore)
 		{
 			if (announce)
@@ -132,45 +140,13 @@ namespace detection
 					"SILENTAIM", player,
 					localization::Format("evidence.silentaim",
 										 "{deviation} degrees from visible aim added {points} points; the rolling score reached {score}/{threshold}.",
-										 {{"deviation", tfm::format("%.2f", shot.silentMaxDeviation)},
+										 {{"deviation", tfm::format("%.2f", shot.silentDeviation)},
 										  {"points", tfm::format("%d", points)},
 										  {"score", tfm::format("%d", total)},
 										  {"threshold", tfm::format("%d", detectionScore)}}));
 			}
 			incidents.clear();
 		}
-	}
-
-	float SilentAimModule::GetHighDeviationThreshold(std::string_view weapon)
-	{
-		weapon = NormalizeWeapon(weapon);
-		if (weapon == "ak47" || weapon == "m4a1" || weapon == "m4a1_silencer" || weapon == "galilar" || weapon == "famas" || weapon == "aug"
-			|| weapon == "sg556" || weapon == "g3sg1" || weapon == "scar20")
-		{
-			return 12.5f;
-		}
-		if (weapon == "awp" || weapon == "ssg08")
-		{
-			return 2.5f;
-		}
-		if (weapon == "deagle" || weapon == "revolver")
-		{
-			return 4.5f;
-		}
-		if (weapon == "glock" || weapon == "hkp2000" || weapon == "usp_silencer" || weapon == "elite" || weapon == "p250" || weapon == "tec9"
-			|| weapon == "fiveseven" || weapon == "cz75a")
-		{
-			return 4.3f;
-		}
-		if (weapon == "mac10" || weapon == "mp9" || weapon == "mp7" || weapon == "mp5sd" || weapon == "ump45" || weapon == "p90" || weapon == "bizon")
-		{
-			return 22.5f;
-		}
-		if (weapon == "nova" || weapon == "xm1014" || weapon == "sawedoff" || weapon == "mag7" || weapon == "m249" || weapon == "negev")
-		{
-			return 13.5f;
-		}
-		return 15.5f;
 	}
 
 	void SilentAimModule::OnClientDisconnect(MovementPlayer *player)
