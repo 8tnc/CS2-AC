@@ -17,9 +17,9 @@ CConVar<bool> cs2ac_silentaim_debug("cs2ac_silentaim_debug", FCVAR_NONE, "Show w
 
 namespace
 {
-	constexpr int detectionScore = 8;
+	constexpr int detectionScore = 10;
 	constexpr int normalHitDecay = 2;
-	constexpr auto evidenceWindow = std::chrono::minutes(10);
+	constexpr auto evidenceWindow = std::chrono::minutes(5);
 	constexpr float minimumAllowance = 1.0f;
 	constexpr float blatantExcess = 22.5f;
 } // namespace
