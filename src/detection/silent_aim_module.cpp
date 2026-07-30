@@ -18,7 +18,8 @@ CConVar<bool> cs2ac_silentaim_debug("cs2ac_silentaim_debug", FCVAR_NONE, "Show w
 namespace
 {
 	constexpr int detectionScore = 8;
-	constexpr auto evidenceWindow = std::chrono::minutes(5);
+	constexpr int normalHitDecay = 2;
+	constexpr auto evidenceWindow = std::chrono::minutes(10);
 	constexpr float minimumAllowance = 1.0f;
 	constexpr float blatantExcess = 22.5f;
 } // namespace
@@ -112,17 +113,24 @@ namespace detection
 
 		if (shot.silentDeviation <= shot.silentAllowance)
 		{
-			if (!incidents.empty() && --incidents.back().points == 0)
+			int remainingDecay = normalHitDecay;
+			while (remainingDecay > 0 && !incidents.empty())
 			{
-				incidents.pop_back();
+				const int applied = (std::min)(remainingDecay, incidents.back().points);
+				incidents.back().points -= applied;
+				remainingDecay -= applied;
+				if (incidents.back().points == 0)
+				{
+					incidents.pop_back();
+				}
 			}
 			int total = 0;
 			for (const auto &incident : incidents)
 			{
 				total += incident.points;
 			}
-			SILENTAIM_DEBUG("%s confirmed hit was normal: %.2f <= %.2f degrees; score decayed to %d/%d.\n", player->GetName(), shot.silentDeviation,
-							shot.silentAllowance, total, detectionScore);
+			SILENTAIM_DEBUG("%s confirmed hit was normal: %.2f <= %.2f degrees; score decayed by %d to %d/%d.\n", player->GetName(),
+							shot.silentDeviation, shot.silentAllowance, normalHitDecay - remainingDecay, total, detectionScore);
 			return;
 		}
 
