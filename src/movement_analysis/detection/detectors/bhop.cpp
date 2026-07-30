@@ -42,9 +42,9 @@ CConVar<bool> cs2ac_hyperscroll_debug("cs2ac_hyperscroll_debug", FCVAR_NONE,
 #define MIN_SAMPLE_COUNT         20                                             // Minimum number of samples before we start checking for bhop hacks
 #define WINDOW_SIZE              30                                             // Number of recent jumps to consider for bhop hack detection
 // Number of consecutive perfect bhops in the window to trigger a bhop hack infraction, regardless of ratio
-#define NUM_CONSECUTIVE_PERFS_FOR_INFRACTION 12
+#define NUM_CONSECUTIVE_PERFS_FOR_INFRACTION 10
 // Perfect jumps add one and failed jumps remove one before repetitive input patterns can trigger an infraction.
-#define PERF_SCORE_FOR_PATTERN_CHECK          8
+#define PERF_SCORE_FOR_PATTERN_CHECK          7
 #define PERF_RATIO_FOR_HYPERSCROLL_INFRACTION 0.6f
 
 #define REPETITIVE_PATTERN_THRESHOLD 0.9f // If 90% of the perfs are the same pattern, it might be a cheat...
