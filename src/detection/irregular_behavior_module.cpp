@@ -18,7 +18,7 @@ CConVar<bool> cs2ac_irregular_debug("cs2ac_irregular_debug", FCVAR_NONE, "Show I
 
 namespace
 {
-	constexpr int evidenceWindowSeconds = 10 * 60;
+	constexpr int evidenceWindowSeconds = 5 * 60;
 	constexpr float minimumDistance = 10.0f;
 	constexpr float longDistance = 20.0f;
 	constexpr int detectionScore = 16;

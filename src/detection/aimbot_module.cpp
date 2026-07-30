@@ -23,7 +23,7 @@ namespace
 	constexpr int snapWindowTicks = static_cast<int>(ENGINE_FIXED_TICK_RATE * 0.5f);
 	constexpr float minimumDistance = 100.0f;
 	constexpr int detectionThreshold = 3;
-	constexpr auto evidenceWindow = std::chrono::minutes(10);
+	constexpr auto evidenceWindow = std::chrono::minutes(5);
 
 	enum class AimbotRule
 	{

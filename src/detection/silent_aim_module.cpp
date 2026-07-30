@@ -18,7 +18,7 @@ CConVar<bool> cs2ac_silentaim_debug("cs2ac_silentaim_debug", FCVAR_NONE, "Show w
 namespace
 {
 	constexpr int detectionScore = 8;
-	constexpr auto evidenceWindow = std::chrono::minutes(10);
+	constexpr auto evidenceWindow = std::chrono::minutes(5);
 	constexpr float minimumAllowance = 1.0f;
 	constexpr float blatantExcess = 22.5f;
 } // namespace
@@ -103,9 +103,26 @@ namespace detection
 			return;
 		}
 
+		const auto now = Clock::now();
+		auto &incidents = evidence[player->index];
+		while (!incidents.empty() && now - incidents.front().time >= evidenceWindow)
+		{
+			incidents.pop_front();
+		}
+
 		if (shot.silentDeviation <= shot.silentAllowance)
 		{
-			SILENTAIM_DEBUG("%s confirmed hit was normal: %.2f <= %.2f degrees.\n", player->GetName(), shot.silentDeviation, shot.silentAllowance);
+			if (!incidents.empty() && --incidents.back().points == 0)
+			{
+				incidents.pop_back();
+			}
+			int total = 0;
+			for (const auto &incident : incidents)
+			{
+				total += incident.points;
+			}
+			SILENTAIM_DEBUG("%s confirmed hit was normal: %.2f <= %.2f degrees; score decayed to %d/%d.\n", player->GetName(), shot.silentDeviation,
+							shot.silentAllowance, total, detectionScore);
 			return;
 		}
 
@@ -117,12 +134,6 @@ namespace detection
 												   : 2)
 						   + static_cast<int>(shot.headshot) + 2 * static_cast<int>(shot.wallbang) + 2 * static_cast<int>(shot.throughSmoke)
 						   + static_cast<int>(noscope);
-		const auto now = Clock::now();
-		auto &incidents = evidence[player->index];
-		while (!incidents.empty() && now - incidents.front().time >= evidenceWindow)
-		{
-			incidents.pop_front();
-		}
 		incidents.push_back({now, points});
 
 		int total = 0;

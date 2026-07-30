@@ -30,7 +30,7 @@ namespace
 	constexpr float minimumTargetTravel = 48.0f; // One and a half player widths, converted to degrees at the episode's starting distance.
 	constexpr float maximumInterpolationTicks = 19.0f;
 	constexpr int detectionThreshold = 3;
-	constexpr auto evidenceWindow = std::chrono::minutes(10);
+	constexpr auto evidenceWindow = std::chrono::minutes(5);
 	constexpr float bodyHeights[] = {8.0f, 46.0f, 64.0f};
 
 	constexpr bool MeetsCoverage(int onTarget, int samples)
