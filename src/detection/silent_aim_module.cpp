@@ -17,10 +17,9 @@ CConVar<bool> cs2ac_silentaim_debug("cs2ac_silentaim_debug", FCVAR_NONE, "Show w
 
 namespace
 {
-	constexpr int detectionScore = 12;
+	constexpr int detectionScore = 8;
 	constexpr auto evidenceWindow = std::chrono::minutes(10);
 	constexpr float minimumAllowance = 1.0f;
-	constexpr float allowanceMargin = 0.5f;
 	constexpr float blatantExcess = 22.5f;
 } // namespace
 
@@ -63,8 +62,7 @@ namespace detection
 
 		constexpr float radiansToDegrees = static_cast<float>(180.0 / M_PI);
 		shot.silentAllowance =
-			(std::max)(minimumAllowance,
-					   static_cast<float>(std::atan(shot.silentInaccuracy + shot.silentSpread) * radiansToDegrees) + allowanceMargin);
+			(std::max)(minimumAllowance, static_cast<float>(std::atan(shot.silentInaccuracy + shot.silentSpread) * radiansToDegrees));
 		shot.silentDeviation = AngularDistance(shot.baseAngles, shot.angles);
 		if (!std::isfinite(shot.silentAllowance) || !std::isfinite(shot.silentDeviation))
 		{
