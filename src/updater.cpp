@@ -693,8 +693,7 @@ bool UpdaterService::StagePackage(const std::vector<std::uint8_t> &body)
 	const fs::path packageRoot = CsgoRoot() / relativeStage / "game" / "csgo";
 	const fs::path packageBinary = packageRoot / "addons" / "cs2ac" / "bin" / platformFolder / (std::string("cs2ac") + binaryExtension);
 	// Keep this name dot-free because Metamod treats a dotted version suffix as the binary extension.
-	const fs::path updateBinary =
-		CsgoRoot() / "addons" / "cs2ac" / "bin" / platformFolder / (std::string("cs2ac-update") + binaryExtension);
+	const fs::path updateBinary = CsgoRoot() / "addons" / "cs2ac" / "bin" / platformFolder / (std::string("cs2ac-update") + binaryExtension);
 	if (!fs::is_regular_file(packageBinary, error) || !fs::is_regular_file(packageRoot / "addons" / "cs2ac" / "gamedata" / "cs2ac.games.txt", error)
 		|| !fs::is_directory(packageRoot / "addons" / "cs2ac" / "translations", error)
 		|| !fs::is_directory(packageRoot / "addons" / "cs2ac" / "licenses", error)
