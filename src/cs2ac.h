@@ -7,6 +7,7 @@
 #include "version_gen.h"
 
 class WebhookService;
+class UpdaterService;
 class CMsgTEFireBullets;
 
 class CS2ACPlugin final : public ISmmPlugin, public IMetamodListener
@@ -125,6 +126,7 @@ private:
 	std::string activationError;
 	detection::DetectionSystem detectionSystem;
 	WebhookService *webhook {};
+	UpdaterService *updater {};
 	std::array<JoinWatermarkState, MAXPLAYERS + 1> joinWatermarks {};
 	std::array<PunishmentLevel, MAXPLAYERS + 1> punishmentLevels {};
 };

@@ -168,6 +168,8 @@ That is it. Players install nothing.
 
 The default punishment commands are made for [CS2-SimpleAdmin](https://github.com/daffyyyy/CS2-SimpleAdmin). Using another admin plugin? Replace the two commands in `cs2ac.cfg` with commands that plugin understands.
 
+CS2AC checks for stable updates after startup and every six hours. A verified update is prepared in the background and installed on the next full server restart. Existing settings are copied into the new configuration layout, and the previous configuration and plugin binary are kept as backups.
+
 ## Configuration
 
 The included [`cs2ac.cfg`](cfg/cs2ac.cfg) explains every option in plain language.
