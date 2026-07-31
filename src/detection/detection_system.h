@@ -104,10 +104,13 @@ namespace detection
 		QAngle baseAngles;
 		QAngle attackAngles;
 		Vector eyePosition;
+		float subtickPitchTravel {};
+		float subtickYawTravel {};
 		bool airborne {};
 		bool scoped {};
 		bool simulated {};
 		bool consumed {};
+		bool subtickAnglesValid {true};
 	};
 
 	struct ShotRecord
@@ -128,6 +131,9 @@ namespace detection
 		float silentAllowance {};
 		float silentInaccuracy {};
 		float silentSpread {};
+		float silentSubtickPitchTravel {};
+		float silentSubtickYawTravel {};
+		float silentUnsupportedDeviation {};
 		std::uint32_t silentWeaponId {};
 		int victimIndex {-1};
 		bool airborne {};
@@ -140,6 +146,8 @@ namespace detection
 		bool silentFireSeen {};
 		bool silentHitSeen {};
 		bool silentRejected {};
+		bool silentMovementSupported {};
+		bool silentSubtickAnglesValid {true};
 		bool aimbotConsumed {};
 		bool silentMeasured {};
 		bool silentConsumed {};

@@ -161,7 +161,40 @@ namespace detection
 				continue;
 			}
 
-			data.commands.push_back({command.cmdNum, base.client_tick(), -1, baseAngles, attackAngles});
+			ShotCommand captured {command.cmdNum, base.client_tick(), -1, baseAngles, attackAngles};
+			for (int moveIndex = 0; moveIndex < base.subtick_moves_size(); ++moveIndex)
+			{
+				const auto &move = base.subtick_moves(moveIndex);
+				if (move.has_pitch_delta())
+				{
+					if (!std::isfinite(move.pitch_delta()))
+					{
+						captured.subtickAnglesValid = false;
+					}
+					else
+					{
+						captured.subtickPitchTravel += std::abs(move.pitch_delta());
+					}
+				}
+				if (move.has_yaw_delta())
+				{
+					if (!std::isfinite(move.yaw_delta()))
+					{
+						captured.subtickAnglesValid = false;
+					}
+					else
+					{
+						captured.subtickYawTravel += std::abs(move.yaw_delta());
+					}
+				}
+			}
+			if (!std::isfinite(captured.subtickPitchTravel) || !std::isfinite(captured.subtickYawTravel))
+			{
+				captured.subtickAnglesValid = false;
+				captured.subtickPitchTravel = 0.0f;
+				captured.subtickYawTravel = 0.0f;
+			}
+			data.commands.push_back(captured);
 			while (data.commands.size() > shotCommandLimit)
 			{
 				data.commands.pop_front();
@@ -315,6 +348,9 @@ namespace detection
 		shot.eyePosition = match->eyePosition;
 		shot.weapon.assign(weapon);
 		shot.fireTime = Clock::now();
+		shot.silentSubtickPitchTravel = match->subtickPitchTravel;
+		shot.silentSubtickYawTravel = match->subtickYawTravel;
+		shot.silentSubtickAnglesValid = match->subtickAnglesValid;
 		shot.airborne = match->airborne;
 		shot.scoped = match->scoped;
 		data.shots.push_back(std::move(shot));
