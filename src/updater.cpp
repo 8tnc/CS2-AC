@@ -511,7 +511,7 @@ void UpdaterService::CheckRelease()
 	request = http->CreateHTTPRequest(k_EHTTPMethodGET, releaseApi);
 	if (request == INVALID_HTTPREQUEST_HANDLE || !http->SetHTTPRequestHeaderValue(request, "Accept", "application/vnd.github+json")
 		|| !http->SetHTTPRequestHeaderValue(request, "X-GitHub-Api-Version", "2022-11-28")
-		|| !http->SetHTTPRequestHeaderValue(request, "User-Agent", "CS2AC-Updater") || !http->SetHTTPRequestNetworkActivityTimeout(request, 10)
+		|| !http->SetHTTPRequestUserAgentInfo(request, "CS2AC-Updater") || !http->SetHTTPRequestNetworkActivityTimeout(request, 10)
 		|| !http->SetHTTPRequestAbsoluteTimeoutMS(request, 20000) || !http->SetHTTPRequestRequiresVerifiedCertificate(request, true))
 	{
 		RetryLater("The release check could not be prepared.");
@@ -531,7 +531,7 @@ void UpdaterService::CheckRelease()
 void UpdaterService::DownloadPackage()
 {
 	request = http->CreateHTTPRequest(k_EHTTPMethodGET, downloadUrl.c_str());
-	if (request == INVALID_HTTPREQUEST_HANDLE || !http->SetHTTPRequestHeaderValue(request, "User-Agent", "CS2AC-Updater")
+	if (request == INVALID_HTTPREQUEST_HANDLE || !http->SetHTTPRequestUserAgentInfo(request, "CS2AC-Updater")
 		|| !http->SetHTTPRequestNetworkActivityTimeout(request, 20) || !http->SetHTTPRequestAbsoluteTimeoutMS(request, 120000)
 		|| !http->SetHTTPRequestRequiresVerifiedCertificate(request, true))
 	{
