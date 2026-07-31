@@ -220,7 +220,7 @@ namespace detection
 			{
 				continue;
 			}
-			frame.players[index] = {origin, eye, pawn->GetTeam(), true, pawn->IsAlive(), player->JustTeleported(5.0f)};
+			frame.players[index] = {origin, eye, pawn->GetTeam(), true, pawn->IsAlive(), player->JustTeleported(2.0f)};
 		}
 
 		if (!positionFrames.empty() && positionFrames.back().serverTick == currentTick)

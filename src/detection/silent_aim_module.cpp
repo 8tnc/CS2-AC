@@ -137,7 +137,7 @@ namespace detection
 		const float excess = shot.silentDeviation - shot.silentAllowance;
 		const std::string_view weapon = NormalizeWeapon(shot.weapon);
 		const bool noscope = !shot.scoped && (weapon == "awp" || weapon == "ssg08" || weapon == "g3sg1" || weapon == "scar20");
-		const int points = (excess > blatantExcess ? 3
+		const int points = (excess > blatantExcess ? 4
 							: shot.airborne        ? 3
 												   : 2)
 						   + static_cast<int>(shot.headshot) + 2 * static_cast<int>(shot.wallbang) + 2 * static_cast<int>(shot.throughSmoke)
