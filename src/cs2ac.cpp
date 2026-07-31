@@ -596,6 +596,7 @@ void CS2ACPlugin::OnGameFrame(bool simulating)
 	{
 		webhook->OnGameFrame();
 	}
+	ProcessJoinWatermarks();
 }
 
 void CS2ACPlugin::OnGameEvent(IGameEvent *event, MovementPlayer *player)
@@ -707,7 +708,15 @@ void CS2ACPlugin::HandleDetection(const char *detection, MovementPlayer *player,
 
 void CS2ACPlugin::OnClientFullyConnect(CPlayerSlot slot)
 {
-	detectionSystem.OnClientReady(g_pCS2ACPlayerManager->ToPlayer(slot));
+	auto *player = g_pCS2ACPlayerManager->ToPlayer(slot);
+	detectionSystem.OnClientReady(player);
+	const int index = slot.Get() + 1;
+	if (player && index > 0 && index <= MAXPLAYERS && !player->IsFakeClient() && !player->IsCSTV() && !joinWatermarks[index].shown
+		&& !joinWatermarks[index].pending)
+	{
+		joinWatermarks[index].showAt = std::chrono::steady_clock::now() + std::chrono::seconds(5);
+		joinWatermarks[index].pending = true;
+	}
 }
 
 void CS2ACPlugin::OnClientSettingsChanged(CPlayerSlot slot)
@@ -720,10 +729,71 @@ void CS2ACPlugin::OnClientDisconnect(CPlayerSlot slot)
 	auto *player = g_pCS2ACPlayerManager->ToPlayer(slot);
 	const std::string playerName = player ? SanitizeConsoleText(player->GetName()) : "<unknown>";
 	detectionSystem.OnClientDisconnect(player);
+	const int index = slot.Get() + 1;
+	if (index > 0 && index <= MAXPLAYERS)
+	{
+		joinWatermarks[index] = {};
+	}
 	if (player)
 	{
 		punishmentLevels[player->index] = PunishmentLevel::None;
 		Msg("[CS2AC] Cleared %s's detection evidence because they disconnected.\n", playerName.c_str());
+	}
+}
+
+void CS2ACPlugin::ProcessJoinWatermarks()
+{
+	const auto now = std::chrono::steady_clock::now();
+	for (int index = 1; index <= MAXPLAYERS; ++index)
+	{
+		auto &state = joinWatermarks[index];
+		if (!state.pending && !state.centerPending && !state.centerActive)
+		{
+			continue;
+		}
+		auto *player = g_pCS2ACPlayerManager->ToPlayer(static_cast<u32>(index));
+		if (!player || !player->IsConnected() || player->IsFakeClient() || player->IsCSTV())
+		{
+			state = {};
+			continue;
+		}
+		if (state.pending && now >= state.showAt && player->IsInGame())
+		{
+			state.pending = false;
+			state.shown = true;
+			state.centerPending = true;
+			utils::AnnounceWatermarkTo(player->GetPlayerSlot(), false);
+		}
+		if (state.centerPending && player->IsInGame() && !utils::IsDetectionAnnouncementActive())
+		{
+			state.centerPending = false;
+			utils::AnnounceWatermarkTo(player->GetPlayerSlot(), true);
+			state.centerActive = true;
+			state.expires = now + std::chrono::seconds(3);
+			state.nextCenterSend = now + std::chrono::milliseconds(100);
+			state.centerBroadcasts = 1;
+		}
+		if (!state.centerActive)
+		{
+			continue;
+		}
+		if (utils::IsDetectionAnnouncementActive() || !player->IsInGame())
+		{
+			state.centerActive = false;
+			continue;
+		}
+		if (now >= state.expires)
+		{
+			utils::ClearWatermarkFor(player->GetPlayerSlot());
+			state.centerActive = false;
+			continue;
+		}
+		if (now >= state.nextCenterSend && state.centerBroadcasts < 31)
+		{
+			utils::AnnounceWatermarkTo(player->GetPlayerSlot(), true);
+			state.nextCenterSend = now + std::chrono::milliseconds(100);
+			++state.centerBroadcasts;
+		}
 	}
 }
 
@@ -1011,6 +1081,7 @@ void CS2ACPlugin::CleanupRuntime()
 	simulatingPhysics = false;
 	serverGlobals = {};
 	punishmentLevels.fill(PunishmentLevel::None);
+	joinWatermarks.fill({});
 	utils::Cleanup();
 	modules::Cleanup();
 	activationPending = false;

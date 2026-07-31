@@ -282,7 +282,7 @@ Yes. When `mp_teammates_are_enemies` is enabled, CS2AC treats other players as e
 <details>
 <summary><strong>Does CS2AC advertise itself?</strong></summary>
 
-Yes, but it does not spam. Every six completed rounds, CS2AC shows this message once in chat and at the center of the screen:
+Yes. Five seconds after a player fully joins, CS2AC shows this message privately to that player in chat and at the center of their screen. The center message stays for three seconds, and no one else sees it:
 
 ```text
 [CS2AC] This server is protected by karola3vax's anti-cheat.

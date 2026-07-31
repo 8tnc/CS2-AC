@@ -98,8 +98,22 @@ private:
 	};
 
 	bool Activate(char *error, size_t maxlen, bool late);
+	void ProcessJoinWatermarks();
 	void ResetRuntime();
 	void CleanupRuntime();
+
+	struct JoinWatermarkState
+	{
+		std::chrono::steady_clock::time_point showAt;
+		std::chrono::steady_clock::time_point expires;
+		std::chrono::steady_clock::time_point nextCenterSend;
+		int centerBroadcasts {};
+		bool pending {};
+		bool shown {};
+		bool centerPending {};
+		bool centerActive {};
+	};
+
 	bool loaded {};
 	bool activationPending {};
 	bool convarsRegistered {};
@@ -111,6 +125,7 @@ private:
 	std::string activationError;
 	detection::DetectionSystem detectionSystem;
 	WebhookService *webhook {};
+	std::array<JoinWatermarkState, MAXPLAYERS + 1> joinWatermarks {};
 	std::array<PunishmentLevel, MAXPLAYERS + 1> punishmentLevels {};
 };
 
