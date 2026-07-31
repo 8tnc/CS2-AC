@@ -106,11 +106,13 @@ namespace detection
 		Vector eyePosition;
 		float subtickPitchTravel {};
 		float subtickYawTravel {};
+		QAngle previousBaseAngles;
 		bool airborne {};
 		bool scoped {};
 		bool simulated {};
 		bool consumed {};
 		bool subtickAnglesValid {true};
+		bool previousBaseValid {};
 	};
 
 	struct ShotRecord
@@ -124,6 +126,7 @@ namespace detection
 		int fireTick {-1};
 		QAngle angles;
 		QAngle baseAngles;
+		QAngle silentPreviousBaseAngles;
 		Vector eyePosition;
 		std::string weapon;
 		Clock::time_point fireTime;
@@ -134,6 +137,7 @@ namespace detection
 		float silentSubtickPitchTravel {};
 		float silentSubtickYawTravel {};
 		float silentUnsupportedDeviation {};
+		float silentAdjacentPathExcess {};
 		std::uint32_t silentWeaponId {};
 		int victimIndex {-1};
 		bool airborne {};
@@ -148,6 +152,7 @@ namespace detection
 		bool silentRejected {};
 		bool silentMovementSupported {};
 		bool silentSubtickAnglesValid {true};
+		bool silentPreviousBaseValid {};
 		bool aimbotConsumed {};
 		bool silentMeasured {};
 		bool silentConsumed {};
@@ -160,6 +165,9 @@ namespace detection
 		std::deque<ShotCommand> commands;
 		std::deque<ShotRecord> shots;
 		std::uint32_t generation {1};
+		int lastViewCommandNumber {-1};
+		QAngle lastViewBaseAngles;
+		bool lastViewValid {};
 	};
 
 	class ShotCorrelator

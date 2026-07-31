@@ -87,11 +87,22 @@ namespace detection
 		shot.silentMovementSupported =
 			hasSubtickMovement && std::isfinite(shot.silentUnsupportedDeviation) && shot.silentUnsupportedDeviation <= shot.silentAllowance;
 
-		SILENTAIM_DEBUG("%s matched command %d to FireBullets weapon %u: deviation %.2f, allowance %.2f, unexplained %.2f, subtick travel "
-						"%.2f pitch/%.2f yaw, inaccuracy %.5f, spread %.5f.\n",
+		if (shot.silentPreviousBaseValid && IsFinite(shot.silentPreviousBaseAngles))
+		{
+			// A legitimate firing angle lies on the reported path between adjacent base angles, so the two path legs
+			// should not be meaningfully longer than the direct angle between those commands.
+			const float previousToAttack = AngularDistance(shot.silentPreviousBaseAngles, shot.angles);
+			const float previousToCurrent = AngularDistance(shot.silentPreviousBaseAngles, shot.baseAngles);
+			shot.silentAdjacentPathExcess = (std::max)(0.0f, previousToAttack + shot.silentDeviation - previousToCurrent);
+			shot.silentMovementSupported =
+				shot.silentMovementSupported || (std::isfinite(shot.silentAdjacentPathExcess) && shot.silentAdjacentPathExcess <= minimumAllowance);
+		}
+
+		SILENTAIM_DEBUG("%s matched command %d to FireBullets weapon %u: deviation %.2f, allowance %.2f, unexplained %.2f, adjacent path "
+						"excess %.2f, subtick travel %.2f pitch/%.2f yaw, inaccuracy %.5f, spread %.5f.\n",
 						player->GetName(), shot.commandNumber, shot.silentWeaponId, shot.silentDeviation, shot.silentAllowance,
-						shot.silentUnsupportedDeviation, shot.silentSubtickPitchTravel, shot.silentSubtickYawTravel, shot.silentInaccuracy,
-						shot.silentSpread);
+						shot.silentUnsupportedDeviation, shot.silentPreviousBaseValid ? shot.silentAdjacentPathExcess : -1.0f,
+						shot.silentSubtickPitchTravel, shot.silentSubtickYawTravel, shot.silentInaccuracy, shot.silentSpread);
 	}
 
 	void SilentAimModule::OnGameFrame(int currentTick)
@@ -149,9 +160,9 @@ namespace detection
 			}
 			if (shot.silentMovementSupported && shot.silentDeviation > shot.silentAllowance)
 			{
-				SILENTAIM_DEBUG("%s confirmed hit was ignored: subtick view movement explained %.2f of %.2f degrees; score decayed by %d to %d/%d.\n",
-								player->GetName(), shot.silentDeviation - shot.silentUnsupportedDeviation, shot.silentDeviation,
-								normalHitDecay - remainingDecay, total, detectionScore);
+				SILENTAIM_DEBUG(
+					"%s confirmed hit was ignored: reported view movement explained the %.2f-degree mismatch; score decayed by %d to %d/%d.\n",
+					player->GetName(), shot.silentDeviation, normalHitDecay - remainingDecay, total, detectionScore);
 			}
 			else
 			{
