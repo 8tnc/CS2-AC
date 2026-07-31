@@ -692,14 +692,15 @@ bool UpdaterService::StagePackage(const std::vector<std::uint8_t> &body)
 
 	const fs::path packageRoot = CsgoRoot() / relativeStage / "game" / "csgo";
 	const fs::path packageBinary = packageRoot / "addons" / "cs2ac" / "bin" / platformFolder / (std::string("cs2ac") + binaryExtension);
-	const fs::path versionedBinary =
-		CsgoRoot() / "addons" / "cs2ac" / "bin" / platformFolder / (std::string("cs2ac-") + updateVersion + binaryExtension);
+	// Keep this name dot-free because Metamod treats a dotted version suffix as the binary extension.
+	const fs::path updateBinary =
+		CsgoRoot() / "addons" / "cs2ac" / "bin" / platformFolder / (std::string("cs2ac-update") + binaryExtension);
 	if (!fs::is_regular_file(packageBinary, error) || !fs::is_regular_file(packageRoot / "addons" / "cs2ac" / "gamedata" / "cs2ac.games.txt", error)
 		|| !fs::is_directory(packageRoot / "addons" / "cs2ac" / "translations", error)
 		|| !fs::is_directory(packageRoot / "addons" / "cs2ac" / "licenses", error)
 		|| !fs::is_regular_file(packageRoot / "addons" / "cs2ac" / "THIRD_PARTY_NOTICES.md", error)
-		|| !fs::is_regular_file(packageRoot / "cfg" / "cs2ac.cfg", error) || !CopyFileAtomically(packageBinary, versionedBinary)
-		|| !WriteTextFileAtomically(PendingMarker(), updateVersion + "\n") || !WriteVdf("cs2ac-" + updateVersion))
+		|| !fs::is_regular_file(packageRoot / "cfg" / "cs2ac.cfg", error) || !CopyFileAtomically(packageBinary, updateBinary)
+		|| !WriteTextFileAtomically(PendingMarker(), updateVersion + "\n") || !WriteVdf("cs2ac-update"))
 	{
 		return false;
 	}
