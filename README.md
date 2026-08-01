@@ -11,7 +11,7 @@
 
 **A good Counter-Strike match should be decided by the players, not by who brought the better cheat.**
 
-CS2AC gives community servers a server-side way to catch cheating behavior. It watches the aim, shots, movement, inputs, and settings that players send to the server, then acts when that evidence crosses a strict detection gate.
+CS2AC watches the aim, shots, movement, button presses, and game settings that players send to the server. When it finds enough strong evidence, it reports the player and can ask the server to punish them.
 
 [Watch it work](#showcase) · [Read the detection modules](#detection-modules) · [Pair it with CS2FOW](#cs2ac-and-cs2fow)
 
@@ -74,7 +74,7 @@ CS2AC gives community servers a server-side way to catch cheating behavior. It w
 
 ## Detection output
 
-When a detector reaches its gate, CS2AC can report the same result wherever the server owner needs it:
+When a detector finds enough evidence, CS2AC can report the result wherever the server owner needs it:
 
 1. Announce it in public chat.
 2. Hold a center-screen alert for five seconds.
@@ -82,7 +82,7 @@ When a detector reaches its gate, CS2AC can report the same result wherever the 
 4. Submit the configured ban or kick command to the server.
 5. Send a detailed Discord webhook report.
 
-Chat and center-screen announcements can be turned on or off independently. Submitting a punishment command means CS2AC handed it to the server; the installed admin plugin is responsible for understanding and carrying out that command.
+Chat and center-screen announcements can be turned on or off separately. CS2AC sends the chosen ban or kick command to the server. The installed admin plugin must understand and run that command.
 
 ```text
 [CS2AC] detected AIMBOT on Player and punished.
@@ -117,166 +117,166 @@ Whitelisted players can still be detected and reported, but CS2AC stops before s
 
 ## Detection modules
 
-All 17 modules are enabled by default and can be switched off individually. The gates below describe the current source; they are not configuration settings.
+All 17 modules are enabled by default, and each one can be turned off. Open **How strict is it?** to see its main rule. These numbers come from the current code and cannot be changed in the config.
 
 ### Aim and accuracy
 
-**Aimbot.** A blatant aimbot snaps onto an enemy as it fires a damaging shot. CS2AC reconstructs the aim and target positions around that shot, then checks how sharply the aim moved and how much closer it landed to the target.
+**Aimbot.** An aimbot can quickly move the crosshair onto an enemy just before it shoots. CS2AC checks where the player was aiming before and after a damaging shot, and how close the snap moved to the enemy.
 
 <details>
 <summary><strong>How strict is it?</strong></summary>
 
-Three qualifying snap-hit incidents within five minutes; the target must be at least 100 units away and the snap is evaluated inside a half-second history window.
+Three suspicious snap shots within five minutes. The enemy must be at least 100 game units away, and CS2AC checks the half-second before the shot.
 
 </details>
 
-**Aimlock.** Some aim assistance follows a moving enemy instead of snapping once. CS2AC checks whether the aim stays inside a distance-based player-width cone while the same target keeps moving, including through walls.
+**Aimlock.** An aimlock keeps the crosshair stuck to a moving enemy. CS2AC checks whether the crosshair stays inside a small area around the same enemy while they move, even behind a wall.
 
 <details>
 <summary><strong>How strict is it?</strong></summary>
 
-Three qualifying episodes within five minutes; each episode requires two seconds of tracking, at least 95% on-target samples, at least 128 units of target travel, and at least 200 units of distance.
+This must happen three times within five minutes. Each time, the lock must last two seconds, stay on the enemy for at least 95% of that time, follow at least 128 game units of movement, and start at least 200 game units away.
 
 </details>
 
-**Silentaim.** Silent aim changes the damaging firing angle without moving the visible aim along the same path. CS2AC compares the exact firing angle with the adjacent command path and gives the weapon room for its real inaccuracy and spread.
+**Silentaim.** Silent aim can send a damaging shot in another direction without moving the player's visible aim there. CS2AC checks where the player looked just before, during, and after the shot. It also allows for the weapon's normal accuracy and bullet spread.
 
 <details>
 <summary><strong>How strict is it?</strong></summary>
 
-The detector needs 10 rolling points within five minutes. A suspicious grounded hit adds 2, an airborne hit adds 3, and a hit more than 22.5 degrees beyond its allowance adds 4; headshots add 1, wallbangs and smoke each add 2, no-scopes add 1, and a normal confirmed hit removes 2.
+The detector needs 10 points within five minutes. A suspicious hit adds 2 points on the ground, 3 in the air, or 4 when it is more than 22.5 degrees past the weapon's normal limit. A headshot adds 1 more, a hit through a wall or smoke adds 2 more, and a no-scope adds 1 more. A normal hit removes 2 points.
 
 </details>
 
-**Inhuman Accuracy.** Nospread and rage settings can keep landing aimed shots at a rate normal play cannot hold over a large sample. CS2AC counts only qualifying shots aimed inside a narrow target cone at a real enemy and records whether they caused damage.
+**Inhuman Accuracy.** Nospread and rage cheats can keep hitting far more shots than a normal player. CS2AC counts only shots fired while the crosshair is already close to a real enemy, then checks how many of those shots deal damage.
 
 <details>
 <summary><strong>How strict is it?</strong></summary>
 
-At least 40 qualifying shots within five minutes, at least 100 units away, with at least 90% of them hitting.
+At least 40 counted shots within five minutes. The enemy must be at least 100 game units away, and at least 90% of the shots must hit.
 
 </details>
 
-**Irregular Behavior.** Rage cheats often turn airborne and unscoped sniper attempts into repeated kills. CS2AC counts both the difficult attempts and their results, with extra weight for combinations such as long-range, headshot, and wallbang kills.
+**Irregular Behavior.** Rage cheats can turn jump shots and no-scope sniper shots into easy kills. CS2AC counts both hits and misses. Harder kills, such as long-range headshots and wallbangs, give more points.
 
 <details>
 <summary><strong>How strict is it?</strong></summary>
 
-The detector needs 16 points within five minutes, at least three successful difficult shots, at least four attempts, and a success rate of at least 50%. Kills below 10 metres are ignored.
+The detector needs 16 points within five minutes. It also needs at least three hard kills from at least four attempts, with a success rate of 50% or more. Kills below 10 metres do not count as successful hard kills.
 
 </details>
 
 ### Movement
 
-**Autostrafe.** Automated strafing repeats air movement with speed, efficiency, and timing that a player cannot keep producing by hand. CS2AC checks completed jumps and also watches for a separate strafe-optimizer pattern in the aim movement.
+**Autostrafe.** An autostrafe cheat moves the player left and right in the air to gain or keep speed. CS2AC compares the turns, speed, and timing across many jumps.
 
 <details>
 <summary><strong>How strict is it?</strong></summary>
 
-Fifteen suspicious jumps in the latest 20, or five when at least one exceeds 30 strafes per second. The optimizer path separately triggers above 90% rolling evidence.
+The detector needs 15 suspicious jumps in the latest 20. It can detect after five suspicious jumps when at least one has more than 30 strafes per second. It can also detect when more than 90% of recent air turns follow the same perfect pattern.
 
 </details>
 
-**Bhop.** A bhop cheat keeps jumping on the landing frame or repeats the same small jump-input pattern. CS2AC evaluates recent landings while allowing failed jumps to weaken the pattern instead of pretending they never happened.
+**Bhop.** A bhop cheat presses jump at the exact moment the player lands, again and again. CS2AC checks the landing time and repeated jump-button patterns. Failed jumps make the evidence weaker.
 
 <details>
 <summary><strong>How strict is it?</strong></summary>
 
-After at least 20 landing samples, the detector needs either 10 consecutive frame-perfect hops or a decaying score of 7 with at least 90% of seven or more completed patterns repeating fewer than four inputs.
+CS2AC starts checking after at least 20 landings. It needs either 10 perfect jumps in a row, or a score of 7 where at least 90% of seven or more jump patterns repeat the same short input pattern.
 
 </details>
 
-**Hyperscroll.** Hyperscroll sends large, repeated bursts of jump inputs around each landing. CS2AC compares the number of presses with how often those landings still become frame-perfect jumps.
+**Hyperscroll.** Hyperscroll sends a very large number of jump presses around each landing. CS2AC checks how many presses were sent and how often they still produced a perfect jump.
 
 <details>
 <summary><strong>How strict is it?</strong></summary>
 
-At least 20 completed patterns and 20 eligible landings, averaging at least 16 jump inputs while more than 60% of the landings are frame-perfect.
+The detector needs at least 20 jump patterns and 20 checked landings. They must average at least 16 jump presses, and more than 60% of the landings must be perfect jumps.
 
 </details>
 
-**Nulls.** Null movement scripts switch between opposite directions with mechanically perfect release and press timing while airborne. CS2AC measures both movement axes, air speed, overlap, underlap, analog input, and the player's measured frame rate.
+**Nulls.** A nulls script changes between opposite movement keys, such as A and D, with perfect timing in the air. CS2AC checks when one key is released, when the other is pressed, the player's air speed, and their frame rate.
 
 <details>
 <summary><strong>How strict is it?</strong></summary>
 
-At least 128 input events and a dynamic perfect-timing score from 128 to 640 while moving at least 100 units per second in the air. Lower frame rates and underlap require more evidence.
+The detector needs at least 128 key changes and a perfect-timing score between 128 and 640 while the player moves at least 100 game units per second in the air. A lower frame rate or a normal delay between the two keys makes the detector require more evidence.
 
 </details>
 
 ### Client behavior
 
-**Antiaim.** Anti-aim produces invalid pitch or roll, repeated angle-command inconsistencies, attack-return snaps, sustained spin, or repeating jitter. CS2AC combines short events into a decaying score while sustained spin and jitter must continue long enough to stand on their own.
+**Antiaim.** Anti-aim sends view angles that normal play should not create. It can make the player look in an impossible direction, spin, repeat the same shaking pattern, or quickly turn away and back while shooting. CS2AC gives these actions points, and the points fall over time when the behavior stops.
 
 <details>
 <summary><strong>How strict is it?</strong></summary>
 
-The detector needs 100 evidence points, a direction-consistent spin of 320–999 degrees per second for 15 seconds, a spin of at least 1,000 degrees per second for 10 seconds, or an exact repeating jitter pattern for 10 seconds.
+The detector needs 100 points. It can also detect a steady spin of 320–999 degrees per second after 15 seconds, a steady spin of 1,000 degrees per second or more after 10 seconds, or the same shaking pattern repeating for 10 seconds.
 
 </details>
 
-**DLL Injection.** Some injected clients expose themselves by subscribing to unusual game events while the player is connected. CS2AC checks the event subscriptions shared with the server against a curated list.
+**DLL Injection.** Some injected cheats ask the game to send them events that a normal client does not usually need. The server can see this event list, so CS2AC compares it with a list of suspicious events.
 
 <details>
 <summary><strong>How strict is it?</strong></summary>
 
-Any subscription matching one of the 117 checked events. The first scan runs 10 seconds after joining, and later scans run every two minutes.
+One match from the 117 checked events is enough. The first check runs 10 seconds after the player joins, and the next checks run every two minutes.
 
 </details>
 
-This detector does not scan a player's files or memory, and it cannot prove or catch every possible DLL injection. It reports this specific server-visible behavior.
+This detector does not scan the player's files or computer memory. It cannot find every kind of DLL injection. It only reports this one behavior that the server can see.
 
-**Desubticking.** Desubticking strips the normal between-tick timing from movement input. CS2AC measures how often commands containing subtick input arrive with that timing forced to zero.
+**Desubticking.** CS2 normally records the small time between movement changes inside each server update. Some cheats remove that time and set it to zero. CS2AC checks how often this happens.
 
 <details>
 <summary><strong>How strict is it?</strong></summary>
 
-At least 30 commands with subtick input inside 20 seconds, with at least 90% carrying zero timing. The first 10 seconds after joining are ignored.
+The detector needs at least 30 movement commands within 20 seconds. At least 90% of them must have their small timing value set to zero. CS2AC ignores the first 10 seconds after the player joins.
 
 </details>
 
-**Doubletap.** Doubletap makes the same ballistic weapon fire twice only zero or one server tick apart. CS2AC counts matching rapid-fire pairs and uses recent network measurements before allowing punishment.
+**Doubletap.** A doubletap cheat makes the same gun fire twice almost at once. CS2AC looks for the same gun firing twice during the same server update or the next one. It also checks the player's connection before sending a punishment.
 
 <details>
 <summary><strong>How strict is it?</strong></summary>
 
-Two qualifying rapid-fire pairs. Bad network conditions do not hide the detection, but they veto its punishment command.
+The detector needs two fast-fire pairs. A bad connection does not hide the alert, but CS2AC will not send the punishment command.
 
 </details>
 
-**Invalid CVar.** A modified client can report a monitored setting outside the values accepted by a normal game. CS2AC requests those settings directly and checks finite values, protected states, and expected ranges.
+**Invalid CVar.** A CVar is simply a game setting. CS2AC asks the player's game for important settings and checks whether the values are normal. This can find protected settings that were changed or values that should not be possible.
 
 <details>
 <summary><strong>How strict is it?</strong></summary>
 
-One invalid monitored value announces once. That CVar must return to a valid value before the same condition can announce again.
+One invalid setting is enough. CS2AC reports it once and stays quiet until that setting becomes normal again.
 
 </details>
 
-**Invalid Input.** Malformed or manipulated commands can claim a button state that disagrees with their recorded presses and releases. CS2AC compares both parts of each command instead of trusting either one alone.
+**Invalid Input.** Every movement command tells the server which buttons are held and which buttons were pressed or released. CS2AC checks whether those two parts agree. Cheats can create commands where they do not.
 
 <details>
 <summary><strong>How strict is it?</strong></summary>
 
-Eight invalid commands within five seconds.
+The detector needs eight broken commands within five seconds.
 
 </details>
 
-**Namechanger.** Name-change cheats repeatedly replace the player's visible name to create spam or confusion. CS2AC keeps a separate rolling history for every connected player.
+**Namechanger.** A namechanger cheat quickly changes the player's visible name to create spam or confusion. CS2AC counts the name changes for each player separately.
 
 <details>
 <summary><strong>How strict is it?</strong></summary>
 
-Five visible name changes within one minute.
+The detector needs five visible name changes within one minute.
 
 </details>
 
-**Subtick Spam.** Subtick spam floods one tick with repeated same-time input aliases carrying angle changes. CS2AC counts only commands matching that specific input pattern.
+**Subtick Spam.** This cheat sends many movement or aim changes at exactly the same moment inside one server update. CS2AC counts commands that repeat this unusual pattern.
 
 <details>
 <summary><strong>How strict is it?</strong></summary>
 
-Twenty suspicious commands within half a second.
+The detector needs 20 suspicious commands within half a second.
 
 </details>
 
