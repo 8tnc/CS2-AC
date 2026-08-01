@@ -123,77 +123,162 @@ All 17 modules are enabled by default and can be switched off individually. The 
 
 **Aimbot.** A blatant aimbot snaps onto an enemy as it fires a damaging shot. CS2AC reconstructs the aim and target positions around that shot, then checks how sharply the aim moved and how much closer it landed to the target.
 
-*Main gate: three qualifying snap-hit incidents within five minutes; the target must be at least 100 units away and the snap is evaluated inside a half-second history window.*
+<details>
+<summary><strong>How strict is it?</strong></summary>
+
+Three qualifying snap-hit incidents within five minutes; the target must be at least 100 units away and the snap is evaluated inside a half-second history window.
+
+</details>
 
 **Aimlock.** Some aim assistance follows a moving enemy instead of snapping once. CS2AC checks whether the aim stays inside a distance-based player-width cone while the same target keeps moving, including through walls.
 
-*Main gate: three qualifying episodes within five minutes; each episode requires two seconds of tracking, at least 95% on-target samples, at least 128 units of target travel, and at least 200 units of distance.*
+<details>
+<summary><strong>How strict is it?</strong></summary>
+
+Three qualifying episodes within five minutes; each episode requires two seconds of tracking, at least 95% on-target samples, at least 128 units of target travel, and at least 200 units of distance.
+
+</details>
 
 **Silentaim.** Silent aim changes the damaging firing angle without moving the visible aim along the same path. CS2AC compares the exact firing angle with the adjacent command path and gives the weapon room for its real inaccuracy and spread.
 
-*Main gate: 10 rolling points within five minutes. A suspicious grounded hit adds 2, an airborne hit adds 3, and a hit more than 22.5 degrees beyond its allowance adds 4; headshots add 1, wallbangs and smoke each add 2, no-scopes add 1, and a normal confirmed hit removes 2.*
+<details>
+<summary><strong>How strict is it?</strong></summary>
+
+The detector needs 10 rolling points within five minutes. A suspicious grounded hit adds 2, an airborne hit adds 3, and a hit more than 22.5 degrees beyond its allowance adds 4; headshots add 1, wallbangs and smoke each add 2, no-scopes add 1, and a normal confirmed hit removes 2.
+
+</details>
 
 **Inhuman Accuracy.** Nospread and rage settings can keep landing aimed shots at a rate normal play cannot hold over a large sample. CS2AC counts only qualifying shots aimed inside a narrow target cone at a real enemy and records whether they caused damage.
 
-*Main gate: at least 40 qualifying shots within five minutes, at least 100 units away, with at least 90% of them hitting.*
+<details>
+<summary><strong>How strict is it?</strong></summary>
+
+At least 40 qualifying shots within five minutes, at least 100 units away, with at least 90% of them hitting.
+
+</details>
 
 **Irregular Behavior.** Rage cheats often turn airborne and unscoped sniper attempts into repeated kills. CS2AC counts both the difficult attempts and their results, with extra weight for combinations such as long-range, headshot, and wallbang kills.
 
-*Main gate: 16 points within five minutes, at least three successful difficult shots, at least four attempts, and a success rate of at least 50%; kills below 10 metres are ignored.*
+<details>
+<summary><strong>How strict is it?</strong></summary>
+
+The detector needs 16 points within five minutes, at least three successful difficult shots, at least four attempts, and a success rate of at least 50%. Kills below 10 metres are ignored.
+
+</details>
 
 ### Movement
 
 **Autostrafe.** Automated strafing repeats air movement with speed, efficiency, and timing that a player cannot keep producing by hand. CS2AC checks completed jumps and also watches for a separate strafe-optimizer pattern in the aim movement.
 
-*Main gate: 15 suspicious jumps in the latest 20, or five when at least one exceeds 30 strafes per second; the optimizer path separately triggers above 90% rolling evidence.*
+<details>
+<summary><strong>How strict is it?</strong></summary>
+
+Fifteen suspicious jumps in the latest 20, or five when at least one exceeds 30 strafes per second. The optimizer path separately triggers above 90% rolling evidence.
+
+</details>
 
 **Bhop.** A bhop cheat keeps jumping on the landing frame or repeats the same small jump-input pattern. CS2AC evaluates recent landings while allowing failed jumps to weaken the pattern instead of pretending they never happened.
 
-*Main gate: after at least 20 landing samples, either 10 consecutive frame-perfect hops or a decaying score of 7 with at least 90% of seven or more completed patterns repeating fewer than four inputs.*
+<details>
+<summary><strong>How strict is it?</strong></summary>
+
+After at least 20 landing samples, the detector needs either 10 consecutive frame-perfect hops or a decaying score of 7 with at least 90% of seven or more completed patterns repeating fewer than four inputs.
+
+</details>
 
 **Hyperscroll.** Hyperscroll sends large, repeated bursts of jump inputs around each landing. CS2AC compares the number of presses with how often those landings still become frame-perfect jumps.
 
-*Main gate: at least 20 completed patterns and 20 eligible landings, averaging at least 16 jump inputs while more than 60% of the landings are frame-perfect.*
+<details>
+<summary><strong>How strict is it?</strong></summary>
+
+At least 20 completed patterns and 20 eligible landings, averaging at least 16 jump inputs while more than 60% of the landings are frame-perfect.
+
+</details>
 
 **Nulls.** Null movement scripts switch between opposite directions with mechanically perfect release and press timing while airborne. CS2AC measures both movement axes, air speed, overlap, underlap, analog input, and the player's measured frame rate.
 
-*Main gate: at least 128 input events and a dynamic perfect-timing score from 128 to 640 while moving at least 100 units per second in the air; lower frame rates and underlap require more evidence.*
+<details>
+<summary><strong>How strict is it?</strong></summary>
+
+At least 128 input events and a dynamic perfect-timing score from 128 to 640 while moving at least 100 units per second in the air. Lower frame rates and underlap require more evidence.
+
+</details>
 
 ### Client behavior
 
 **Antiaim.** Anti-aim produces invalid pitch or roll, repeated angle-command inconsistencies, attack-return snaps, sustained spin, or repeating jitter. CS2AC combines short events into a decaying score while sustained spin and jitter must continue long enough to stand on their own.
 
-*Main gate: 100 evidence points, a direction-consistent spin of 320–999 degrees per second for 15 seconds, a spin of at least 1,000 degrees per second for 10 seconds, or an exact repeating jitter pattern for 10 seconds.*
+<details>
+<summary><strong>How strict is it?</strong></summary>
+
+The detector needs 100 evidence points, a direction-consistent spin of 320–999 degrees per second for 15 seconds, a spin of at least 1,000 degrees per second for 10 seconds, or an exact repeating jitter pattern for 10 seconds.
+
+</details>
 
 **DLL Injection.** Some injected clients expose themselves by subscribing to unusual game events while the player is connected. CS2AC checks the event subscriptions shared with the server against a curated list.
 
-*Main gate: any subscription matching one of the 117 checked events; the first scan runs 10 seconds after joining and later scans run every two minutes.*
+<details>
+<summary><strong>How strict is it?</strong></summary>
+
+Any subscription matching one of the 117 checked events. The first scan runs 10 seconds after joining, and later scans run every two minutes.
+
+</details>
 
 This detector does not scan a player's files or memory, and it cannot prove or catch every possible DLL injection. It reports this specific server-visible behavior.
 
 **Desubticking.** Desubticking strips the normal between-tick timing from movement input. CS2AC measures how often commands containing subtick input arrive with that timing forced to zero.
 
-*Main gate: at least 30 commands with subtick input inside 20 seconds, with at least 90% carrying zero timing; the first 10 seconds after joining are ignored.*
+<details>
+<summary><strong>How strict is it?</strong></summary>
+
+At least 30 commands with subtick input inside 20 seconds, with at least 90% carrying zero timing. The first 10 seconds after joining are ignored.
+
+</details>
 
 **Doubletap.** Doubletap makes the same ballistic weapon fire twice only zero or one server tick apart. CS2AC counts matching rapid-fire pairs and uses recent network measurements before allowing punishment.
 
-*Main gate: two qualifying rapid-fire pairs. Bad network conditions do not hide the detection, but they veto its punishment command.*
+<details>
+<summary><strong>How strict is it?</strong></summary>
+
+Two qualifying rapid-fire pairs. Bad network conditions do not hide the detection, but they veto its punishment command.
+
+</details>
 
 **Invalid CVar.** A modified client can report a monitored setting outside the values accepted by a normal game. CS2AC requests those settings directly and checks finite values, protected states, and expected ranges.
 
-*Main gate: one invalid monitored value announces once; that CVar must return to a valid value before the same condition can announce again.*
+<details>
+<summary><strong>How strict is it?</strong></summary>
+
+One invalid monitored value announces once. That CVar must return to a valid value before the same condition can announce again.
+
+</details>
 
 **Invalid Input.** Malformed or manipulated commands can claim a button state that disagrees with their recorded presses and releases. CS2AC compares both parts of each command instead of trusting either one alone.
 
-*Main gate: eight invalid commands within five seconds.*
+<details>
+<summary><strong>How strict is it?</strong></summary>
+
+Eight invalid commands within five seconds.
+
+</details>
 
 **Namechanger.** Name-change cheats repeatedly replace the player's visible name to create spam or confusion. CS2AC keeps a separate rolling history for every connected player.
 
-*Main gate: five visible name changes within one minute.*
+<details>
+<summary><strong>How strict is it?</strong></summary>
+
+Five visible name changes within one minute.
+
+</details>
 
 **Subtick Spam.** Subtick spam floods one tick with repeated same-time input aliases carrying angle changes. CS2AC counts only commands matching that specific input pattern.
 
-*Main gate: 20 suspicious commands within half a second.*
+<details>
+<summary><strong>How strict is it?</strong></summary>
+
+Twenty suspicious commands within half a second.
+
+</details>
 
 ## Quickstart
 
