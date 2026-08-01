@@ -4,7 +4,7 @@
 
 ### Open-source server-side anti-cheat for Counter-Strike 2.
 
-[![Modules](https://img.shields.io/badge/modules-17-red?style=for-the-badge)](#detection-modules)
+[![Modules](https://img.shields.io/badge/modules-17-6f42c1?style=for-the-badge)](#detection-modules)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-5c7cfa?style=for-the-badge)](#quickstart)
 [![License](https://img.shields.io/badge/license-AGPL--3.0-2ea44f?style=for-the-badge)](LICENSE)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_a_Coffee-Support_Development-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=000000)](https://buymeacoffee.com/karola3vax)
@@ -13,7 +13,7 @@
 
 CS2AC watches the aim, shots, movement, button presses, and game settings that players send to the server. When it finds enough strong evidence, it reports the player and can ask the server to punish them.
 
-[Watch it work](#showcase) · [Read the detection modules](#detection-modules) · [Pair it with CS2FOW](#cs2ac-and-cs2fow)
+[Watch it work](#showcase) · [Install](#quickstart) · [Read the detection modules](#detection-modules) · [Pair it with CS2FOW](#cs2ac-and-cs2fow)
 
 </div>
 
@@ -71,6 +71,22 @@ CS2AC watches the aim, shots, movement, button presses, and game settings that p
 <sub>They solve different problems, run entirely on the server, and can protect the same CS2 community server together.</sub>
 
 </div>
+
+## Quickstart
+
+You need a Windows x64 or Linux x64 CS2 dedicated server running [Metamod:Source](https://www.sourcemm.net/) 2.x.
+
+1. Open this repository's **Releases** tab and choose the matching Windows or Linux package.
+2. Extract it into the CS2 server root without rearranging anything. The package begins with the `game` folder.
+3. Edit `game/csgo/cfg/cs2ac.cfg`.
+4. Start the server.
+5. Run `meta list`, then `cs2ac_status`.
+
+That is it. Players install nothing.
+
+The default punishment commands are made for [CS2-SimpleAdmin](https://github.com/daffyyyy/CS2-SimpleAdmin). If your server uses another admin plugin, replace the two commands in `cs2ac.cfg` with commands that plugin understands.
+
+CS2AC checks for stable updates after startup and every six hours. A verified update is prepared in the background and installed on the next full server restart. Existing settings are copied into the new configuration layout, and the previous configuration and plugin binary are kept as backups.
 
 ## Detection output
 
@@ -280,22 +296,6 @@ The detector needs 20 suspicious commands within half a second.
 
 </details>
 
-## Quickstart
-
-You need a Windows x64 or Linux x64 CS2 dedicated server running [Metamod:Source](https://www.sourcemm.net/) 2.x.
-
-1. Open this repository's **Releases** tab and choose the matching Windows or Linux package.
-2. Extract it into the CS2 server root without rearranging anything. The package begins with the `game` folder.
-3. Edit `game/csgo/cfg/cs2ac.cfg`.
-4. Start the server.
-5. Run `meta list`, then `cs2ac_status`.
-
-That is it. Players install nothing.
-
-The default punishment commands are made for [CS2-SimpleAdmin](https://github.com/daffyyyy/CS2-SimpleAdmin). If your server uses another admin plugin, replace the two commands in `cs2ac.cfg` with commands that plugin understands.
-
-CS2AC checks for stable updates after startup and every six hours. A verified update is prepared in the background and installed on the next full server restart. Existing settings are copied into the new configuration layout, and the previous configuration and plugin binary are kept as backups.
-
 ## Configuration
 
 <details>
@@ -453,7 +453,7 @@ Both scripts make a directly installable package under the build folder's `packa
 
 ## Contributing
 
-Run CS2AC on a real server. Test it, send reproducible reports, and include the detector evidence whenever something looks wrong.
+Run CS2AC on a real server. Test it, [send reproducible reports](https://github.com/karola3vax/CS2AC/issues), and include the detector evidence whenever something looks wrong.
 
 If CS2AC earns a place on your server, star the repository and share your clips. That helps more server owners find it and gives the project better real-world feedback.
 
