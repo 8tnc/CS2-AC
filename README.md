@@ -8,6 +8,7 @@
 [![Detections](https://img.shields.io/badge/detections-17-red?style=for-the-badge)](#detection-modules)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-5c7cfa?style=for-the-badge)](#quickstart)
 [![License](https://img.shields.io/badge/license-AGPL--3.0-2ea44f?style=for-the-badge)](LICENSE)
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_a_Coffee-Support_Development-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=000000)](https://buymeacoffee.com/karola3vax)
 
 **A good Counter-Strike match should be decided by the players, not by who brought the better cheat.**
 
