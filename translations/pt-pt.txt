@@ -13,6 +13,7 @@
 
 	"evidence.aimbot.snap_return"	"O limite foi atingido após {incidents} movimentos bruscos com acerto; o último foi um retorno de {snap}°."
 	"evidence.aimbot.convergence"	"O limite foi atingido após {incidents} movimentos bruscos com acerto; último movimento: {snap}°, erro até ao alvo: {before}° -> {after}°."
+	"evidence.aimbot.smooth"	"O limite foi atingido após {incidents} movimentos suaves de mira que causaram dano; último movimento: {snap}°, erro até ao alvo: {before}° -> {after}°."
 	"evidence.aimlock"	"O limite foi atingido após {incidents} períodos de seguimento preciso; no último, a mira ficou no alvo em {precise}/{samples} amostras enquanto este se moveu {movement}° face aos {required}° exigidos."
 	"evidence.silentaim"	"Um desvio de {deviation}° da mira visível adicionou {points} pontos; a pontuação acumulada chegou a {score}/{threshold}."
 	"evidence.inhuman_accuracy"	"Acertou {hits} de {attempts} tiros válidos ({accuracy}% de precisão)."

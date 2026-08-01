@@ -13,6 +13,7 @@
 
 	"evidence.aimbot.snap_return"	"El umbral se alcanzó tras {incidents} movimientos bruscos con impacto; el último fue un regreso de {snap}°."
 	"evidence.aimbot.convergence"	"El umbral se alcanzó tras {incidents} movimientos bruscos con impacto; último movimiento: {snap}°, error al objetivo: {before}° -> {after}°."
+	"evidence.aimbot.smooth"	"El umbral se alcanzó tras {incidents} movimientos suaves de mira que causaron daño; último movimiento: {snap}°, error al objetivo: {before}° -> {after}°."
 	"evidence.aimlock"	"El umbral se alcanzó tras {incidents} periodos de seguimiento preciso; en el último, la mira quedó sobre el objetivo en {precise}/{samples} muestras mientras se movía {movement}° frente a los {required}° requeridos."
 	"evidence.silentaim"	"Una desviación de {deviation}° respecto a la mira visible agregó {points} puntos; el puntaje acumulado llegó a {score}/{threshold}."
 	"evidence.inhuman_accuracy"	"Acertó {hits} de {attempts} disparos válidos ({accuracy}% de precisión)."

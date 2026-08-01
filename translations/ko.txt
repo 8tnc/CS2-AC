@@ -13,6 +13,7 @@
 
 	"evidence.aimbot.snap_return"	"급격한 조준 후 명중이 {incidents}회로 기준에 도달했습니다. 최근 기록은 {snap}° 스냅 복귀였습니다."
 	"evidence.aimbot.convergence"	"급격한 조준 후 명중이 {incidents}회로 기준에 도달했습니다. 최근 이동 {snap}°, 목표 오차 {before}° -> {after}°."
+	"evidence.aimbot.smooth"	"부드러운 조준 이동 후 피해를 준 기록이 {incidents}회로 기준에 도달했습니다. 최근 이동 {snap}°, 목표 오차 {before}° -> {after}°."
 	"evidence.aimlock"	"정밀 추적이 {incidents}회로 기준에 도달했습니다. 최근 기록에서 목표가 요구값 {required}°에 대해 {movement}° 이동하는 동안 {precise}/{samples}개 샘플에서 조준이 목표에 유지되었습니다."
 	"evidence.silentaim"	"보이는 조준점과 {deviation}° 차이가 나 {points}점이 추가되었고, 누적 점수가 {score}/{threshold}에 도달했습니다."
 	"evidence.inhuman_accuracy"	"평가 대상 {attempts}발 중 {hits}발이 명중했습니다(명중률 {accuracy}%)."

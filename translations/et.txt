@@ -13,6 +13,7 @@
 
 	"evidence.aimbot.snap_return"	"Lävi saavutati pärast {incidents} järsku tabamusega sihtimisliigutust; viimane oli {snap}° tagasiliikumine."
 	"evidence.aimbot.convergence"	"Lävi saavutati pärast {incidents} järsku tabamusega sihtimisliigutust; viimane liikumine {snap}°, sihtmärgi viga {before}° -> {after}°."
+	"evidence.aimbot.smooth"	"Lävi saavutati pärast {incidents} sujuvat kahjustusega sihtimisliigutust; viimane liikumine {snap}°, sihtmärgi viga {before}° -> {after}°."
 	"evidence.aimlock"	"Lävi saavutati pärast {incidents} täpset jälgimisperioodi; viimati püsis sihik sihtmärgil {precise}/{samples} mõõtmises, kui see liikus {movement}° nõutud {required}° vastu."
 	"evidence.silentaim"	"{deviation}° kõrvalekalle nähtavast sihikust lisas {points} punkti; jooksev tulemus jõudis {score}/{threshold}."
 	"evidence.inhuman_accuracy"	"{hits}/{attempts} arvestatud lasust tabas ({accuracy}% täpsus)."

@@ -13,6 +13,7 @@
 
 	"evidence.aimbot.snap_return"	"Slieksnis sasniegts pēc {incidents} straujām tēmēšanas kustībām ar trāpījumu; pēdējā bija {snap}° atgriešanās."
 	"evidence.aimbot.convergence"	"Slieksnis sasniegts pēc {incidents} straujām tēmēšanas kustībām ar trāpījumu; pēdējā kustība {snap}°, kļūda līdz mērķim {before}° -> {after}°."
+	"evidence.aimbot.smooth"	"Slieksnis sasniegts pēc {incidents} vienmērīgām tēmēšanas kustībām, kas nodarīja bojājumus; pēdējā kustība {snap}°, kļūda līdz mērķim {before}° -> {after}°."
 	"evidence.aimlock"	"Slieksnis sasniegts pēc {incidents} precīzas sekošanas posmiem; pēdējā reizē tēmeklis palika uz mērķa {precise}/{samples} mērījumos, kamēr tas pārvietojās {movement}° pret prasītajiem {required}°."
 	"evidence.silentaim"	"{deviation}° novirze no redzamā tēmēkļa pievienoja {points} punktus; ritošais rezultāts sasniedza {score}/{threshold}."
 	"evidence.inhuman_accuracy"	"Trāpīja {hits} no {attempts} ieskaitītajiem šāvieniem ({accuracy}% precizitāte)."

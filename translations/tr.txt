@@ -13,6 +13,7 @@
 
 	"evidence.aimbot.snap_return"	"{incidents} ani nişan-isabet olayı eşiğe ulaştı; son olay {snap} derecelik ani dönüşlü nişandı."
 	"evidence.aimbot.convergence"	"{incidents} ani nişan-isabet olayı eşiğe ulaştı; son nişan hareketi {snap} dereceydi, hedef hatası {before} -> {after} dereceye indi."
+	"evidence.aimbot.smooth"	"{incidents} yumuşak nişan hareketi hasarla sonuçlanarak eşiğe ulaştı; son hareket {snap} dereceydi, hedef hatası {before} -> {after} dereceye indi."
 	"evidence.aimlock"	"{incidents} kusursuz takip olayı eşiğe ulaştı; son olayda hedef {required} derecelik hareket şartına karşı {movement} derece hareket ederken nişan {precise}/{samples} örnek boyunca hedefte kaldı."
 	"evidence.silentaim"	"Görünür nişandan {deviation} derecelik sapma {points} puan ekledi; biriken puan {score}/{threshold} oldu."
 	"evidence.inhuman_accuracy"	"Değerlendirilen {attempts} atışın {hits} tanesi isabet etti (%{accuracy} isabet)."

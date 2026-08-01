@@ -13,6 +13,7 @@
 
 	"evidence.aimbot.snap_return"	"{incidents} 次急转命中达到阈值；最近一次为 {snap}° 的急转回正。"
 	"evidence.aimbot.convergence"	"{incidents} 次急转命中达到阈值；最近一次急转 {snap}°，目标误差从 {before}° 降至 {after}°。"
+	"evidence.aimbot.smooth"	"{incidents} 次平滑瞄准并造成伤害达到阈值；最近一次移动 {snap}°，目标误差从 {before}° 降至 {after}°。"
 	"evidence.aimlock"	"{incidents} 次精确跟踪达到阈值；最近一次中，目标移动了 {movement}°（要求 {required}°），准星在 {precise}/{samples} 个样本中保持在目标上。"
 	"evidence.silentaim"	"弹着点与可见准星偏差 {deviation}°，增加 {points} 分；滚动分数达到 {score}/{threshold}。"
 	"evidence.inhuman_accuracy"	"{attempts} 次有效射击中有 {hits} 次命中（命中率 {accuracy}%）。"

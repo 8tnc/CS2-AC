@@ -13,6 +13,7 @@
 
 	"evidence.aimbot.snap_return"	"Pragul a fost atins după {incidents} mișcări bruște urmate de lovitură; ultima a fost o revenire de {snap}°."
 	"evidence.aimbot.convergence"	"Pragul a fost atins după {incidents} mișcări bruște urmate de lovitură; ultima mișcare {snap}°, eroarea față de țintă {before}° -> {after}°."
+	"evidence.aimbot.smooth"	"Pragul a fost atins după {incidents} mișcări line de ochire care au provocat daune; ultima mișcare {snap}°, eroarea față de țintă {before}° -> {after}°."
 	"evidence.aimlock"	"Pragul a fost atins după {incidents} perioade de urmărire precisă; în ultima, ținta a fost urmărită în {precise}/{samples} măsurători în timp ce s-a mișcat {movement}° față de cele {required}° necesare."
 	"evidence.silentaim"	"O abatere de {deviation}° față de ținta vizibilă a adăugat {points} puncte; scorul acumulat a ajuns la {score}/{threshold}."
 	"evidence.inhuman_accuracy"	"{hits} din {attempts} focuri eligibile au lovit (precizie {accuracy}%)."

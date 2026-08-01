@@ -13,6 +13,7 @@
 
 	"evidence.aimbot.snap_return"	"急な照準移動と命中が {incidents} 件に達しました。直近は {snap}° のスナップ復帰でした。"
 	"evidence.aimbot.convergence"	"急な照準移動と命中が {incidents} 件に達しました。直近の移動は {snap}°、目標誤差は {before}° -> {after}° でした。"
+	"evidence.aimbot.smooth"	"滑らかな照準移動からダメージを与えた記録が {incidents} 件に達しました。直近の移動は {snap}°、目標誤差は {before}° -> {after}° でした。"
 	"evidence.aimlock"	"精密追跡が {incidents} 件に達しました。直近では、目標が必要な {required}° に対して {movement}° 移動する間、{precise}/{samples} サンプルで照準が目標上にありました。"
 	"evidence.silentaim"	"見えている照準から {deviation}° のずれが {points} ポイントを加算し、累積スコアが {score}/{threshold} に達しました。"
 	"evidence.inhuman_accuracy"	"対象となる {attempts} 発のうち {hits} 発が命中しました（命中率 {accuracy}%）。"

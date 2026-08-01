@@ -13,6 +13,7 @@
 
 	"evidence.aimbot.snap_return"	"Прагът беше достигнат след {incidents} резки насочвания с попадение; последното беше връщане с {snap}°."
 	"evidence.aimbot.convergence"	"Прагът беше достигнат след {incidents} резки насочвания с попадение; последно движение {snap}°, грешка към целта {before}° -> {after}°."
+	"evidence.aimbot.smooth"	"Прагът беше достигнат след {incidents} плавни движения на прицела с нанесени щети; последно движение {snap}°, грешка към целта {before}° -> {after}°."
 	"evidence.aimlock"	"Прагът беше достигнат след {incidents} периода на прецизно проследяване; при последния мерникът остана върху целта в {precise}/{samples} измервания, докато тя се премести с {movement}° при изисквани {required}°."
 	"evidence.silentaim"	"Отклонение от {deviation}° спрямо видимия мерник добави {points} точки; текущият резултат достигна {score}/{threshold}."
 	"evidence.inhuman_accuracy"	"{hits} от {attempts} зачетени изстрела попаднаха ({accuracy}% точност)."

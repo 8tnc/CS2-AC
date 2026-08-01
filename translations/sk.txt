@@ -13,6 +13,7 @@
 
 	"evidence.aimbot.snap_return"	"Prah bol dosiahnutý po {incidents} prudkých zamiereniach so zásahom; posledné bolo návratom o {snap}°."
 	"evidence.aimbot.convergence"	"Prah bol dosiahnutý po {incidents} prudkých zamiereniach so zásahom; posledný pohyb {snap}°, chyba voči cieľu {before}° -> {after}°."
+	"evidence.aimbot.smooth"	"Prah bol dosiahnutý po {incidents} plynulých pohyboch mierenia, ktoré spôsobili poškodenie; posledný pohyb {snap}°, chyba voči cieľu {before}° -> {after}°."
 	"evidence.aimlock"	"Prah bol dosiahnutý po {incidents} úsekoch presného sledovania; naposledy zostal zameriavač na cieli v {precise}/{samples} vzorkách, kým sa cieľ pohol o {movement}° oproti požadovaným {required}°."
 	"evidence.silentaim"	"Odchýlka {deviation}° od viditeľného zamierenia pridala {points} bodov; priebežné skóre dosiahlo {score}/{threshold}."
 	"evidence.inhuman_accuracy"	"Zásahov bolo {hits} z {attempts} započítaných výstrelov (presnosť {accuracy}%)."

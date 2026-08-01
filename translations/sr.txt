@@ -13,6 +13,7 @@
 
 	"evidence.aimbot.snap_return"	"Prag je dostignut nakon {incidents} naglih nišanjenja sa pogotkom; poslednje je bilo vraćanje od {snap}°."
 	"evidence.aimbot.convergence"	"Prag je dostignut nakon {incidents} naglih nišanjenja sa pogotkom; poslednji pokret {snap}°, greška prema meti {before}° -> {after}°."
+	"evidence.aimbot.smooth"	"Prag je dostignut nakon {incidents} glatkih pokreta nišana koji su naneli štetu; poslednji pokret {snap}°, greška prema meti {before}° -> {after}°."
 	"evidence.aimlock"	"Prag je dostignut nakon {incidents} perioda preciznog praćenja; poslednji put nišan je ostao na meti u {precise}/{samples} uzoraka dok se meta pomerila {movement}° prema potrebnih {required}°."
 	"evidence.silentaim"	"Odstupanje od {deviation}° od vidljivog nišana dodalo je {points} poena; tekući rezultat je dostigao {score}/{threshold}."
 	"evidence.inhuman_accuracy"	"Pogođeno je {hits} od {attempts} važećih hitaca ({accuracy}% preciznosti)."

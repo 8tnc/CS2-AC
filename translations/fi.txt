@@ -13,6 +13,7 @@
 
 	"evidence.aimbot.snap_return"	"Raja saavutettiin {incidents} nopean, osumaan johtaneen tähtäysliikkeen jälkeen; viimeisin oli {snap}°:n palautus."
 	"evidence.aimbot.convergence"	"Raja saavutettiin {incidents} nopean, osumaan johtaneen tähtäysliikkeen jälkeen; viimeisin liike {snap}°, kohdevirhe {before}° -> {after}°."
+	"evidence.aimbot.smooth"	"Raja saavutettiin {incidents} tasaisen, vahinkoon johtaneen tähtäysliikkeen jälkeen; viimeisin liike {snap}°, kohdevirhe {before}° -> {after}°."
 	"evidence.aimlock"	"Raja saavutettiin {incidents} tarkan seurantajakson jälkeen; viimeksi tähtäin pysyi kohteessa {precise}/{samples} mittauksessa kohteen liikkuessa {movement}°, kun vaatimus oli {required}°."
 	"evidence.silentaim"	"{deviation}°:n poikkeama näkyvästä tähtäyksestä lisäsi {points} pistettä; kertyvä pistemäärä saavutti {score}/{threshold}."
 	"evidence.inhuman_accuracy"	"{hits}/{attempts} hyväksytystä laukauksesta osui ({accuracy}% tarkkuus)."

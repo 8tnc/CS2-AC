@@ -13,6 +13,7 @@
 
 	"evidence.aimbot.snap_return"	"Đạt ngưỡng sau {incidents} lần kéo tâm đột ngột kèm trúng đạn; lần gần nhất là kéo rồi trả lại {snap}°."
 	"evidence.aimbot.convergence"	"Đạt ngưỡng sau {incidents} lần kéo tâm đột ngột kèm trúng đạn; lần gần nhất {snap}°, sai số tới mục tiêu {before}° -> {after}°."
+	"evidence.aimbot.smooth"	"Đạt ngưỡng sau {incidents} lần di chuyển tâm mượt gây sát thương; lần gần nhất {snap}°, sai số tới mục tiêu {before}° -> {after}°."
 	"evidence.aimlock"	"Đạt ngưỡng sau {incidents} giai đoạn bám mục tiêu chính xác; ở lần gần nhất, tâm ngắm nằm trên mục tiêu trong {precise}/{samples} mẫu khi mục tiêu di chuyển {movement}° so với yêu cầu {required}°."
 	"evidence.silentaim"	"Độ lệch {deviation}° so với tâm ngắm hiển thị đã thêm {points} điểm; điểm tích lũy đạt {score}/{threshold}."
 	"evidence.inhuman_accuracy"	"Trúng {hits} trong {attempts} phát đạn hợp lệ (độ chính xác {accuracy}%)."

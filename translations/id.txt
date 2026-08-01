@@ -13,6 +13,7 @@
 
 	"evidence.aimbot.snap_return"	"Ambang tercapai setelah {incidents} gerakan bidik mendadak yang mengenai sasaran; yang terakhir adalah gerakan kembali sebesar {snap}°."
 	"evidence.aimbot.convergence"	"Ambang tercapai setelah {incidents} gerakan bidik mendadak yang mengenai sasaran; gerakan terakhir {snap}°, kesalahan sasaran {before}° -> {after}°."
+	"evidence.aimbot.smooth"	"Ambang tercapai setelah {incidents} gerakan bidik halus yang menghasilkan damage; gerakan terakhir {snap}°, kesalahan sasaran {before}° -> {after}°."
 	"evidence.aimlock"	"Ambang tercapai setelah {incidents} periode pelacakan presisi; terakhir, bidikan tetap pada sasaran dalam {precise}/{samples} sampel saat sasaran bergerak {movement}° dibanding syarat {required}°."
 	"evidence.silentaim"	"Selisih {deviation}° dari bidikan yang terlihat menambahkan {points} poin; skor berjalan mencapai {score}/{threshold}."
 	"evidence.inhuman_accuracy"	"{hits} dari {attempts} tembakan yang dinilai mengenai sasaran (akurasi {accuracy}%)."

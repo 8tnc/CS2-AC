@@ -287,7 +287,8 @@ namespace detection
 		AnnounceCallback announce {};
 		ShotCorrelator *shots {};
 		std::array<AimbotPlayerData, MAXPLAYERS + 1> playerData;
-		std::array<std::deque<Clock::time_point>, MAXPLAYERS + 1> evidence;
+		std::array<std::deque<Clock::time_point>, MAXPLAYERS + 1> snapEvidence;
+		std::array<std::deque<Clock::time_point>, MAXPLAYERS + 1> smoothEvidence;
 	};
 
 	struct AimlockSample

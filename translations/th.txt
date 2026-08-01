@@ -13,6 +13,7 @@
 
 	"evidence.aimbot.snap_return"	"ถึงเกณฑ์หลังพบการสะบัดเป้าและยิงโดน {incidents} ครั้ง โดยครั้งล่าสุดสะบัดกลับ {snap}°"
 	"evidence.aimbot.convergence"	"ถึงเกณฑ์หลังพบการสะบัดเป้าและยิงโดน {incidents} ครั้ง การสะบัดล่าสุด {snap}° และความคลาดเคลื่อนจากเป้าลดจาก {before}° เป็น {after}°"
+	"evidence.aimbot.smooth"	"ถึงเกณฑ์หลังพบการเล็งอย่างลื่นไหลที่สร้างความเสียหาย {incidents} ครั้ง การเคลื่อนที่ล่าสุด {snap}° และความคลาดเคลื่อนจากเป้าลดจาก {before}° เป็น {after}°"
 	"evidence.aimlock"	"ถึงเกณฑ์หลังพบการติดตามเป้าอย่างแม่นยำ {incidents} ช่วง ครั้งล่าสุดเป้าเคลื่อนที่ {movement}° จากข้อกำหนด {required}° และเป้าเล็งอยู่บนเป้า {precise}/{samples} ตัวอย่าง"
 	"evidence.silentaim"	"กระสุนเบี่ยงจากเป้าเล็งที่มองเห็น {deviation}° เพิ่ม {points} คะแนน คะแนนสะสมถึง {score}/{threshold}"
 	"evidence.inhuman_accuracy"	"ยิงโดน {hits} จาก {attempts} นัดที่เข้าเกณฑ์ (ความแม่นยำ {accuracy}%)"

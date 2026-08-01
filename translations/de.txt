@@ -13,6 +13,7 @@
 
 	"evidence.aimbot.snap_return"	"Der Schwellenwert wurde nach {incidents} abrupten Zielbewegungen mit Treffer erreicht; zuletzt erfolgte eine Rückkehr um {snap}°."
 	"evidence.aimbot.convergence"	"Der Schwellenwert wurde nach {incidents} abrupten Zielbewegungen mit Treffer erreicht; letzte Bewegung {snap}°, Zielfehler {before}° -> {after}°."
+	"evidence.aimbot.smooth"	"Der Schwellenwert wurde nach {incidents} gleichmäßigen Zielbewegungen mit Schaden erreicht; letzte Bewegung {snap}°, Zielfehler {before}° -> {after}°."
 	"evidence.aimlock"	"Der Schwellenwert wurde nach {incidents} präzisen Tracking-Phasen erreicht; zuletzt blieb das Fadenkreuz in {precise}/{samples} Messungen auf dem Ziel, während es sich um {movement}° bei geforderten {required}° bewegte."
 	"evidence.silentaim"	"Eine Abweichung von {deviation}° vom sichtbaren Fadenkreuz fügte {points} Punkte hinzu; der laufende Wert erreichte {score}/{threshold}."
 	"evidence.inhuman_accuracy"	"{hits} von {attempts} gewerteten Schüssen trafen ({accuracy}% Genauigkeit)."

@@ -13,6 +13,7 @@
 
 	"evidence.aimbot.snap_return"	"Próg osiągnięto po {incidents} gwałtownych namierzeniach zakończonych trafieniem; ostatnie było powrotem o {snap}°."
 	"evidence.aimbot.convergence"	"Próg osiągnięto po {incidents} gwałtownych namierzeniach zakończonych trafieniem; ostatni ruch miał {snap}°, a błąd celu spadł z {before}° do {after}°."
+	"evidence.aimbot.smooth"	"Próg osiągnięto po {incidents} płynnych ruchach celownika zakończonych zadaniem obrażeń; ostatni ruch miał {snap}°, a błąd celu spadł z {before}° do {after}°."
 	"evidence.aimlock"	"Próg osiągnięto po {incidents} epizodach precyzyjnego śledzenia; w ostatnim cel poruszył się o {movement}° przy wymaganych {required}°, a celownik pozostał na nim w {precise} z {samples} próbek."
 	"evidence.silentaim"	"Odchylenie o {deviation}° od widocznego celownika dodało {points} punktów; wynik kroczący osiągnął {score}/{threshold}."
 	"evidence.inhuman_accuracy"	"Trafiono {hits} z {attempts} kwalifikowanych strzałów (celność {accuracy}%)."

@@ -13,6 +13,7 @@
 
 	"evidence.aimbot.snap_return"	"De drempel werd bereikt na {incidents} abrupte richtbewegingen met een treffer; de laatste was een terugkeer van {snap}°."
 	"evidence.aimbot.convergence"	"De drempel werd bereikt na {incidents} abrupte richtbewegingen met een treffer; laatste beweging {snap}°, doelfout {before}° -> {after}°."
+	"evidence.aimbot.smooth"	"De drempel werd bereikt na {incidents} vloeiende richtbewegingen die schade deden; laatste beweging {snap}°, doelfout {before}° -> {after}°."
 	"evidence.aimlock"	"De drempel werd bereikt na {incidents} nauwkeurige volgperiodes; bij de laatste bleef het vizier in {precise}/{samples} metingen op het doel terwijl dit {movement}° bewoog tegenover de vereiste {required}°."
 	"evidence.silentaim"	"Een afwijking van {deviation}° ten opzichte van het zichtbare vizier voegde {points} punten toe; de voortschrijdende score bereikte {score}/{threshold}."
 	"evidence.inhuman_accuracy"	"{hits} van {attempts} geldige schoten raakten ({accuracy}% nauwkeurigheid)."

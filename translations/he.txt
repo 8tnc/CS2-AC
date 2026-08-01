@@ -13,6 +13,7 @@
 
 	"evidence.aimbot.snap_return"	"הסף הושג לאחר {incidents} תנועות כוונת חדות עם פגיעה; האחרונה הייתה חזרה של {snap}°."
 	"evidence.aimbot.convergence"	"הסף הושג לאחר {incidents} תנועות כוונת חדות עם פגיעה; תנועה אחרונה {snap}°, שגיאת מטרה {before}° -> {after}°."
+	"evidence.aimbot.smooth"	"הסף הושג לאחר {incidents} תנועות כוונת חלקות שגרמו נזק; תנועה אחרונה {snap}°, שגיאת מטרה {before}° -> {after}°."
 	"evidence.aimlock"	"הסף הושג לאחר {incidents} קטעי מעקב מדויק; באחרון הכוונת נשארה על המטרה ב-{precise}/{samples} דגימות בזמן שהמטרה זזה {movement}° מול דרישה של {required}°."
 	"evidence.silentaim"	"סטייה של {deviation}° מהכוונת הנראית הוסיפה {points} נקודות; הציון המצטבר הגיע ל-{score}/{threshold}."
 	"evidence.inhuman_accuracy"	"{hits} מתוך {attempts} יריות מתאימות פגעו ({accuracy}% דיוק)."

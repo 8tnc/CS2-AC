@@ -13,6 +13,7 @@
 
 	"evidence.aimbot.snap_return"	"Το όριο έφτασε μετά από {incidents} απότομες κινήσεις στόχευσης με εύστοχη βολή· η τελευταία ήταν επιστροφή {snap}°."
 	"evidence.aimbot.convergence"	"Το όριο έφτασε μετά από {incidents} απότομες κινήσεις στόχευσης με εύστοχη βολή· τελευταία κίνηση {snap}°, σφάλμα στόχου {before}° -> {after}°."
+	"evidence.aimbot.smooth"	"Το όριο έφτασε μετά από {incidents} ομαλές κινήσεις στόχευσης που προκάλεσαν ζημιά· τελευταία κίνηση {snap}°, σφάλμα στόχου {before}° -> {after}°."
 	"evidence.aimlock"	"Το όριο έφτασε μετά από {incidents} περιόδους ακριβούς παρακολούθησης· στην τελευταία το στόχαστρο έμεινε στον στόχο σε {precise}/{samples} δείγματα ενώ κινήθηκε {movement}° έναντι των απαιτούμενων {required}°."
 	"evidence.silentaim"	"Απόκλιση {deviation}° από το ορατό στόχαστρο πρόσθεσε {points} πόντους· το κυλιόμενο σκορ έφτασε {score}/{threshold}."
 	"evidence.inhuman_accuracy"	"Ευστόχησαν {hits} από {attempts} επιλέξιμες βολές ({accuracy}% ακρίβεια)."

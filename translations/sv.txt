@@ -13,6 +13,7 @@
 
 	"evidence.aimbot.snap_return"	"Tröskeln nåddes efter {incidents} snabba siktförflyttningar med träff; den senaste var en återgång på {snap}°."
 	"evidence.aimbot.convergence"	"Tröskeln nåddes efter {incidents} snabba siktförflyttningar med träff; senaste rörelse {snap}°, målfel {before}° -> {after}°."
+	"evidence.aimbot.smooth"	"Tröskeln nåddes efter {incidents} jämna siktförflyttningar som gav skada; senaste rörelse {snap}°, målfel {before}° -> {after}°."
 	"evidence.aimlock"	"Tröskeln nåddes efter {incidents} exakta följningsperioder; senast låg siktet på målet i {precise}/{samples} mätningar medan det rörde sig {movement}° mot kravet {required}°."
 	"evidence.silentaim"	"En avvikelse på {deviation}° från det synliga siktet gav {points} poäng; den rullande poängen nådde {score}/{threshold}."
 	"evidence.inhuman_accuracy"	"{hits} av {attempts} kvalificerade skott träffade ({accuracy}% träffsäkerhet)."

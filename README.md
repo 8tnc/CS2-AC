@@ -142,7 +142,7 @@ All 17 modules are enabled by default, and each one can be turned off. Open **Ho
 <details>
 <summary><strong>How strict is it?</strong></summary>
 
-Three suspicious snap shots within five minutes. The enemy must be at least 100 game units away, and CS2AC checks the half-second before the shot.
+Three suspicious one-command snap movements before damaging shots, or five matching smooth aim curves, within five minutes. The enemy must be at least 100 game units away, and CS2AC checks the half-second before the shot.
 
 </details>
 

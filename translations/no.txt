@@ -13,6 +13,7 @@
 
 	"evidence.aimbot.snap_return"	"Terskelen ble nådd etter {incidents} raske siktebevegelser med treff; den siste var en retur på {snap}°."
 	"evidence.aimbot.convergence"	"Terskelen ble nådd etter {incidents} raske siktebevegelser med treff; siste bevegelse {snap}°, målfeil {before}° -> {after}°."
+	"evidence.aimbot.smooth"	"Terskelen ble nådd etter {incidents} jevne siktebevegelser som ga skade; siste bevegelse {snap}°, målfeil {before}° -> {after}°."
 	"evidence.aimlock"	"Terskelen ble nådd etter {incidents} presise sporingsperioder; sist holdt siktet seg på målet i {precise}/{samples} målinger mens det beveget seg {movement}° mot kravet på {required}°."
 	"evidence.silentaim"	"Et avvik på {deviation}° fra det synlige siktet ga {points} poeng; den løpende poengsummen nådde {score}/{threshold}."
 	"evidence.inhuman_accuracy"	"{hits} av {attempts} kvalifiserte skudd traff ({accuracy}% treffsikkerhet)."

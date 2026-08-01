@@ -13,6 +13,7 @@
 
 	"evidence.aimbot.snap_return"	"Slenkstis pasiektas po {incidents} staigių taikymų su pataikymu; paskutinis buvo {snap}° grįžimas."
 	"evidence.aimbot.convergence"	"Slenkstis pasiektas po {incidents} staigių taikymų su pataikymu; paskutinis judesys {snap}°, taikinio paklaida {before}° -> {after}°."
+	"evidence.aimbot.smooth"	"Slenkstis pasiektas po {incidents} tolygių taikymosi judesių, padariusių žalos; paskutinis judesys {snap}°, taikinio paklaida {before}° -> {after}°."
 	"evidence.aimlock"	"Slenkstis pasiektas po {incidents} tikslaus sekimo etapų; paskutinį kartą taikiklis išliko ant taikinio {precise}/{samples} matavimų, kai šis judėjo {movement}° prieš reikalaujamus {required}°."
 	"evidence.silentaim"	"{deviation}° nuokrypis nuo matomo taikiklio pridėjo {points} taškus; kaupiamas rezultatas pasiekė {score}/{threshold}."
 	"evidence.inhuman_accuracy"	"Pataikyta {hits} iš {attempts} įskaitomų šūvių ({accuracy}% tikslumas)."

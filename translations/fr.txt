@@ -13,6 +13,7 @@
 
 	"evidence.aimbot.snap_return"	"Le seuil a été atteint après {incidents} visées brusques suivies d'un tir réussi ; la dernière était un retour de {snap}°."
 	"evidence.aimbot.convergence"	"Le seuil a été atteint après {incidents} visées brusques suivies d'un tir réussi ; dernier mouvement : {snap}°, erreur de cible : {before}° -> {after}°."
+	"evidence.aimbot.smooth"	"Le seuil a été atteint après {incidents} mouvements de visée fluides ayant infligé des dégâts ; dernier mouvement : {snap}°, erreur de cible : {before}° -> {after}°."
 	"evidence.aimlock"	"Le seuil a été atteint après {incidents} phases de suivi précis ; lors de la dernière, la visée est restée sur la cible pendant {precise}/{samples} mesures tandis qu'elle se déplaçait de {movement}° pour {required}° requis."
 	"evidence.silentaim"	"Un écart de {deviation}° par rapport à la visée visible a ajouté {points} points ; le score glissant a atteint {score}/{threshold}."
 	"evidence.inhuman_accuracy"	"{hits} tirs sur {attempts} tirs retenus ont touché ({accuracy}% de précision)."
