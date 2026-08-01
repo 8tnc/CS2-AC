@@ -4,7 +4,6 @@
 
 ### Open-source server-side anti-cheat for Counter-Strike 2.
 
-[![CI](https://img.shields.io/github/actions/workflow/status/karola3vax/CS2AC/build.yml?branch=main&style=for-the-badge&label=CI)](https://github.com/karola3vax/CS2AC/actions/workflows/build.yml)
 [![Modules](https://img.shields.io/badge/modules-17-red?style=for-the-badge)](#detection-modules)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-5c7cfa?style=for-the-badge)](#quickstart)
 [![License](https://img.shields.io/badge/license-AGPL--3.0-2ea44f?style=for-the-badge)](LICENSE)
