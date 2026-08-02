@@ -434,30 +434,10 @@ void utils::AnnounceTest()
 
 void utils::AnnounceWatermarkTo(CPlayerSlot slot, bool centerOnly)
 {
-	CSingleRecipientFilter filter(slot);
-	if (!centerOnly)
-	{
-		const std::string chatBody = localization::Watermark({{"author", "{grey}%s1{default}"}}).localized;
-		const std::string chatTemplate = "{red}[CS2AC]{default} " + chatBody;
-		char coloredChat[256];
-		if (CFormat(coloredChat, sizeof(coloredChat), chatTemplate.c_str()))
-		{
-			ClientPrintFilter(&filter, HUD_PRINTTALK, coloredChat, "karola3vax", "", "", "");
-		}
-		return;
-	}
-
-	std::string centerBody = EscapeHtml(localization::Watermark().localized.c_str());
-	ReplaceAll(centerBody, "{author}", "<span color='#B0B0B0'>karola3vax</span>");
-	const std::string message =
-		"<span class='fontSize-l'><span color='#FF0000'>[CS2AC]</span> <span color='#FFFFFF'>" + centerBody + "</span></span>";
-	SendDetectionHtml(message.c_str(), 3, &filter);
 }
 
 void utils::ClearWatermarkFor(CPlayerSlot slot)
 {
-	CSingleRecipientFilter filter(slot);
-	SendDetectionHtml("<font></font>", 1, &filter);
 }
 
 bool utils::IsDetectionAnnouncementActive()
