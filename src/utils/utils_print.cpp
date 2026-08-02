@@ -434,10 +434,13 @@ void utils::AnnounceTest()
 
 void utils::AnnounceWatermarkTo(CPlayerSlot slot, bool centerOnly)
 {
+	(void)slot;
+	(void)centerOnly;
 }
 
 void utils::ClearWatermarkFor(CPlayerSlot slot)
 {
+	(void)slot;
 }
 
 bool utils::IsDetectionAnnouncementActive()
