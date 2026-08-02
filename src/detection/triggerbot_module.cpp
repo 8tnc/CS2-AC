@@ -161,8 +161,8 @@ namespace
 		}
 
 		const Vector end = eye + detection::AimForward(angles) * traceLength;
-		CTraceFilter filter(static_cast<CEntityInstance *>(pawn), pawn->m_hOwnerEntity.Get(), pawn->m_Collision().m_collisionAttribute().m_nHierarchyId(),
-							MASK_SHOT, COLLISION_GROUP_DEFAULT, true);
+		CTraceFilter filter(static_cast<CEntityInstance *>(pawn), pawn->m_hOwnerEntity.Get(),
+							pawn->m_Collision().m_collisionAttribute().m_nHierarchyId(), MASK_SHOT, COLLISION_GROUP_DEFAULT, true);
 		CGameTrace trace;
 		INavPhysicsInterface::TraceLine(eye, end, &filter, &trace);
 		if (!trace.DidHit() || !trace.m_pEnt || !trace.m_pHitbox || !g_pCS2ACPlayerManager)
@@ -260,8 +260,8 @@ namespace detection
 		data.lastCommandNumber = command->cmdNum;
 
 		const int attackIndex = command->attack1_start_history_index();
-		const bool freshAttack = attackIndex >= 0 && attackIndex < command->input_history_size()
-							 && command->input_history(attackIndex).has_view_angles();
+		const bool freshAttack =
+			attackIndex >= 0 && attackIndex < command->input_history_size() && command->input_history(attackIndex).has_view_angles();
 		const auto &baseView = command->base().viewangles();
 		QAngle angles(baseView.x(), baseView.y(), baseView.z());
 		if (freshAttack)
@@ -291,16 +291,17 @@ namespace detection
 					data.contactStartCommand = command->cmdNum;
 					const float aimMovement = data.lastAnglesValid ? AngularDistance(data.lastAngles, angles) : 0.0f;
 					data.activeMode = std::isfinite(aimMovement) && aimMovement > heldAngleMaximumDegrees ? TriggerContactMode::AimDriven
-																				 : TriggerContactMode::TargetDriven;
+																										  : TriggerContactMode::TargetDriven;
 					if (previousContact < 0)
 					{
 						TRIGGERBOT_DEBUG("%s acquired target #%d for the first time (%s).\n", player->GetName(), contact.targetIndex,
-								 ContactModeName(data.activeMode));
+										 ContactModeName(data.activeMode));
 					}
 					else
 					{
 						TRIGGERBOT_DEBUG("%s acquired target #%d after %lld ticks without contact (%s).\n", player->GetName(), contact.targetIndex,
-								 static_cast<long long>(static_cast<std::int64_t>(currentTick) - previousContact), ContactModeName(data.activeMode));
+										 static_cast<long long>(static_cast<std::int64_t>(currentTick) - previousContact),
+										 ContactModeName(data.activeMode));
 					}
 				}
 			}
@@ -319,7 +320,7 @@ namespace detection
 		if (!smokeUncertain && contact.targetIndex >= 1)
 		{
 			smokeUncertain = std::any_of(smokes.begin(), smokes.end(),
-									 [&](const TriggerbotSmoke &smoke) { return SegmentTouchesSmokeBounds(eye, contact.point, smoke.center); });
+										 [&](const TriggerbotSmoke &smoke) { return SegmentTouchesSmokeBounds(eye, contact.point, smoke.center); });
 		}
 
 		if (freshAttack && contact.targetIndex >= 1 && data.contactStartCommand >= 0)
@@ -352,7 +353,7 @@ namespace detection
 		}
 		auto &data = playerData[attacker->index];
 		const auto pending = std::find_if(data.pending.begin(), data.pending.end(),
-								  [&](const TriggerbotPending &candidate) { return candidate.commandNumber == shot.commandNumber; });
+										  [&](const TriggerbotPending &candidate) { return candidate.commandNumber == shot.commandNumber; });
 		if (pending == data.pending.end())
 		{
 			return;
@@ -362,7 +363,7 @@ namespace detection
 		if (candidate.targetIndex != victim->index || shot.victimIndex != victim->index)
 		{
 			TRIGGERBOT_DEBUG("%s's damage was ignored because target #%d was expected, not #%d.\n", attacker->GetName(), candidate.targetIndex,
-						 victim->index);
+							 victim->index);
 			return;
 		}
 		const int damage = event->GetInt("dmg_health", 0);
