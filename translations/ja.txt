@@ -18,7 +18,7 @@
 	"evidence.silentaim"	"見えている照準から {deviation}° のずれが {points} ポイントを加算し、累積スコアが {score}/{threshold} に達しました。"
 	"evidence.inhuman_accuracy"	"対象となる {attempts} 発のうち {hits} 発が命中しました（命中率 {accuracy}%）。"
 	"evidence.irregular_behavior"	"難しい射撃 {attempts} 回のうち {successes} 回成功し（成功率 {accuracy}%）、{score} ポイントに達しました。"
-	"evidence.triggerbot"	"The last {shots} damaging fresh-contact shots reached {score}/{threshold}: {fast} landed in 0-3 ticks (+2 each) and {slow} took 4+ ticks (-1 each). Latest: {latest_ticks} ticks, {damage} damage, {context}, {hitgroup}, target #{target}."
+	"evidence.triggerbot"	"The last {shots} damaging fresh-contact shots reached {score}/{threshold}: {one_tick} landed in 0-1 ticks (+3 each), {two_tick} in 2 ticks (+2 each), {three_tick} in 3 ticks (+1 each), and {normal} took 4+ ticks (-2 each). Latest: {latest_ticks} ticks, {damage} damage, {context}, {hitgroup}, target #{target}."
 
 	"evidence.antiaim"	"「{reason}」で {points} ポイントが加算され、証拠が {score}/{threshold} に達しました。"
 	"evidence.antiaim.reason.spin"	"継続的な回転"

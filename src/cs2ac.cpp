@@ -825,6 +825,7 @@ void CS2ACPlugin::PrintConfigSummary(bool reloaded) const
 		settings::GetDuplicateWhitelistCount());
 	Msg("[CS2AC] Public announcements: chat %s, center screen %s.\n", settings::ShowChatAnnouncements() ? "on" : "off",
 		settings::ShowCenterAnnouncements() ? "on" : "off");
+	Msg("[CS2AC] Automatic updates: %s.\n", settings::AutomaticUpdatesEnabled() ? "on" : "off");
 	Msg("[CS2AC] Punishments: permanent ban %s, kick %s.\n",
 		settings::GetPunishmentCommand() && *settings::GetPunishmentCommand() ? "configured" : "disabled",
 		settings::GetKickCommand() && *settings::GetKickCommand() ? "configured" : "disabled");

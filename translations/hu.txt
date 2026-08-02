@@ -18,7 +18,7 @@
 	"evidence.silentaim"	"A látható célzástól mért {deviation}° eltérés {points} pontot adott; a gördülő pontszám elérte a {score}/{threshold} értéket."
 	"evidence.inhuman_accuracy"	"{hits} találat {attempts} értékelt lövésből ({accuracy}% pontosság)."
 	"evidence.irregular_behavior"	"{score} pont {successes} sikeres nehéz lövésből, {attempts} kísérlet mellett ({accuracy}% siker)."
-	"evidence.triggerbot"	"The last {shots} damaging fresh-contact shots reached {score}/{threshold}: {fast} landed in 0-3 ticks (+2 each) and {slow} took 4+ ticks (-1 each). Latest: {latest_ticks} ticks, {damage} damage, {context}, {hitgroup}, target #{target}."
+	"evidence.triggerbot"	"The last {shots} damaging fresh-contact shots reached {score}/{threshold}: {one_tick} landed in 0-1 ticks (+3 each), {two_tick} in 2 ticks (+2 each), {three_tick} in 3 ticks (+1 each), and {normal} took 4+ ticks (-2 each). Latest: {latest_ticks} ticks, {damage} damage, {context}, {hitgroup}, target #{target}."
 
 	"evidence.antiaim"	"„{reason}” {points} pontot adott; a bizonyíték elérte a {score}/{threshold} értéket."
 	"evidence.antiaim.reason.spin"	"folyamatos forgás"

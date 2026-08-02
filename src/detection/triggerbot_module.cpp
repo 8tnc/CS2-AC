@@ -38,8 +38,10 @@ namespace
 	struct ReactionScore
 	{
 		int score {};
-		int fastCount {};
-		int slowCount {};
+		int oneTickCount {};
+		int twoTickCount {};
+		int threeTickCount {};
+		int normalCount {};
 	};
 
 	template<size_t N>
@@ -49,25 +51,35 @@ namespace
 		for (size_t index = 0; index < count && index < N; ++index)
 		{
 			const int tick = ticks[index];
-			if (tick >= 0 && tick <= fastReactionTicks)
+			if (tick >= 0 && tick <= 1)
 			{
-				++result.fastCount;
+				++result.oneTickCount;
+				result.score += 3;
+			}
+			else if (tick == 2)
+			{
+				++result.twoTickCount;
 				result.score += 2;
+			}
+			else if (tick == fastReactionTicks)
+			{
+				++result.threeTickCount;
+				++result.score;
 			}
 			else if (tick > fastReactionTicks)
 			{
-				++result.slowCount;
-				result.score = (std::max)(0, result.score - 1);
+				++result.normalCount;
+				result.score = (std::max)(0, result.score - 2);
 			}
 		}
 		return result;
 	}
 
-	static_assert(ScoreReactions(std::array<int, 5> {0, 1, 2, 3, 0}, 5).score == detectionThreshold);
-	static_assert(ScoreReactions(std::array<int, 4> {0, 1, 2, 3}, 4).score == 8);
-	static_assert(ScoreReactions(std::array<int, 5> {0, 1, 2, 3, 4}, 5).score == 7);
+	static_assert(ScoreReactions(std::array<int, 4> {0, 1, 2, 3}, 4).score == 9);
+	static_assert(ScoreReactions(std::array<int, 4> {1, 1, 1, 1}, 4).score == 12);
+	static_assert(ScoreReactions(std::array<int, 4> {1, 2, 3, 4}, 4).score == 4);
 	static_assert(ScoreReactions(std::array<int, 4> {10, 20, 30, 40}, 4).score == 0);
-	static_assert(ScoreReactions(std::array<int, 8> {0, 4, 0, 4, 0, 0, 0, 0}, 8).score == detectionThreshold);
+	static_assert(ScoreReactions(std::array<int, 3> {4, 4, 1}, 3).score == 3);
 
 	bool SegmentTouchesSmokeBounds(const Vector &start, const Vector &end, const Vector &center)
 	{
@@ -404,8 +416,9 @@ namespace detection
 			ticks[index] = data.history[index].reactionTicks;
 		}
 		const ReactionScore score = ScoreReactions(ticks, data.history.size());
-		TRIGGERBOT_DEBUG("%s recorded a damaging %d-tick shot: score %d/%d across %zu reactions; fast %d, slow %d.\n", attacker->GetName(),
-						 candidate.reactionTicks, score.score, detectionThreshold, data.history.size(), score.fastCount, score.slowCount);
+		TRIGGERBOT_DEBUG("%s recorded a damaging %d-tick shot: score %d/%d across %zu reactions; <=1t %d, 2t %d, 3t %d, normal %d.\n",
+						 attacker->GetName(), candidate.reactionTicks, score.score, detectionThreshold, data.history.size(), score.oneTickCount,
+						 score.twoTickCount, score.threeTickCount, score.normalCount);
 		if (score.score < detectionThreshold || !announce)
 		{
 			return;
@@ -414,13 +427,16 @@ namespace detection
 		announce("TRIGGERBOT", attacker,
 				 localization::Format(
 					 "evidence.triggerbot",
-					 "The last {shots} damaging fresh-contact shots reached {score}/{threshold}: {fast} landed in 0-3 ticks (+2 each) and {slow} "
-					 "took 4+ ticks (-1 each). Latest: {latest_ticks} ticks, {damage} damage, {context}, {hitgroup}, target #{target}.",
+					 "The last {shots} damaging fresh-contact shots reached {score}/{threshold}: {one_tick} landed in 0-1 ticks (+3 each), "
+					 "{two_tick} in 2 ticks (+2 each), {three_tick} in 3 ticks (+1 each), and {normal} took 4+ ticks (-2 each). Latest: "
+					 "{latest_ticks} ticks, {damage} damage, {context}, {hitgroup}, target #{target}.",
 					 {{"shots", tfm::format("%zu", data.history.size())},
 					  {"score", tfm::format("%d", score.score)},
 					  {"threshold", tfm::format("%d", detectionThreshold)},
-					  {"fast", tfm::format("%d", score.fastCount)},
-					  {"slow", tfm::format("%d", score.slowCount)},
+					  {"one_tick", tfm::format("%d", score.oneTickCount)},
+					  {"two_tick", tfm::format("%d", score.twoTickCount)},
+					  {"three_tick", tfm::format("%d", score.threeTickCount)},
+					  {"normal", tfm::format("%d", score.normalCount)},
 					  {"latest_ticks", tfm::format("%d", candidate.reactionTicks)},
 					  {"damage", tfm::format("%d", damage)},
 					  {"context", ContactModeName(candidate.mode)},

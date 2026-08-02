@@ -86,7 +86,7 @@ That is it. Players install nothing.
 
 The default punishment commands are made for [CS2-SimpleAdmin](https://github.com/daffyyyy/CS2-SimpleAdmin). If your server uses another admin plugin, replace the two commands in `cs2ac.cfg` with commands that plugin understands.
 
-CS2AC checks for stable updates after startup and every six hours. A verified update is prepared in the background and installed on the next full server restart. Existing settings are copied into the new configuration layout, and the previous configuration and plugin binary are kept as backups.
+CS2AC checks for stable updates after startup and every six hours. A verified update is prepared in the background and installed on the next full server restart. Set `cs2ac_auto_update 0` in `cs2ac.cfg` and run `cs2ac_reload` to disable future automatic checks and downloads. An update already prepared before this was disabled may still install on the next restart. Existing settings are copied into the new configuration layout, and the previous configuration and plugin binary are kept as backups.
 
 ## Detection output
 
@@ -160,7 +160,7 @@ This must happen three times within five minutes. Each time, the lock must last 
 <details>
 <summary><strong>How strict is it?</strong></summary>
 
-The previous contact with that enemy must be at least one second old, and the confirmed shot must damage that same enemy. Contact-to-damage shots in 0-3 ticks add 2 points; longer damaging shots remove 1 point. Detection needs 10 points and the score cannot fall below zero. Walls, misses, held sprays, unconfirmed shots, unsafe networking, possible smoke, the R8 Revolver, and the Zeus cannot change the score.
+The previous contact with that enemy must be at least one second old, and the confirmed shot must damage that same enemy. Contact-to-damage shots in 0-1 ticks add 3 points, 2 ticks add 2 points, and 3 ticks add 1 point; longer damaging shots remove 2 points. Detection needs 10 points and the score cannot fall below zero. Walls, misses, held sprays, unconfirmed shots, unsafe networking, possible smoke, the R8 Revolver, and the Zeus cannot change the score.
 
 </details>
 
@@ -315,6 +315,7 @@ The included [`cs2ac.cfg`](cfg/cs2ac.cfg) explains every option in plain languag
 | Setting | Default | What it does |
 | --- | ---: | --- |
 | `cs2ac_enabled` | `1` | Master switch for CS2AC. |
+| `cs2ac_auto_update` | `1` | Check for and download verified stable updates automatically. |
 | `cs2ac_whitelist` | empty | SteamID64s that may be detected but must never be punished. |
 | `cs2ac_*_enabled` | `1` | Enable or disable one detection module. |
 | `cs2ac_chat_announcements` | `1` | Show detections in public chat. |

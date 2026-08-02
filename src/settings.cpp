@@ -106,6 +106,7 @@ namespace
 										 OnDetectionSettingChanged};
 		CConVar<bool> chatAnnouncements {"cs2ac_chat_announcements", FCVAR_NONE, "Show CS2AC detections in public chat", true};
 		CConVar<bool> centerAnnouncements {"cs2ac_center_announcements", FCVAR_NONE, "Show CS2AC detections in the center of the screen", true};
+		CConVar<bool> automaticUpdates {"cs2ac_auto_update", FCVAR_NONE, "Automatically download verified stable updates", true};
 		CConVar<CUtlString> punishmentCommand {"cs2ac_punishment_command", FCVAR_NONE, "Command run for permanent-ban detections",
 											   CUtlString("css_addban {steamid64} 0 CS2AC: {detection}")};
 		CConVar<CUtlString> kickCommand {"cs2ac_kick_command", FCVAR_NONE, "Command run for kick-only detections",
@@ -276,6 +277,11 @@ bool settings::ShowChatAnnouncements()
 bool settings::ShowCenterAnnouncements()
 {
 	return configuration && configuration->centerAnnouncements.GetBool();
+}
+
+bool settings::AutomaticUpdatesEnabled()
+{
+	return configuration && configuration->automaticUpdates.GetBool();
 }
 
 const char *settings::GetPunishmentCommand()
