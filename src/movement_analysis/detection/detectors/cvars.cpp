@@ -50,7 +50,7 @@ extern IClientCvarValue *g_pClientCvarValue;
 
 #define INTEGRITY_CHECK_MIN_INTERVAL 1.0f
 #define INTEGRITY_CHECK_MAX_INTERVAL 5.0f
-#define MINIMUM_FPS_MAX              64.0f
+#define MINIMUM_FPS_MAX              60.0f
 #define MAXIMUM_M_YAW                0.3f
 
 static constexpr auto SV_CHEATS_MAX_PROPAGATION_DELAY = std::chrono::seconds(30);
