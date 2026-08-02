@@ -18,6 +18,7 @@
 	"evidence.silentaim"	"Görünür nişandan {deviation} derecelik sapma {points} puan ekledi; biriken puan {score}/{threshold} oldu."
 	"evidence.inhuman_accuracy"	"Değerlendirilen {attempts} atışın {hits} tanesi isabet etti (%{accuracy} isabet)."
 	"evidence.irregular_behavior"	"{attempts} zor atışın {successes} tanesi başarılı oldu (%{accuracy} başarı) ve {score} puan toplandı."
+	"evidence.triggerbot"	"The last {shots} damaging fresh-contact shots reached {score}/{threshold}: {fast} landed in 0-3 ticks (+2 each) and {slow} took 4+ ticks (-1 each). Latest: {latest_ticks} ticks, {damage} damage, {context}, {hitgroup}, target #{target}."
 
 	"evidence.antiaim"	"{reason}, {points} puan ekledi ve kanıt {score}/{threshold} seviyesine ulaştı."
 	"evidence.antiaim.reason.spin"	"kesintisiz dönme"
