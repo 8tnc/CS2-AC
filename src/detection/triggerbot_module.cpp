@@ -27,7 +27,6 @@ namespace
 	constexpr size_t historyLimit = 30;
 	constexpr size_t pendingLimit = 8;
 	constexpr int freshContactTicks = static_cast<int>(ENGINE_FIXED_TICK_RATE);
-	constexpr int fastReactionTicks = 3;
 	constexpr int detectionThreshold = 10;
 	constexpr float heldAngleMaximumDegrees = 0.5f;
 	constexpr float traceLength = 8192.0f;
@@ -40,7 +39,6 @@ namespace
 		int score {};
 		int oneTickCount {};
 		int twoTickCount {};
-		int threeTickCount {};
 		int normalCount {};
 	};
 
@@ -54,19 +52,14 @@ namespace
 			if (tick >= 0 && tick <= 1)
 			{
 				++result.oneTickCount;
-				result.score += 3;
+				result.score += 2;
 			}
 			else if (tick == 2)
 			{
 				++result.twoTickCount;
-				result.score += 2;
-			}
-			else if (tick == fastReactionTicks)
-			{
-				++result.threeTickCount;
 				++result.score;
 			}
-			else if (tick > fastReactionTicks)
+			else if (tick >= 3)
 			{
 				++result.normalCount;
 				result.score = (std::max)(0, result.score - 2);
@@ -75,11 +68,11 @@ namespace
 		return result;
 	}
 
-	static_assert(ScoreReactions(std::array<int, 4> {0, 1, 2, 3}, 4).score == 9);
-	static_assert(ScoreReactions(std::array<int, 4> {1, 1, 1, 1}, 4).score == 12);
-	static_assert(ScoreReactions(std::array<int, 4> {1, 2, 3, 4}, 4).score == 4);
+	static_assert(ScoreReactions(std::array<int, 5> {0, 1, 0, 1, 0}, 5).score == detectionThreshold);
+	static_assert(ScoreReactions(std::array<int, 10> {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}, 10).score == detectionThreshold);
+	static_assert(ScoreReactions(std::array<int, 4> {1, 2, 3, 4}, 4).score == 0);
 	static_assert(ScoreReactions(std::array<int, 4> {10, 20, 30, 40}, 4).score == 0);
-	static_assert(ScoreReactions(std::array<int, 3> {4, 4, 1}, 3).score == 3);
+	static_assert(ScoreReactions(std::array<int, 3> {3, 3, 1}, 3).score == 2);
 
 	bool SegmentTouchesSmokeBounds(const Vector &start, const Vector &end, const Vector &center)
 	{
@@ -417,9 +410,9 @@ namespace detection
 			ticks[index] = data.history[index].reactionTicks;
 		}
 		const ReactionScore score = ScoreReactions(ticks, data.history.size());
-		TRIGGERBOT_DEBUG("%s recorded a damaging %d-tick shot: score %d/%d across %zu reactions; <=1t %d, 2t %d, 3t %d, normal %d.\n",
-						 attacker->GetName(), candidate.reactionTicks, score.score, detectionThreshold, data.history.size(), score.oneTickCount,
-						 score.twoTickCount, score.threeTickCount, score.normalCount);
+		TRIGGERBOT_DEBUG("%s recorded a damaging %d-tick shot: score %d/%d across %zu reactions; <=1t %d, 2t %d, normal %d.\n", attacker->GetName(),
+						 candidate.reactionTicks, score.score, detectionThreshold, data.history.size(), score.oneTickCount, score.twoTickCount,
+						 score.normalCount);
 		if (score.score < detectionThreshold || !announce)
 		{
 			return;
@@ -428,15 +421,14 @@ namespace detection
 		announce("TRIGGERBOT", attacker,
 				 localization::Format(
 					 "evidence.triggerbot",
-					 "The last {shots} damaging fresh-contact shots reached {score}/{threshold}: {one_tick} landed in 0-1 ticks (+3 each), "
-					 "{two_tick} in 2 ticks (+2 each), {three_tick} in 3 ticks (+1 each), and {normal} took 4+ ticks (-2 each). Latest: "
+					 "The last {shots} damaging fresh-contact shots reached {score}/{threshold}: {one_tick} landed in 0-1 ticks (+2 each), "
+					 "{two_tick} in 2 ticks (+1 each), and {normal} took 3+ ticks (-2 each). Latest: "
 					 "{latest_ticks} ticks, {damage} damage, {context}, {hitgroup}, target #{target}.",
 					 {{"shots", tfm::format("%zu", data.history.size())},
 					  {"score", tfm::format("%d", score.score)},
 					  {"threshold", tfm::format("%d", detectionThreshold)},
 					  {"one_tick", tfm::format("%d", score.oneTickCount)},
 					  {"two_tick", tfm::format("%d", score.twoTickCount)},
-					  {"three_tick", tfm::format("%d", score.threeTickCount)},
 					  {"normal", tfm::format("%d", score.normalCount)},
 					  {"latest_ticks", tfm::format("%d", candidate.reactionTicks)},
 					  {"damage", tfm::format("%d", damage)},

@@ -142,7 +142,7 @@ All 18 modules are enabled by default, and each one can be turned off. Open **Ho
 <details>
 <summary><strong>How strict is it?</strong></summary>
 
-Three suspicious one-command snap movements before damaging shots, or five matching smooth aim curves, within five minutes. The enemy must be at least 100 game units away, and CS2AC checks the half-second before the shot.
+Three suspicious one-command snap movements before damaging shots, or three matching smooth aim curves, within five minutes. The enemy must be at least 100 game units away, and CS2AC checks the half-second before the shot.
 
 </details>
 
@@ -160,7 +160,7 @@ This must happen three times within five minutes. Each time, the lock must last 
 <details>
 <summary><strong>How strict is it?</strong></summary>
 
-The previous contact with that enemy must be at least one second old, and the confirmed shot must damage that same enemy. Contact-to-damage shots in 0-1 ticks add 3 points, 2 ticks add 2 points, and 3 ticks add 1 point; longer damaging shots remove 2 points. Detection needs 10 points and the score cannot fall below zero. Walls, misses, held sprays, unconfirmed shots, unsafe networking, possible smoke, the R8 Revolver, and the Zeus cannot change the score.
+The previous contact with that enemy must be at least one second old, and the confirmed shot must damage that same enemy. Contact-to-damage shots in 0-1 ticks add 2 points and 2-tick shots add 1 point; reactions of 3 ticks or longer remove 2 points. Detection needs 10 points and the score cannot fall below zero. Walls, misses, held sprays, unconfirmed shots, unsafe networking, possible smoke, the R8 Revolver, and the Zeus cannot change the score.
 
 </details>
 

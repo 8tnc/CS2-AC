@@ -18,7 +18,7 @@
 	"evidence.silentaim"	"{deviation} degrees from visible aim added {points} points; the rolling score reached {score}/{threshold}."
 	"evidence.inhuman_accuracy"	"{hits} of {attempts} qualifying shots hit ({accuracy}% accuracy)."
 	"evidence.irregular_behavior"	"{score} points from {successes} successful difficult shots out of {attempts} attempts ({accuracy}% success)."
-	"evidence.triggerbot"	"The last {shots} damaging fresh-contact shots reached {score}/{threshold}: {one_tick} landed in 0-1 ticks (+3 each), {two_tick} in 2 ticks (+2 each), {three_tick} in 3 ticks (+1 each), and {normal} took 4+ ticks (-2 each). Latest: {latest_ticks} ticks, {damage} damage, {context}, {hitgroup}, target #{target}."
+	"evidence.triggerbot"	"The last {shots} damaging fresh-contact shots reached {score}/{threshold}: {one_tick} landed in 0-1 ticks (+2 each), {two_tick} in 2 ticks (+1 each), and {normal} took 3+ ticks (-2 each). Latest: {latest_ticks} ticks, {damage} damage, {context}, {hitgroup}, target #{target}."
 
 	"evidence.antiaim"	"{reason} added {points} points and reached {score}/{threshold} evidence."
 	"evidence.antiaim.reason.spin"	"continuous spin"

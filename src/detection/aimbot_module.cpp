@@ -26,7 +26,7 @@ namespace
 	constexpr int snapWindowTicks = static_cast<int>(ENGINE_FIXED_TICK_RATE * 0.5f);
 	constexpr float minimumDistance = 100.0f;
 	constexpr int snapDetectionThreshold = 3;
-	constexpr int smoothDetectionThreshold = 5;
+	constexpr int smoothDetectionThreshold = 3;
 	constexpr auto evidenceWindow = std::chrono::minutes(5);
 	// A confirmed smoothed-aimbot demo produced 12 damaging curves inside this envelope: 13.66-29.69 degrees of travel,
 	// 94.9-99.5% error removal, 0.12-0.85 degrees of final error, 94.6-100% path efficiency, and 3-5 shrinking steps.
