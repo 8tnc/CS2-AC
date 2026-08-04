@@ -18,6 +18,7 @@
 	"evidence.silentaim"	"Độ lệch {deviation}° so với tâm ngắm hiển thị đã thêm {points} điểm; điểm tích lũy đạt {score}/{threshold}."
 	"evidence.inhuman_accuracy"	"Trúng {hits} trong {attempts} phát đạn hợp lệ (độ chính xác {accuracy}%)."
 	"evidence.irregular_behavior"	"{score} điểm từ {successes} phát đạn khó thành công trong {attempts} lần thử (tỷ lệ {accuracy}%)."
+	"evidence.triggerbot"	"The last {shots} damaging fresh-contact shots reached {score}/{threshold}: {one_tick} landed in 0-1 ticks (+2 each), {two_tick} in 2 ticks (+1 each), and {normal} took 3+ ticks (-2 each). Latest: {latest_ticks} ticks, {damage} damage, {context}, {hitgroup}, target #{target}."
 
 	"evidence.antiaim"	"“{reason}” đã thêm {points} điểm; bằng chứng đạt {score}/{threshold}."
 	"evidence.antiaim.reason.spin"	"xoay liên tục"

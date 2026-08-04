@@ -4,7 +4,7 @@
 
 ### Open-source server-side anti-cheat for Counter-Strike 2.
 
-[![Modules](https://img.shields.io/badge/modules-17-6f42c1?style=for-the-badge)](#detection-modules)
+[![Modules](https://img.shields.io/badge/modules-18-6f42c1?style=for-the-badge)](#detection-modules)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-5c7cfa?style=for-the-badge)](#quickstart)
 [![License](https://img.shields.io/badge/license-AGPL--3.0-2ea44f?style=for-the-badge)](LICENSE)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_a_Coffee-Support_Development-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=000000)](https://buymeacoffee.com/karola3vax)
@@ -86,7 +86,7 @@ That is it. Players install nothing.
 
 The default punishment commands are made for [CS2-SimpleAdmin](https://github.com/daffyyyy/CS2-SimpleAdmin). If your server uses another admin plugin, replace the two commands in `cs2ac.cfg` with commands that plugin understands.
 
-CS2AC checks for stable updates after startup and every six hours. A verified update is prepared in the background and installed on the next full server restart. Existing settings are copied into the new configuration layout, and the previous configuration and plugin binary are kept as backups.
+CS2AC checks for stable updates after startup and every six hours. A verified update is prepared in the background and installed on the next full server restart. Set `cs2ac_auto_update 0` in `cs2ac.cfg` and run `cs2ac_reload` to disable future automatic checks and downloads. An update already prepared before this was disabled may still install on the next restart. Existing settings are copied into the new configuration layout, and the previous configuration and plugin binary are kept as backups.
 
 ## Detection output
 
@@ -133,7 +133,7 @@ Whitelisted players can still be detected and reported, but CS2AC stops before s
 
 ## Detection modules
 
-All 17 modules are enabled by default, and each one can be turned off. Open **How strict is it?** to see its main rule. These numbers come from the current code and cannot be changed in the config.
+All 18 modules are enabled by default, and each one can be turned off. Open **How strict is it?** to see its main rule. These numbers come from the current code and cannot be changed in the config.
 
 ### Aim and accuracy
 
@@ -142,7 +142,7 @@ All 17 modules are enabled by default, and each one can be turned off. Open **Ho
 <details>
 <summary><strong>How strict is it?</strong></summary>
 
-Three suspicious one-command snap movements before damaging shots, or five matching smooth aim curves, within five minutes. The enemy must be at least 100 game units away, and CS2AC checks the half-second before the shot.
+Three suspicious one-command snap movements before damaging shots, or three matching smooth aim curves, within five minutes. The enemy must be at least 100 game units away, and CS2AC checks the half-second before the shot.
 
 </details>
 
@@ -152,6 +152,15 @@ Three suspicious one-command snap movements before damaging shots, or five match
 <summary><strong>How strict is it?</strong></summary>
 
 This must happen three times within five minutes. Each time, the lock must last two seconds, stay on the enemy for at least 95% of that time, follow at least 128 game units of movement, and start at least 200 game units away.
+
+</details>
+
+**Triggerbot.** A triggerbot fires when the crosshair first touches an enemy. CS2AC casts the same kind of first-hit ray through the current server hitboxes and remembers the player's last 30 damaging fresh-contact shots, whether the aim moved onto the enemy or the enemy entered a held angle.
+
+<details>
+<summary><strong>How strict is it?</strong></summary>
+
+The previous contact with that enemy must be at least one second old, and the confirmed shot must damage that same enemy. Contact-to-damage shots in 0-1 ticks add 2 points and 2-tick shots add 1 point; reactions of 3 ticks or longer remove 2 points. Detection needs 10 points and the score cannot fall below zero. Walls, misses, held sprays, unconfirmed shots, unsafe networking, possible smoke, the R8 Revolver, and the Zeus cannot change the score.
 
 </details>
 
@@ -306,6 +315,7 @@ The included [`cs2ac.cfg`](cfg/cs2ac.cfg) explains every option in plain languag
 | Setting | Default | What it does |
 | --- | ---: | --- |
 | `cs2ac_enabled` | `1` | Master switch for CS2AC. |
+| `cs2ac_auto_update` | `1` | Check for and download verified stable updates automatically. |
 | `cs2ac_whitelist` | empty | SteamID64s that may be detected but must never be punished. |
 | `cs2ac_*_enabled` | `1` | Enable or disable one detection module. |
 | `cs2ac_chat_announcements` | `1` | Show detections in public chat. |
