@@ -656,6 +656,10 @@ void CS2ACPlugin::HandleDetection(const char *detection, MovementPlayer *player,
 	{
 		Msg("[CS2AC] Detected %s on %s (SteamID64 unavailable).\n", detection, playerName.c_str());
 	}
+	if (!evidence.english.empty())
+	{
+		Msg("[CS2AC] Evidence: %s\n", SanitizeConsoleText(evidence.english.c_str()).c_str());
+	}
 	if (networkVetoed)
 	{
 		finish(utils::DetectionOutcome::NetworkUnstable);
