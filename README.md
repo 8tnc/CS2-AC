@@ -160,7 +160,7 @@ This must happen three times within five minutes. Each time, the lock must last 
 <details>
 <summary><strong>How strict is it?</strong></summary>
 
-The previous contact with that enemy must be at least one second old, and the confirmed shot must damage that same enemy. Contact-to-damage shots in 0-1 ticks add 2 points and 2-tick shots add 1 point; reactions of 3 ticks or longer remove 2 points. Detection needs 10 points and the score cannot fall below zero. Walls, misses, held sprays, unconfirmed shots, unsafe networking, possible smoke, the R8 Revolver, and the Zeus cannot change the score.
+The previous contact with that enemy must be at least one second old, and the confirmed shot must damage that same enemy. Contact-to-damage shots in 0-1 ticks add 2 points and 2-tick shots add 1 point; reactions of 3 ticks or longer remove 3 points. Detection needs 10 points and the score cannot fall below zero. Walls, misses, held sprays, unconfirmed shots, unsafe networking, possible smoke, the R8 Revolver, and the Zeus cannot change the score.
 
 </details>
 

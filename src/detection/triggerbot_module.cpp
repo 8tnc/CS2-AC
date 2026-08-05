@@ -62,7 +62,7 @@ namespace
 			else if (tick >= 3)
 			{
 				++result.normalCount;
-				result.score = (std::max)(0, result.score - 2);
+				result.score = (std::max)(0, result.score - 3);
 			}
 		}
 		return result;
@@ -73,6 +73,7 @@ namespace
 	static_assert(ScoreReactions(std::array<int, 4> {1, 2, 3, 4}, 4).score == 0);
 	static_assert(ScoreReactions(std::array<int, 4> {10, 20, 30, 40}, 4).score == 0);
 	static_assert(ScoreReactions(std::array<int, 3> {3, 3, 1}, 3).score == 2);
+	static_assert(ScoreReactions(std::array<int, 3> {0, 0, 3}, 3).score == 1);
 
 	bool SegmentTouchesSmokeBounds(const Vector &start, const Vector &end, const Vector &center)
 	{
