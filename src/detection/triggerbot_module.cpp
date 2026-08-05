@@ -421,9 +421,10 @@ namespace detection
 		announce("TRIGGERBOT", attacker,
 				 localization::Format(
 					 "evidence.triggerbot",
-					 "The last {shots} damaging fresh-contact shots reached {score}/{threshold}: {one_tick} landed in 0-1 ticks (+2 each), "
-					 "{two_tick} in 2 ticks (+1 each), and {normal} took 3+ ticks (-2 each). Latest: "
-					 "{latest_ticks} ticks, {damage} damage, {context}, {hitgroup}, target #{target}.",
+					 "The player repeatedly fired almost immediately after the crosshair first touched an enemy. Across {shots} damaging "
+					 "shots, {one_tick} were fired within one game update, {two_tick} within two updates, and {normal} took three or more "
+					 "updates, bringing the score to {score}/{threshold}. The latest shot took {latest_ticks} updates, dealt {damage} "
+					 "damage to the enemy's {hitgroup}, and happened while {context}; the target was player slot {target}.",
 					 {{"shots", tfm::format("%zu", data.history.size())},
 					  {"score", tfm::format("%d", score.score)},
 					  {"threshold", tfm::format("%d", detectionThreshold)},

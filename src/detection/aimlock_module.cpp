@@ -563,17 +563,18 @@ namespace detection
 		{
 			if (announce)
 			{
-				announce(
-					"AIMLOCK", player,
-					localization::Format(
-						"evidence.aimlock",
-						"{incidents} precise tracking episodes reached the threshold; the latest stayed on target for {precise}/{samples} samples "
-						"while the target moved {movement} degrees against a {required}-degree requirement.",
-						{{"incidents", tfm::format("%zu", incidents.size())},
-						 {"precise", tfm::format("%d", hypothesis.onTargetSamples)},
-						 {"samples", tfm::format("%d", data.track.samples)},
-						 {"movement", tfm::format("%.1f", hypothesis.maximumTargetDisplacement)},
-						 {"required", tfm::format("%.1f", hypothesis.requiredTargetDisplacement)}}));
+				announce("AIMLOCK", player,
+						 localization::Format(
+							 "evidence.aimlock",
+							 "CS2AC found {incidents} separate periods of near-perfect enemy tracking. During the latest two-second period, "
+							 "the aim stayed inside the enemy's body width for {precise} of {samples} checks while the enemy moved far enough "
+							 "across the player's view. The enemy moved {movement} degrees across the view; {required} degrees was required at "
+							 "that distance.",
+							 {{"incidents", tfm::format("%zu", incidents.size())},
+							  {"precise", tfm::format("%d", hypothesis.onTargetSamples)},
+							  {"samples", tfm::format("%d", data.track.samples)},
+							  {"movement", tfm::format("%.1f", hypothesis.maximumTargetDisplacement)},
+							  {"required", tfm::format("%.1f", hypothesis.requiredTargetDisplacement)}}));
 			}
 			incidents.clear();
 			data.latched = true;

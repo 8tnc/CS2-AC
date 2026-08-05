@@ -315,7 +315,8 @@ void MovementDetectionService::CheckLandingEvents()
 			this->MarkInfraction(
 				MovementDetectionService::Infraction::Type::BhopHack,
 				localization::Format("evidence.bhop.perfect_chain",
-									 "{perfect} of {landings} eligible landings formed one consecutive frame-perfect bhop chain.",
+									 "The player made {perfect} frame-perfect bunny hops in one uninterrupted chain, out of {landings} checked "
+									 "landings.",
 									 {{"perfect", tfm::format("%u", maxPerfChain)}, {"landings", tfm::format("%u", totalChainEligibleEvents)}}));
 			this->recentLandingEvents.clear();
 			this->bhopDirty = false;
@@ -333,7 +334,8 @@ void MovementDetectionService::CheckLandingEvents()
 					MovementDetectionService::Infraction::Type::BhopHack,
 					localization::Format(
 						"evidence.bhop.repeated_pattern",
-						"{repeated} of {patterns} completed jump patterns repeated {inputs} inputs, with an average of {average} inputs.",
+						"The player repeated the same short jump-button pattern on {repeated} of {patterns} completed landings. The common "
+						"pattern used {inputs} jump presses around each landing, while the overall average was {average}.",
 						{{"repeated", tfm::format("%u", mostCommonPatternCount)},
 						 {"patterns", tfm::format("%u", totalPatternOccurrences)},
 						 {"inputs", tfm::format("%u", mostCommonPattern)},
@@ -357,8 +359,8 @@ void MovementDetectionService::CheckLandingEvents()
 			this->MarkInfraction(
 				MovementDetectionService::Infraction::Type::Hyperscroll,
 				localization::Format("evidence.hyperscroll",
-									 "The player averaged {average} jump inputs across {patterns} completed landing patterns, while {perfect} of "
-									 "{landings} eligible landings were frame-perfect ({ratio}%).",
+									 "Across {patterns} completed landings, the player sent an average of {average} jump presses around each "
+									 "landing. Of {landings} checked landings, {perfect} were frame-perfect ({ratio}%).",
 									 {{"average", tfm::format("%.2f", averagePattern)},
 									  {"patterns", tfm::format("%u", totalPatternOccurrences)},
 									  {"perfect", tfm::format("%u", numPerfs)},

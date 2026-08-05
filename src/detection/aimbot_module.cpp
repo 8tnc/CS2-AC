@@ -545,19 +545,22 @@ namespace detection
 															 {"after", tfm::format("%.2f", bestAfter)}};
 				const localization::Text details =
 					matchedRule == AimbotRule::SnapReturn
-						? localization::Format("evidence.aimbot.snap_return",
-											   "{incidents} snap-hit incidents reached the threshold; the latest was a {snap}-degree snap-return.",
-											   values)
+						? localization::Format(
+							  "evidence.aimbot.snap_return",
+							  "CS2AC found {incidents} damaging shots where the aim jumped during the shot and immediately returned. The "
+							  "latest jump was {snap} degrees.",
+							  values)
 					: matchedRule == AimbotRule::SmoothConvergence
 						? localization::Format(
 							  "evidence.aimbot.smooth",
-							  "{incidents} smooth damaging aim movements reached the threshold; latest movement {snap} degrees, target "
-							  "error {before} -> {after} degrees.",
+							  "CS2AC found {incidents} damaging shots where the aim followed an unusually clean curve onto the enemy. On "
+							  "the latest shot, the aim moved {snap} degrees and its distance from the enemy fell from {before} to {after} "
+							  "degrees.",
 							  values)
 						: localization::Format(
 							  "evidence.aimbot.convergence",
-							  "{incidents} snap-hit incidents reached the threshold; latest snap {snap} degrees, target error {before} -> "
-							  "{after} degrees.",
+							  "CS2AC found {incidents} damaging shots where the aim moved onto the enemy in one sudden step. On the latest "
+							  "shot, the aim moved {snap} degrees and its distance from the enemy fell from {before} to {after} degrees.",
 							  values);
 				announce("AIMBOT", attacker, details);
 			}
