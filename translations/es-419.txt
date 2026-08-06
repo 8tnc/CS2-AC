@@ -87,7 +87,7 @@
 	"webhook.default_evidence"	"El detector alcanzó su umbral configurado"
 	"webhook.default_server_name"	"Servidor de CS2"
 	"webhook.footer"	"Reporte de detección"
-	"webhook.test_detection"	"PRUEBA DE WEBHOOK"
+	"webhook.test_detection"	"TEST DE WEBHOOK"
 	"webhook.test_player"	"Prueba de webhook"
 	"webhook.test_evidence"	"Este es un reporte de prueba inofensivo. No se creó ninguna detección ni sanción."
 }
