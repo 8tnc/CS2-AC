@@ -123,9 +123,11 @@ namespace detection
 		{
 			if (announceNetworkVeto)
 			{
-				const auto details = localization::Format("evidence.doubletap.network_unstable",
-														  "Three rapid-fire pairs were detected; the latest was {ticks} server ticks apart.",
-														  {{"ticks", tfm::format("%lld", static_cast<long long>(delta))}});
+				const auto details = localization::Format(
+					"evidence.doubletap.network_unstable",
+					"The same gun fired twice almost at once on {pairs} separate occasions. The latest pair was {ticks} "
+					"server ticks apart.",
+					{{"pairs", tfm::format("%d", detectionThreshold)}, {"ticks", tfm::format("%lld", static_cast<long long>(delta))}});
 				announceNetworkVeto("DOUBLETAP", player, AddNetworkSafetyDetails(details, networkEvidence));
 			}
 			return;
@@ -134,9 +136,13 @@ namespace detection
 		if (announce)
 		{
 			announce("DOUBLETAP", player,
-					 localization::Format(delta == 1 ? "evidence.doubletap.one_tick" : "evidence.doubletap.zero_ticks",
-										  delta == 1 ? "Three rapid-fire pairs reached the threshold; the latest pair was 1 server tick apart."
-													 : "Three rapid-fire pairs reached the threshold; the latest pair was 0 server ticks apart."));
+					 localization::Format(
+						 delta == 1 ? "evidence.doubletap.one_tick" : "evidence.doubletap.zero_ticks",
+						 delta == 1 ? "The same gun fired twice within 1 server tick on {pairs} separate occasions. That is faster than the "
+									  "weapon's normal firing cycle allows."
+									: "The same gun fired twice within the same server tick on {pairs} separate occasions. That is faster than "
+									  "the weapon's normal firing cycle allows.",
+						 {{"pairs", tfm::format("%d", detectionThreshold)}}));
 		}
 	}
 

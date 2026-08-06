@@ -4,9 +4,11 @@
 #include "movement_analysis/player_context.h"
 #include "movement/movement.h"
 #include "sdk/usercmd.h"
+#include "utils/utils.h"
 
 #include <algorithm>
 #include <cmath>
+#include <cstdlib>
 #include <limits>
 
 CConVar<bool> cs2ac_antiaim_debug("cs2ac_antiaim_debug", FCVAR_NONE, "Show AntiAim evidence, score decay, and shot matching", false);
@@ -170,15 +172,26 @@ namespace detection
 		if (callback)
 		{
 			const std::string localizedReason = localization::Get(reasonKey, reason);
-			const localization::Text details {
-				tfm::format("%s added %.1f points and reached %.1f/%.0f evidence.", reason, weight, total, detectionThreshold),
-				localization::Format("evidence.antiaim", "{reason} added {points} points and reached {score}/{threshold} evidence.",
+			localization::Text details {
+				tfm::format("The final piece of evidence was %s. It added %.1f points, bringing the combined AntiAim score to %.1f/%.0f.", reason,
+							weight, total, detectionThreshold),
+				localization::Format("evidence.antiaim",
+									 "The final piece of evidence was {reason}. It added {points} points, bringing the combined AntiAim score to "
+									 "{score}/{threshold}.",
 									 {{"reason", localizedReason},
 									  {"points", tfm::format("%.1f", weight)},
 									  {"score", tfm::format("%.1f", total)},
 									  {"threshold", tfm::format("%.0f", detectionThreshold)}})
 					.localized,
 			};
+			// m_yaw is evidence-only context for reviewing high-value turn binds; it never changes the score or punishment.
+			const char *mYaw = interfaces::pEngine ? interfaces::pEngine->GetClientConVarValue(player->GetPlayerSlot(), "m_yaw") : nullptr;
+			if (utils::IsNumeric(mYaw))
+			{
+				const auto yaw = localization::Format("evidence.antiaim.m_yaw", "The player's m_yaw value was {value} at the time.",
+													  {{"value", tfm::format("%.6g", std::strtod(mYaw, nullptr))}});
+				details = {details.english + " " + yaw.english, details.localized + " " + yaw.localized};
+			}
 			callback("ANTIAIM", player, networkVetoed ? AddNetworkSafetyDetails(details, network) : details);
 		}
 		data.score = 0.0f;
@@ -396,7 +409,8 @@ namespace detection
 		}
 		if (spinDetected && !data.suppressContinuous)
 		{
-			AddEvidence(player, data, detectionThreshold, "evidence.antiaim.reason.spin", "continuous spin", true);
+			AddEvidence(player, data, detectionThreshold, "evidence.antiaim.reason.spin",
+						"continuous spinning at a speed and consistency associated with AntiAim", true);
 			data.spinActive = true;
 		}
 		else if (!spinEpisodeActive)
@@ -475,7 +489,8 @@ namespace detection
 		}
 		if (data.jitterSeconds >= requiredJitterSeconds && !data.suppressContinuous)
 		{
-			AddEvidence(player, data, detectionThreshold, "evidence.antiaim.reason.jitter", "continuous repeating jitter", true);
+			AddEvidence(player, data, detectionThreshold, "evidence.antiaim.reason.jitter", "the same rapid view-angle jitter repeating continuously",
+						true);
 			data.jitterActive = true;
 		}
 		else if (!jitterEpisodeActive)
@@ -539,7 +554,8 @@ namespace detection
 					  shot->subtickYaw);
 		if (std::isfinite(surrounding) && std::isfinite(snap) && surrounding < 10.0f && snap > minimumAttackReturnAngle && snap > surrounding * 5.0f)
 		{
-			AddEvidence(player, data, 20.0f, "evidence.antiaim.reason.attack_return", "one-command attack return", false);
+			AddEvidence(player, data, 20.0f, "evidence.antiaim.reason.attack_return",
+						"a shot where the aim changed by at least 30 degrees for one command and immediately returned", false);
 		}
 		else
 		{
@@ -603,7 +619,8 @@ namespace detection
 		if (found->problems != 0 && !data.suppressContinuous)
 		{
 			ANTIAIM_DEBUG("%s command %d is inconsistent: %s.\n", player->GetName(), found->commandNumber, ProblemName(found->problems));
-			AddEvidence(player, data, 1.0f, "evidence.antiaim.reason.inconsistent_command", "an inconsistent angle command", true);
+			AddEvidence(player, data, 1.0f, "evidence.antiaim.reason.inconsistent_command", "view-angle data that a normal client should not send",
+						true);
 		}
 		else if (historyMismatch && !data.suppressContinuous
 				 && (data.lastMismatchEvidenceCommand < 0
@@ -613,7 +630,8 @@ namespace detection
 			ANTIAIM_DEBUG("%s command %d base/input-history yaw mismatch is %.2f degrees.\n", player->GetName(), found->commandNumber,
 						  found->historyYawDifference);
 			// Fast legitimate mouse movement can create this difference, so it contributes only short-lived supporting evidence.
-			AddEvidence(player, data, 1.0f, "evidence.antiaim.reason.history_mismatch", "a repeated base and input-history mismatch", true, true);
+			AddEvidence(player, data, 1.0f, "evidence.antiaim.reason.history_mismatch",
+						"two view angles in the same command repeatedly disagreeing by at least 120 degrees", true, true);
 		}
 		else if (!data.inconsistencyActive && wasInconsistent)
 		{
@@ -627,7 +645,7 @@ namespace detection
 		{
 			ANTIAIM_DEBUG("%s command %d has invalid pitch/roll %.2f/%.2f.\n", player->GetName(), found->commandNumber, found->baseAngles.x,
 						  found->baseAngles.z);
-			AddEvidence(player, data, 2.0f, "evidence.antiaim.reason.invalid_angles", "invalid pitch or roll", true);
+			AddEvidence(player, data, 2.0f, "evidence.antiaim.reason.invalid_angles", "a pitch or roll angle outside the normal CS2 range", true);
 		}
 
 		EvaluateMotion(player, data, *found);

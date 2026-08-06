@@ -175,9 +175,10 @@ namespace detection
 		const float excess = shot.silentDeviation - shot.silentAllowance;
 		const std::string_view weapon = NormalizeWeapon(shot.weapon);
 		const bool noscope = !shot.scoped && (weapon == "awp" || weapon == "ssg08" || weapon == "g3sg1" || weapon == "scar20");
-		const int points = (excess > blatantExcess ? 4
-							: shot.airborne        ? 3
-												   : 2)
+		const bool blatant = excess > blatantExcess;
+		const int points = (blatant         ? 4
+							: shot.airborne ? 3
+											: 2)
 						   + static_cast<int>(shot.headshot) + 2 * static_cast<int>(shot.wallbang) + 2 * static_cast<int>(shot.throughSmoke)
 						   + static_cast<int>(noscope);
 		incidents.push_back({now, points});
@@ -193,14 +194,59 @@ namespace detection
 		{
 			if (announce)
 			{
-				announce(
-					"SILENTAIM", player,
-					localization::Format("evidence.silentaim",
-										 "{deviation} degrees from visible aim added {points} points; the rolling score reached {score}/{threshold}.",
-										 {{"deviation", tfm::format("%.2f", shot.silentDeviation)},
-										  {"points", tfm::format("%d", points)},
-										  {"score", tfm::format("%d", total)},
-										  {"threshold", tfm::format("%d", detectionScore)}}));
+				localization::Text weightDetails;
+				auto addWeightSentence = [&](const char *key, const char *english)
+				{
+					const auto sentence = localization::Format(key, english);
+					const char *separator = weightDetails.english.empty() ? "" : " ";
+					weightDetails = {weightDetails.english + separator + sentence.english, weightDetails.localized + separator + sentence.localized};
+				};
+				if (blatant)
+				{
+					addWeightSentence("evidence.silentaim.weight.blatant",
+									  "The unexplained angle was over 22.5 degrees, so the shot started at 4 points.");
+				}
+				else if (shot.airborne)
+				{
+					addWeightSentence("evidence.silentaim.weight.airborne", "The player was airborne, so the shot started at 3 points.");
+				}
+				else
+				{
+					addWeightSentence("evidence.silentaim.weight.grounded", "The player was on the ground, so the shot started at 2 points.");
+				}
+				if (shot.headshot)
+				{
+					addWeightSentence("evidence.silentaim.weight.headshot", "A headshot added 1 point.");
+				}
+				if (shot.wallbang)
+				{
+					addWeightSentence("evidence.silentaim.weight.wallbang", "A wallbang added 2 points.");
+				}
+				if (shot.throughSmoke)
+				{
+					addWeightSentence("evidence.silentaim.weight.smoke", "A shot through smoke added 2 points.");
+				}
+				if (noscope)
+				{
+					addWeightSentence("evidence.silentaim.weight.noscope", "A no-scope added 1 point.");
+				}
+				auto formatEvidence = [&](const std::string &weight)
+				{
+					return localization::Format(
+						"evidence.silentaim",
+						"The bullet landed {deviation} degrees away from the player's visible aim. The weapon's current inaccuracy and "
+						"spread allowed {allowance} degrees, leaving {excess} degrees unexplained. {weight} The rolling score reached "
+						"{score}/{threshold}.",
+						{{"deviation", tfm::format("%.2f", shot.silentDeviation)},
+						 {"allowance", tfm::format("%.2f", shot.silentAllowance)},
+						 {"excess", tfm::format("%.2f", excess)},
+						 {"weight", weight},
+						 {"score", tfm::format("%d", total)},
+						 {"threshold", tfm::format("%d", detectionScore)}});
+				};
+				const auto englishEvidence = formatEvidence(weightDetails.english);
+				const auto localizedEvidence = formatEvidence(weightDetails.localized);
+				announce("SILENTAIM", player, {englishEvidence.english, localizedEvidence.localized});
 			}
 			incidents.clear();
 		}
