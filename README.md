@@ -160,7 +160,7 @@ This must happen three times within five minutes. Each time, the lock must last 
 <details>
 <summary><strong>How strict is it?</strong></summary>
 
-The previous contact with that enemy must be at least one second old, and the confirmed shot must damage that same enemy. Contact-to-damage shots in 0-1 ticks add 2 points and 2-tick shots add 1 point; reactions of 3 ticks or longer remove 3 points. Detection needs 10 points and the score cannot fall below zero. Walls, misses, held sprays, unconfirmed shots, unsafe networking, possible smoke, the R8 Revolver, and the Zeus cannot change the score.
+The previous contact with that enemy must be at least one second old, and the confirmed shot must damage that same enemy. Contact-to-damage shots in 0-1 ticks add 2 points; reactions of 2 ticks or longer remove 3 points. Detection needs 10 points and the score cannot fall below zero. Walls, misses, held sprays, unconfirmed shots, unsafe networking, possible smoke, the R8 Revolver, and the Zeus cannot change the score.
 
 </details>
 
@@ -423,7 +423,7 @@ Yes. When `mp_teammates_are_enemies` is enabled, CS2AC treats other players as e
 <details>
 <summary><strong>Does CS2AC advertise itself?</strong></summary>
 
-Yes. Five seconds after a player fully joins, CS2AC privately shows this message to that player in chat and at the center of their screen. The center message stays for three seconds, and no one else sees it:
+Yes. Ten seconds after a player fully joins, CS2AC privately shows this message to that player in chat and at the center of their screen. The center message stays for three seconds, and no one else sees it:
 
 ```text
 [CS2AC] This server is protected by karola3vax's anti-cheat.

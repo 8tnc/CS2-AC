@@ -57,7 +57,7 @@ namespace
 			else if (tick == 2)
 			{
 				++result.twoTickCount;
-				++result.score;
+				result.score = (std::max)(0, result.score - 3);
 			}
 			else if (tick >= 3)
 			{
@@ -69,7 +69,7 @@ namespace
 	}
 
 	static_assert(ScoreReactions(std::array<int, 5> {0, 1, 0, 1, 0}, 5).score == detectionThreshold);
-	static_assert(ScoreReactions(std::array<int, 10> {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}, 10).score == detectionThreshold);
+	static_assert(ScoreReactions(std::array<int, 10> {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}, 10).score == 0);
 	static_assert(ScoreReactions(std::array<int, 4> {1, 2, 3, 4}, 4).score == 0);
 	static_assert(ScoreReactions(std::array<int, 4> {10, 20, 30, 40}, 4).score == 0);
 	static_assert(ScoreReactions(std::array<int, 3> {3, 3, 1}, 3).score == 2);

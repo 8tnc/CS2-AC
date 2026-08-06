@@ -737,7 +737,7 @@ void CS2ACPlugin::OnClientFullyConnect(CPlayerSlot slot)
 	if (player && index > 0 && index <= MAXPLAYERS && !player->IsFakeClient() && !player->IsCSTV() && !joinWatermarks[index].shown
 		&& !joinWatermarks[index].pending)
 	{
-		joinWatermarks[index].showAt = std::chrono::steady_clock::now() + std::chrono::seconds(5);
+		joinWatermarks[index].showAt = std::chrono::steady_clock::now() + std::chrono::seconds(10);
 		joinWatermarks[index].pending = true;
 	}
 }
