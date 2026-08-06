@@ -2,7 +2,7 @@
 {
 	"announcement.detected"	"detectó {detection} en {player}{outcome}"
 	"announcement.outcome.punishment_sent"	" y aplicó la sanción."
-	"announcement.outcome.whitelisted"	", pero el jugador está en la lista blanca."
+	"announcement.outcome.whitelisted"	", pero el jugador está en la white list."
 	"announcement.outcome.punishment_disabled"	", pero las sanciones están desactivadas."
 	"announcement.outcome.identity_unavailable"	", pero la identidad del jugador todavía no está disponible."
 	"announcement.outcome.already_punished"	" y la sanción ya se había aplicado."
