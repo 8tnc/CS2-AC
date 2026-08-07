@@ -2,6 +2,12 @@ name: Build
 
 on:
   push:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Versión de la release (ej: v1.0.14)"
+        required: true
+        default: "v1.0.14"
 
 permissions:
   contents: read
@@ -95,19 +101,39 @@ jobs:
           path: CS2AC-1.0.14-source.zip
           if-no-files-found: error
 
-  release:
-    if: startsWith(github.ref, 'refs/tags/v')
-    needs: [windows, linux, source]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
-        with:
-          pattern: CS2AC-1.0.14-*
-          path: dist
-          merge-multiple: true
-      - name: Publish release
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" dist/*.zip --repo "$GITHUB_REPOSITORY" --verify-tag --title "CS2AC ${GITHUB_REF_NAME#v}" --generate-notes
+release:
+  if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
+  needs: [windows, linux, source]
+  runs-on: ubuntu-latest
+
+  permissions:
+    contents: write
+
+  steps:
+    - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+      with:
+        pattern: CS2AC-1.0.14-*
+        path: dist
+        merge-multiple: true
+
+    - name: Publish release
+      env:
+        GH_TOKEN: ${{ github.token }}
+      shell: bash
+      run: |
+        if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          VERSION="${{ github.event.inputs.version }}"
+
+          gh release create "$VERSION" \
+            dist/*.zip \
+            --repo "8tnc/CS2-AC" \
+            --title "CS2AC ${VERSION#v}" \
+            --generate-notes
+        else
+          gh release create "$GITHUB_REF_NAME" \
+            dist/*.zip \
+            --repo "8tnc/CS2-AC" \
+            --verify-tag \
+            --title "CS2AC ${GITHUB_REF_NAME#v}" \
+            --generate-notes
+        fi
