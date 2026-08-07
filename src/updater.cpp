@@ -31,7 +31,7 @@ namespace
 	constexpr std::uint32_t maximumPackageSize = 32 * 1024 * 1024;
 	constexpr std::uint64_t maximumExtractedSize = 64 * 1024 * 1024;
 	constexpr std::uint32_t maximumArchiveFiles = 512;
-	constexpr const char *releaseApi = "https://api.github.com/repos/karola3vax/CS2AC/releases/latest";
+	constexpr const char *releaseApi = "https://api.github.com/repos/8tnc/CS2-AC/releases/latest";
 
 #ifdef _WIN32
 	constexpr const char *platformName = "windows";
